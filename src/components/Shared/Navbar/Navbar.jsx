@@ -19,7 +19,7 @@ const NavBar = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
-  console.log(isLogin);
+  // console.log(isLogin);
   const cookies = new Cookies();
   cookies.set('isLogin', isLogin);
   const router = useRouter();
@@ -75,13 +75,13 @@ const NavBar = () => {
     { name: "Discover", link: "/" },
     {
       name: "Book an Artist",
-      link: "/competition-rooms",
+      link: "/booking-availablity",
       icon: <RiArrowDropDownLine className="text-black text-4xl" />,
     },
     { name: "Guest Spots", link: "/guest-spot" },
     {
       name: "Join As",
-      link: "/join-us",
+      link: "/sign-in",
       icon: <RiArrowDropDownLine className="text-black text-4xl" />,
     },
     { name: "Help", link: "/help" },

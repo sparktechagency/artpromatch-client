@@ -20,10 +20,10 @@ const ForgotPassword = () => {
                         <Form
                             name="login"
                             initialValues={{ remember: true }}
-                            style={{ maxWidth: 800 }}
+                      
                             onFinish={onFinish}
                             layout="vertical"
-                            className=""
+                            className="w-full md:w-[600px] bg-white px-2 rounded-2xl"
                         >
                             <div className="mb-4 flex flex-col justify-center items-center text-center">
                                 <Image src={AllImages.logo} width={50} height={50} alt='logo'></Image>

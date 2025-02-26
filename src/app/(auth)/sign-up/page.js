@@ -21,7 +21,7 @@ const SignUp = () => {
                         style={{ maxWidth: 550 }}
                         onFinish={onFinish}
                         layout="vertical"
-                        className=""
+                        className="w-full md:w-[600px] bg-white px-2 rounded-2xl"
                     >
                         <div className="mb-4 flex flex-col justify-center items-center text-center">
                             <Image src={AllImages.logo} width={50} height={50} alt='logo'></Image>
@@ -86,12 +86,14 @@ const SignUp = () => {
                             </Link>
                         </p>
                         <Form.Item className="text-center">
+                            <Link href="/account-verification">
                             <button
                                 className="bg-primary w-full px-6 py-2 rounded-md text-white"
                                 htmlType="submit"
                             >
                                 Create Account
                             </button>
+                            </Link>
                         </Form.Item>
                         <p className='text-center my-6'> Or Sign up with</p>
                         <Form.Item className="text-center">
