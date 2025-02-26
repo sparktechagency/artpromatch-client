@@ -272,8 +272,9 @@ const FilteredTatto = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
                         {filteredArtists.map((artist) => (
                             <div key={artist.id} className="border rounded-xl p-2">
+                                <Link href="profile-page">
                                 <Image onClick={() => openModal(artist.id)} src={artist.image} alt={artist.name} height={300} width={500} className='cursor-pointer' />
-
+                                </Link>
                                 <div className="flex justify-between items-center my-3">
                                     <div className="flex items-center gap-2">
                                         <Link href="/profile-page">

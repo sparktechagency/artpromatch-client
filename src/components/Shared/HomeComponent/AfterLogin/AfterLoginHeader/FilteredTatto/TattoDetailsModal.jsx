@@ -210,10 +210,10 @@ const TattoDetailsModal = ({ selectedArtist }) => {
           </div>
         </div>
         <div className="flex gap-2">
-          <Link href="/favorites">
+          <Link href="/favourites">
           <CiHeart className="h-8 w-8 border border-primary p-1 rounded-lg "/>
           </Link>
-          <Link href="/messages">
+          <Link href="/message">
             <button className="flex justify-center items-center gap-2 text-primary px-3 py-1 border rounded-lg font-bold">
               <AiOutlineMessage /> Message
             </button>

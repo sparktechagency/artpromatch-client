@@ -47,10 +47,12 @@ const TattoArtistProfile = () => {
                 Message
               </button>
             </Link>
+            <Link href="/booking-availablity">
             <button className="px-3 py-1 rounded-xl border flex justify-center items-center gap-2 bg-primary text-white">
               <SlCalender className="h-4 w-4 " />
               Book Now
             </button>
+            </Link>
           </div>
         </div>
       </div>
