@@ -1,0 +1,45 @@
+/* eslint-disable react/no-unescaped-entities */
+'use client';
+
+import { AllImages } from '@/assets/images/AllImages';
+import { Form, Typography } from 'antd';
+import Image from 'next/image';
+import Link from 'next/link';
+import React from 'react';
+
+const AllSet = () => {
+
+    return (
+        <div className="py-16 md:py-0 h-[100vh] w-full flex items-center justify-center ">
+            <div className="pt-32 pb-16">
+                <div className="">
+                    <div className="w-[450px]">
+                        <Form
+                            name="select-user-type"
+                            initialValues={{ remember: true }}
+                            layout="vertical"
+                            className=""
+                        >
+                            <div className="mb-4 flex flex-col justify-center items-center text-center">
+                                <Image src={AllImages.logo} width={50} height={50} alt='logo'></Image>
+                                <h2 className="text-center text-2xl font-bold mt-6 mb-2 text-primary">
+                                    You're All Set!
+                                </h2>
+                                <Typography.Text className=" text-center text-base ">
+                                    We’re ready to show you personalized recommendations based on your preferences.
+                                </Typography.Text>
+                            </div>
+
+                            <Link href="/">
+                                <button className='w-full bg-primary text-white py-3 rounded-lg mt-5'>Continue</button>
+                            </Link>
+                        </Form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default AllSet;

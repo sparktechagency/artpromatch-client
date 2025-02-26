@@ -1,0 +1,13 @@
+import { AllImages } from '@/assets/images/AllImages';
+import Image from 'next/image';
+import React from 'react';
+
+const GuestSpots = () => {
+    return (
+           <div>
+                   <Image src={AllImages.map} alt='map' height={800} width={1280} className="h-full w-full object-cover"></Image>
+               </div>
+    );
+};
+
+export default GuestSpots;
