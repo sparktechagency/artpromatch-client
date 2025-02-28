@@ -14,7 +14,7 @@ import image8 from "../images/image (8).png";
 import image9 from "../images/image (9).png";
 import apple from "../images/apple.png";
 import playStore from "../images/playStore.png";
-import image10 from "../images/image10.png";
+import image10 from "../images/Image10.png";
 import phone from "../images/phone.png";
 import x from "../images/x.png";
 import fb from "../images/fb.png";

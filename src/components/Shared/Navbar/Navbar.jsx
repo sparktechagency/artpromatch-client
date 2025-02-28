@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import "antd/dist/reset.css";
-import { Button, ConfigProvider, Drawer, Modal, Tooltip } from "antd";
+import { Button, Drawer, Dropdown, Menu, Modal,  } from "antd";
 import { RxHamburgerMenu } from "react-icons/rx";
 import Link from "next/link";
 import Image from "next/image";
@@ -71,11 +71,39 @@ const NavBar = () => {
     }
   }, []);
 
+
+  const bookArtistMenu = (
+    <Menu>
+      <Menu.Item key="1">
+        <Link href="/">Artist 1</Link>
+      </Menu.Item>
+      <Menu.Item key="2">
+        <Link href="/">Artist 2</Link>
+      </Menu.Item>
+      <Menu.Item key="3">
+        <Link href="/">Artist 3</Link>
+      </Menu.Item>
+    </Menu>
+  );
+
+  const joinAsMenu = (
+    <Menu>
+      <Menu.Item key="1">
+        <Link href="/">Join as an Artist</Link>
+      </Menu.Item>
+      <Menu.Item key="2">
+        <Link href="/">Join as a Client</Link>
+      </Menu.Item>
+    </Menu>
+  );
+
+
+  console.log()
   const beforeLoginLabels = [
     { name: "Discover", link: "/" },
     {
       name: "Book an Artist",
-      link: "/booking-availablity",
+      link: "/sign-in",
       icon: <RiArrowDropDownLine className="text-black text-4xl" />,
     },
     { name: "Guest Spots", link: "/guest-spot" },
@@ -90,7 +118,8 @@ const NavBar = () => {
     { name: "Discover", link: "/" },
     {
       name: "Book an Artist",
-      link: "/booking-availablity",
+      Dropdown: bookArtistMenu,
+      // link: "/booking-availablity",
       icon: <RiArrowDropDownLine className="text-black text-4xl" />,
     },
     { name: "Guest Spots", link: "/guest-spot" },

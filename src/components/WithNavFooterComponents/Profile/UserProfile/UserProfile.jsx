@@ -1,8 +1,5 @@
 "use client"
-import { AllImages } from "@/assets/images/AllImages";
 import { ConfigProvider, Form, Input, Select } from "antd";
-import Image from "next/image";
-import { FaTrash, FaUpload } from "react-icons/fa6";
 const UserProfile = () => {
     const onFinish = (values) => {
         console.log('Received values of form:', values);
