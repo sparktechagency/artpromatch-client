@@ -116,8 +116,9 @@ const NavBar = () => {
       icon: <RiArrowDropDownLine className="text-black text-4xl" />,
       isDropdown: true,
       dropdownItems: [
-        { key: "1", label: <Link href="/artist-signup">Artist</Link> },
-        { key: "2", label: <Link href="/piercer-signup">Piercer</Link> },
+        { key: "1", label: <Link href="">Tattoo Artists</Link> },
+        { key: "2", label: <Link href="">Body Piercers</Link> },
+        { key: "3", label: <Link href="">Studios</Link> },
       ],
     },
     { name: "Guest Spots", link: "/guest-spot" },
