@@ -7,7 +7,7 @@ import { FaX } from "react-icons/fa6";
 import LeftsideBar from "@/components/WithNavFooterComponents/Profile/Message/LeftsideBar/LeftsideBar";
 import Image from "next/image";
 import { AllImages } from "@/assets/images/AllImages";
-import { SearchOutlined, MoreOutlined, AudioOutlined } from "@ant-design/icons";
+import { SearchOutlined, MoreOutlined } from "@ant-design/icons";
 const MessegeLayout = ({ children }) => {
     const [isDrawerVisible, setIsDrawerVisible] = useState(false);
     const showDrawer = () => setIsDrawerVisible(true);
