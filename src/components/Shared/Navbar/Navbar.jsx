@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import "antd/dist/reset.css";
-import { Button, Drawer, Dropdown, Menu, Modal,  } from "antd";
+import { Button, Drawer, Dropdown, Menu, Modal } from "antd";
 import { RxHamburgerMenu } from "react-icons/rx";
 import Link from "next/link";
 import Image from "next/image";
@@ -13,15 +13,10 @@ import { IoIosNotificationsOutline } from "react-icons/io";
 import { AiOutlineMessage } from "react-icons/ai";
 import NotificationModal from "@/components/WithNavFooterComponents/Profile/NotificationModal/NotificationModal";
 import { useRouter } from "next/navigation";
-import Cookies from 'universal-cookie';
 const NavBar = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
-  // console.log(isLogin);
-  const cookies = new Cookies();
-  cookies.set('isLogin', isLogin);
   const router = useRouter();
 
   useEffect(() => {
@@ -56,7 +51,6 @@ const NavBar = () => {
   const handleCancelForNotification = () => {
     setIsModalOpenForNotification(false);
   };
-  // const user = false;
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -71,61 +65,91 @@ const NavBar = () => {
     }
   }, []);
 
+  const items = [
+    {
+      key: "1",
+      label: (
+        <Link
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://www.antgroup.com"
+        >
+          1st menu item
+        </Link>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <Link
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://www.aliyun.com"
+        >
+          2nd menu item
+        </Link>
+      ),
+    },
+    {
+      key: "3",
+      label: (
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://www.luohanacademy.com"
+        >
+          3rd menu item
+        </a>
+      ),
+    },
+  ];
 
-  const bookArtistMenu = (
-    <Menu>
-      <Menu.Item key="1">
-        <Link href="/">Artist 1</Link>
-      </Menu.Item>
-      <Menu.Item key="2">
-        <Link href="/">Artist 2</Link>
-      </Menu.Item>
-      <Menu.Item key="3">
-        <Link href="/">Artist 3</Link>
-      </Menu.Item>
-    </Menu>
-  );
-
-  const joinAsMenu = (
-    <Menu>
-      <Menu.Item key="1">
-        <Link href="/">Join as an Artist</Link>
-      </Menu.Item>
-      <Menu.Item key="2">
-        <Link href="/">Join as a Client</Link>
-      </Menu.Item>
-    </Menu>
-  );
-
-
-  console.log()
   const beforeLoginLabels = [
     { name: "Discover", link: "/" },
-    {
-      name: "Book an Artist",
-      link: "/sign-in",
-      icon: <RiArrowDropDownLine className="text-black text-4xl" />,
-    },
     { name: "Guest Spots", link: "/guest-spot" },
-    {
-      name: "Join As",
-      link: "/sign-in",
-      icon: <RiArrowDropDownLine className="text-black text-4xl" />,
-    },
     { name: "Help", link: "/help" },
   ];
   const labels = [
     { name: "Discover", link: "/" },
     {
       name: "Book an Artist",
-      Dropdown: bookArtistMenu,
-      // link: "/booking-availablity",
       icon: <RiArrowDropDownLine className="text-black text-4xl" />,
+      isDropdown: true,
+      dropdownItems: [
+        { key: "1", label: <Link href="/artist-signup">Artist</Link> },
+        { key: "2", label: <Link href="/piercer-signup">Piercer</Link> },
+      ],
     },
     { name: "Guest Spots", link: "/guest-spot" },
     {
       name: "Join As",
-      link: "/sign-in",
+      isDropdown: true,
+      dropdownItems: [
+        {
+          key: "1",
+          label: (
+            <Link href="https://client-artpromatch-4cq2vqx1n-rabeyaakter78s-projects.vercel.app/">
+              Client
+            </Link>
+          ),
+        },
+        {
+          key: "2",
+          label: (
+            <Link href="https://artist-artpromatch-ckakmcc6u-rabeyaakter78s-projects.vercel.app/">
+              Artist
+            </Link>
+          ),
+        },
+        {
+          key: "3",
+          label: (
+            <Link href="https://artpromatch-business-nh3gxj7po-rabeyaakter78s-projects.vercel.app/">
+              Business Owner
+            </Link>
+          ),
+        },
+      ],
       icon: <RiArrowDropDownLine className="text-black text-4xl" />,
     },
     { name: "Help", link: "/help" },
@@ -145,20 +169,38 @@ const NavBar = () => {
           </Link>
 
           <div className="hidden lg:flex flex-grow justify-center space-x-6">
-            {(isLogin ? labels : beforeLoginLabels).map((item, index) => (
-              <Link
-                href={item.link}
-                key={index}
-                className="text-lg font-medium hover:text-blue-600 transition flex items-center"
-              >
-                {item.name} {item.icon && item.icon}
-              </Link>
-            ))}
+            {(isLogin ? labels : beforeLoginLabels).map((item, index) =>
+              item.isDropdown ? (
+                <Dropdown
+                  key={index}
+                  menu={{ items: item.dropdownItems }}
+                  placement="bottom"
+                >
+                  <button className="text-lg font-medium hover:text-blue-600 transition flex items-center">
+                    {item.name} {item.icon}
+                  </button>
+                </Dropdown>
+              ) : (
+                <Link
+                  href={item.link}
+                  key={index}
+                  className="text-lg font-medium hover:text-blue-600 transition flex items-center"
+                >
+                  {item.name} {item.icon && item.icon}
+                </Link>
+              )
+            )}
           </div>
 
           {isLogin ? (
             <div className="hidden lg:flex items-center space-x-4">
-              <IoIosNotificationsOutline onClick={showModalForNotification} className="cursor-pointer h-5 w-5" />
+              <Link href="/favorites">
+              <CiHeart className="h-5 w-5 cursor-pointer"/>
+              </Link>
+              <IoIosNotificationsOutline
+                onClick={showModalForNotification}
+                className="cursor-pointer h-5 w-5"
+              />
               <Link href="/message">
                 <AiOutlineMessage className="h-5 w-5" />
               </Link>
@@ -171,6 +213,7 @@ const NavBar = () => {
                   className="h-10 w-10 rounded-full"
                 />
               </Link>
+             
               <button onClick={handleLogout} className="text-red-500">
                 Logout
               </button>
@@ -238,7 +281,11 @@ const NavBar = () => {
           </div>
         </Drawer>
       </nav>
-      <Modal open={isModalOpenForNotification} onOk={handleOkForNotification} onCancel={handleCancelForNotification}>
+      <Modal
+        open={isModalOpenForNotification}
+        onOk={handleOkForNotification}
+        onCancel={handleCancelForNotification}
+      >
         <NotificationModal></NotificationModal>
       </Modal>
     </div>
