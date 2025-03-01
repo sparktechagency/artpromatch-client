@@ -195,7 +195,7 @@ const NavBar = () => {
 
           {isLogin ? (
             <div className="hidden lg:flex items-center space-x-4">
-              <Link href="/favorites">
+              <Link href="/favourites">
               <CiHeart className="h-5 w-5 cursor-pointer"/>
               </Link>
               <IoIosNotificationsOutline

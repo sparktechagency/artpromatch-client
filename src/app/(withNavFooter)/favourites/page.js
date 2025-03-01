@@ -3,8 +3,7 @@ import { AllImages } from "@/assets/images/AllImages";
 import { Typography } from "antd";
 import Image from "next/image";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
-import { IoLocationOutline } from "react-icons/io5";
-import { CiSearch } from "react-icons/ci";
+
 import Link from "next/link";
 import { FaCalendarDay, FaDollarSign } from "react-icons/fa6";
 
@@ -20,10 +19,10 @@ const FavouritesPage = () => {
                     Easily revisit and book the artists you love.
                 </Typography.Text>
                 <div className='flex flex-col md:flex-row justify-center items-center md:gap-5 mb-20'>
-                    <Link href="/sign-in">
+                    <Link href="/">
                         <button className='bg-black text-white py-3 px-6 rounded-lg mt-5'>Discover More Artists</button>
                     </Link>
-                    <Link href="/sign-in">
+                    <Link href="/">
                         <button className='bg-primary text-white py-3 px-6 rounded-lg mt-5 flex justify-center items-center gap-2'>Book a Guest Spot <IoIosArrowForward /></button>
                     </Link>
                 </div>
@@ -38,10 +37,7 @@ const FavouritesPage = () => {
 
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 my-10">
-                {/* <motion.div
-                                whileHover={{ scale: 1.1 }}
-                                transition={{ duration: 0.8 }}
-                            > */}
+            
                 <div className="border rounded-xl p-2">
 
                     <Image src={AllImages.image1} alt="image" height={300} width={500}></Image>
