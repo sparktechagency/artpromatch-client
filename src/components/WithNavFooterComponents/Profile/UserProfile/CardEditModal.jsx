@@ -2,13 +2,11 @@
 
 import { AllImages } from '@/assets/images/AllImages';
 import { ConfigProvider, DatePicker, Form, Input, InputNumber, Modal, Select, Tag } from 'antd';
-import { Option } from 'antd/es/mentions';
 import Image from 'next/image';
 import React, { useState } from 'react';
-import ReviewBookingModal from './ReviewBookingModal';
 import ConfirmModal from './ConfirmModal';
 
-const PaymentModal = ({ handleOk, handleCancel }) => {
+const CardEditModal = ({ handleOk, handleCancel }) => {
     const onFinish = (values) => {
         console.log('Received values of form:', values);
     }
@@ -28,7 +26,7 @@ const PaymentModal = ({ handleOk, handleCancel }) => {
     };
     return (
         <div>
-            {/* <div className="flex justify-between items-center mb-4  border-0 border-b">
+            <div className="flex justify-between items-center mb-4  border-0 border-b">
                 <div className="flex items-center gap-3">
                     <Image
                         src={AllImages.user}
@@ -50,12 +48,12 @@ const PaymentModal = ({ handleOk, handleCancel }) => {
                     <p>A deposit is required to secure your appointment.</p>
                 </div>
                 <h1 className='text-xl font-bold text-primary'>$50.00</h1>
-            </div> */}
+            </div>
 
 
 
             <div className='my-5'>
-                {/* <div className='flex justify-start items-center gap-5 border-0 border-b mb-2 pb-2'>
+                <div className='flex justify-start items-center gap-5 border-0 border-b mb-2 pb-2'>
                     <div className='border p-2 rounded-xl h-16 w-20 flex flex-col justify-center items-center hover:border-primary'>
                         <Image src={AllImages.VisaMastercard} height={0} width={0} alt='card' className='object-contain h-5 w-14'></Image>
                         <p>Card</p>
@@ -64,7 +62,7 @@ const PaymentModal = ({ handleOk, handleCancel }) => {
                         <Image src={AllImages.Paypal} height={0} width={0} alt='card' object-contain h-5 w-14></Image>
                         <p>Paypal</p>
                     </div>
-                </div> */}
+                </div>
                 <Form
                     name="contact"
                     initialValues={{ remember: false }}
@@ -85,7 +83,7 @@ const PaymentModal = ({ handleOk, handleCancel }) => {
                     </Form.Item>
                     <div className='flex justify-between items-center gap-2 rounded-xl'>
                         <Form.Item name="expiry" label={<p className="font-semibold">Expiry</p>}>
-                            <DatePicker></DatePicker>
+                            <Input placeholder='MM/YY'></Input>
                         </Form.Item>
                         <Form.Item name="CVC" label={<p className="font-semibold">CVC</p>}>
                             <Input placeholder='000'></Input>
@@ -101,7 +99,7 @@ const PaymentModal = ({ handleOk, handleCancel }) => {
                     </div>
                     <Form.Item >
                         <button
-                            onClick={handleOk}
+                            onClick={showModalForConfirm}
                             className="w-full py-2 bg-primary rounded-xl  text-white font-semiboldbold md:text-xl  shadow-lg"
                             type="submit"
                         >
@@ -122,10 +120,13 @@ const PaymentModal = ({ handleOk, handleCancel }) => {
                     }
                 }}
             >
-             
+                {/* modal for add program */}
+                <Modal open={isModalOpenForConfirm} onOk={handleOkForConfirm} onCancel={handleCancelForConfirm} footer={false} >
+                    <ConfirmModal handleOk={handleOkForConfirm} handleCancel={handleCancelForConfirm} />
+                </Modal>
             </ConfigProvider>
         </div>
     );
 };
 
-export default PaymentModal; 
+export default CardEditModal; 

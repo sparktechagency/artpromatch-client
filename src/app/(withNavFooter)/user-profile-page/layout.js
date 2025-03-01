@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import React, { useState } from "react";
-import { Drawer, Button } from "antd";
+import { Drawer, Button, Upload, message } from "antd";
 import { MenuOutlined } from "@ant-design/icons";
 import Image from "next/image";
 import { FaTrash, FaUpload } from "react-icons/fa6";
@@ -24,6 +24,26 @@ const UserDashboardLayout = ({ children }) => {
     { name: "Linked Accounts", path: "/user-profile-page/linked-accounts" },
   ];
 
+  const props = {
+    name: 'file',
+    action: 'https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload',
+    headers: {
+      authorization: 'authorization-text',
+    },
+    onChange(info) {
+      if (info.file.status !== 'uploading') {
+        console.log(info.file, info.fileList);
+      }
+      if (info.file.status === 'done') {
+        message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === 'error') {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  };
+  const handleDelete = () => {
+    message.success("Removed Successfully");
+  };
   return (
     <div className="container mx-auto mt-20 px-2 md:px-0">
       <div className="my-5 w-full flex flex-col md:flex-row">
@@ -107,11 +127,13 @@ const UserDashboardLayout = ({ children }) => {
               </div>
             </div>
             <div className="flex flex-col md:flex-row items-center gap-2  mb-5 md:mb-0">
+              <Upload {...props}>
               <button className="flex items-center gap-2 px-10 py-2 rounded-xl border hover:border-primary hover:text-primary">
                 <FaUpload /> Uplaod
               </button>
+              </Upload>
               <button className="flex items-center gap-2 px-10 py-2 rounded-xl border hover:border-primary hover:text-primary">
-                <FaTrash /> Remove
+                <FaTrash onClick={handleDelete} /> Remove
               </button>
             </div>
           </div>
