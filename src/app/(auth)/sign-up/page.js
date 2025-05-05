@@ -6,27 +6,40 @@ import { useSignUpMutation } from "@/redux/features/auth/authApi";
 import { Form, Input, message, Typography } from "antd";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const SignUp = () => {
+  const router = useRouter();
   const [signUp] = useSignUpMutation();
   const onFinish = async (values) => {
     try {
-      // console.log(values);
       const userInfo = {
         fullName: values.name,
         email: values.email,
         phoneNumber: values.phone,
         password: values.password,
       };
-      const result = await signUp(userInfo).unwrap();
-      // if the user is already registered, the api will return an error message: TODO
 
-      message.success("User Registered Successfully");
+      const result = await signUp(userInfo).unwrap();
+        console.log("otp:", result?.data?.otp);
+
+      if (result?.data?.token) {
+        localStorage.setItem("token", result?.data?.token);
+      }
+
+      if (result.success) {
+        message.success("User Registered Successfully");
+        router.push("/account-verification");
+      } else {
+        message.error("User Registration Failed");
+      }
     } catch (error) {
-      message.error(error.data.message);
+      console.error(error); 
+      message.error("User Registration Failed");
     }
   };
+
   return (
     <div className="container mx-auto my-10 md:my-40">
       <div className="flex justify-center items-center">
