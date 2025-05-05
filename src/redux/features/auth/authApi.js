@@ -24,6 +24,13 @@ export const authApi = baseApi.injectEndpoints({
         body: credentials,
       }),
     }),
+    userTypeSelection: builder.mutation({
+      query: (credentials) => ({
+        url: "auth/create-profile",
+        method: "POST",
+        body: credentials,
+      }),
+    }),
 
     login: builder.mutation({
       query: (credentials) => ({
@@ -35,5 +42,10 @@ export const authApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useSignUpMutation, useVerifySignUpMutation,useSendOtpAgainMutation, useLoginMutation } =
-  authApi;
+export const {
+  useSignUpMutation,
+  useVerifySignUpMutation,
+  useSendOtpAgainMutation,
+  useUserTypeSelectionMutation,
+  useLoginMutation,
+} = authApi;
