@@ -3,13 +3,17 @@
 import Image from "next/image";
 import { AllImages } from "@/assets/images/AllImages";
 import { useRouter } from "next/navigation";
-import { useVerifySignUpMutation } from "@/redux/features/auth/authApi";
+import {
+  useSendOtpAgainMutation,
+  useVerifySignUpMutation,
+} from "@/redux/features/auth/authApi";
 import { Flex, Input, message } from "antd";
 import { useState } from "react";
 
 const AccountVerification = () => {
   const router = useRouter();
   const [verifySignUp] = useVerifySignUpMutation();
+  const [sendOtpAgain] = useSendOtpAgainMutation();
   const [otp, setOtp] = useState("");
 
   const onChange = (value) => {
@@ -18,11 +22,11 @@ const AccountVerification = () => {
 
   const handleSubmit = async () => {
     const token = localStorage.getItem("token");
-    console.log("token", token);
+    // console.log("token", token);
 
     try {
       const response = await verifySignUp({ otp }).unwrap();
-      console.log("response", response);
+      //   console.log("response", response);
       if (response.success) {
         message.success("Account verified!");
         router.push("/user-type-selection");
@@ -31,6 +35,28 @@ const AccountVerification = () => {
       }
     } catch (error) {
       console.log("error", error);
+      message.error("Verification failed.");
+    }
+  };
+
+  const handleResendOtp = async () => {
+    try {
+      const response = await sendOtpAgain({ otp }).unwrap();
+      if (response.success) {
+        message.success("OTP sent successfully!");
+      } else {
+        message.error("Failed to send OTP.");
+      }
+    } catch (error) {
+      console.log("error", error);
+
+      if (error?.data?.message === "jwt expired") {
+        message.error("Session expired. Please sign in again.");
+        localStorage.removeItem("token");
+        // router.push("/sign-in"); 
+        return;
+      }
+
       message.error("Verification failed.");
     }
   };
@@ -69,9 +95,12 @@ const AccountVerification = () => {
 
           <p className="text-center mt-5">
             Didn’t get the code?{" "}
-            <a href="/sign-up" className="text-primary">
+            <span
+              onClick={handleResendOtp}
+              className="text-primary cursor-pointer"
+            >
               Send Again
-            </a>
+            </span>
           </p>
         </div>
       </div>
