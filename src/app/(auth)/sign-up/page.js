@@ -22,7 +22,11 @@ const SignUp = () => {
       };
 
       const result = await signUp(userInfo).unwrap();
-      console.log(result);
+        console.log("otp:", result?.data?.otp);
+
+      if (result?.data?.token) {
+        localStorage.setItem("token", result?.data?.token);
+      }
 
       if (result.success) {
         message.success("User Registered Successfully");
@@ -31,7 +35,7 @@ const SignUp = () => {
         message.error("User Registration Failed");
       }
     } catch (error) {
-      console.error(error); // Log the error for debugging
+      console.error(error); 
       message.error("User Registration Failed");
     }
   };

@@ -6,8 +6,9 @@ import { message } from "antd";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `${BASE_URL}`,
-  prepareHeader: (headers, { getState }) => {
-    const token = getState().auth.token;
+  prepareHeaders: (headers, { getState }) => {
+    const token = getState().auth.token|| localStorage.getItem("token");
+    console.log("token", token);
     if (token) {
       headers.set("authorization", `Bearer ${token}`);
     }
