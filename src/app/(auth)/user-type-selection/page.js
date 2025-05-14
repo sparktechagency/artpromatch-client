@@ -34,8 +34,9 @@ const UserTypeSelection = () => {
   const [value, setValue] = useState(1);
   const [userTypeSelection] = useUserTypeSelectionMutation();
   const router = useRouter();
+   const selectedRole = userRoles.find((role) => role.value === value);
   const onFinish = async () => {
-    const selectedRole = userRoles.find((role) => role.value === value);
+   
     try {
       console.log("Selected role:", selectedRole);
 
@@ -56,7 +57,7 @@ const UserTypeSelection = () => {
             initialValues={{ remember: true }}
             layout="vertical"
             className="w-full md:w-[600px] bg-white px-2 rounded-2xl"
-            onFinish={onFinish}
+            // onFinish={onFinish}
           >
             <div className="mb-4 flex flex-col justify-center items-center text-center">
               <Image src={AllImages.logo} width={50} height={50} alt="logo" />
@@ -97,14 +98,19 @@ const UserTypeSelection = () => {
               </Radio.Group>
             </div>
 
-            {/* <Link href="/preference-selection"> */}
-            <button
-              type="submit"
-              className="w-full bg-primary text-white py-3 rounded-lg mt-5"
+            <Link
+              href={{
+                pathname: "/preference-selection",
+                query: { role: selectedRole?.label },
+              }}
             >
-              Continue
-            </button>
-            {/* </Link> */}
+              <button
+                type="submit"
+                className="w-full bg-primary text-white py-3 rounded-lg mt-5"
+              >
+                Continue
+              </button>
+            </Link>
           </Form>
         </div>
       </div>

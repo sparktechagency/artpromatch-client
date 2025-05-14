@@ -13,7 +13,7 @@ const PreferenceSelection = () => {
 
   const role = SearchParams.get("role");
 //   const { role } = router.query;
-  console.log("role", role);
+  // console.log("role", role);
 
 const handleSetPreference = () => {
   router.push(`/preferences?role=${encodeURIComponent(role)}`);

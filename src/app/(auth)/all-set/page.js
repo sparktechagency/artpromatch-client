@@ -5,9 +5,16 @@ import { AllImages } from '@/assets/images/AllImages';
 import { Form, Typography } from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+
 import React from 'react';
 
 const AllSet = () => {
+   const SearchParams = useSearchParams();
+  const role = SearchParams.get("role");
+
+  console.log("role", role);
+
 
     return (
         <div className="py-16 md:py-0 h-[100vh] w-full flex items-center justify-center ">
