@@ -6,9 +6,10 @@ import { message } from "antd";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `${BASE_URL}`,
+  credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = getState().auth.token|| localStorage.getItem("token");
-    console.log("token", token);
+    // console.log("token", token);
     if (token) {
       headers.set("authorization", `Bearer ${token}`);
     }
@@ -36,23 +37,23 @@ const baseQueryWithRefreshToken = async (args, api, extraOptions) => {
     message.error(result.error.data.message);
   }
   //   unAUthorized:
-  if (result?.error?.status === 401) {
-    const res = await fetch(`${BASE_URL}/auth/refresh-token`, {
-      method: "POST",
-      body: JSON.stringify({
-        refreshToken: api.getState().auth.refreshToken,
-      }),
-    });
-    const data = await res.json();
-    console.log(data);
+  // if (result?.error?.status === 401) {
+  //   const res = await fetch(`${BASE_URL}/auth/refresh-token`, {
+  //     method: "POST",
+  //     body: JSON.stringify({
+  //       refreshToken: api.getState().auth.refreshToken,
+  //     }),
+  //   });
+  //   const data = await res.json();
+  //   console.log(data);
 
-    if (data.access) {
-      localStorage.setItem("token", data.accessToken);
-      result = await baseQuery(args, api, extraOptions);
-    } else {
-      api.dispatch(logout());
-    }
-  }
+  //   if (data.access) {
+  //     localStorage.setItem("token", data.accessToken);
+  //     result = await baseQuery(args, api, extraOptions);
+  //   } else {
+  //     api.dispatch(logout());
+  //   }
+  // }
   return result;
 };
 

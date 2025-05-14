@@ -35,11 +35,13 @@ const UserTypeSelection = () => {
   const [userTypeSelection] = useUserTypeSelectionMutation();
   const router = useRouter();
   const onFinish = async () => {
+    const selectedRole = userRoles.find((role) => role.value === value);
     try {
-      const selectedRole = userRoles.find((role) => role.value === value);
-      //   console.log("Selected role:", selectedRole);
-      await userTypeSelection({ role: selectedRole.label }).unwrap();
-      router.push("/preference-selection");
+      console.log("Selected role:", selectedRole);
+
+      router.push(
+        `/preference-selection?role=${encodeURIComponent(selectedRole?.label)}`
+      );
     } catch (error) {
       console.error("Error selecting user type:", error);
     }
