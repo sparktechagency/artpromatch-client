@@ -39,6 +39,8 @@ const Preferences = () => {
     "Abstract",
   ];
 
+
+
   return (
     <div className="py-16 md:py-0 h-[100vh] w-full flex items-center justify-center">
       <div className="pt-32 pb-16">
