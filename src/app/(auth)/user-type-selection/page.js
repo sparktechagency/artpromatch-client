@@ -34,9 +34,8 @@ const UserTypeSelection = () => {
   const [value, setValue] = useState(1);
   const [userTypeSelection] = useUserTypeSelectionMutation();
   const router = useRouter();
-   const selectedRole = userRoles.find((role) => role.value === value);
+  const selectedRole = userRoles.find((role) => role.value === value);
   const onFinish = async () => {
-   
     try {
       console.log("Selected role:", selectedRole);
 
@@ -48,6 +47,11 @@ const UserTypeSelection = () => {
     }
   };
 
+  const handleNext = () => {
+    router.push(`/preference-selection`);
+    localStorage.setItem("role", selectedRole?.label);
+  };
+localStorage.setItem("role", selectedRole?.label);
   return (
     <div className="py-16 md:py-0 h-[100vh] w-full flex items-center justify-center">
       <div className="pt-32 pb-16">
@@ -98,19 +102,21 @@ const UserTypeSelection = () => {
               </Radio.Group>
             </div>
 
-            <Link
+            <button
+              onClick={handleNext}
+              type="submit"
+              className="w-full bg-primary text-white py-3 rounded-lg mt-5"
+            >
+              Continue
+            </button>
+            {/* <Link
               href={{
                 pathname: "/preference-selection",
                 query: { role: selectedRole?.label },
               }}
             >
-              <button
-                type="submit"
-                className="w-full bg-primary text-white py-3 rounded-lg mt-5"
-              >
-                Continue
-              </button>
-            </Link>
+          
+            </Link> */}
           </Form>
         </div>
       </div>

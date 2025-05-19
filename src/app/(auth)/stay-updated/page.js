@@ -18,6 +18,7 @@ const StayUpdated = () => {
   const handleTypeChange = (e) => {
     setSelectedType(e.target.value);
     console.log("Selected Type:", e.target.value);
+    localStorage.setItem("notificationPreferences", e.target.value);
   };
 
   return (
@@ -66,10 +67,7 @@ const StayUpdated = () => {
             </Radio.Group>
 
             <Link
-              href={{
-                pathname: "/all-set",
-                query: { selectedType: selectedType },
-              }}
+              href="/all-set"
             >
               <button className="w-full bg-primary text-white py-3 rounded-lg mt-5">
                 Continue

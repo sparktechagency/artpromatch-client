@@ -1,14 +1,7 @@
 "use client";
 
 import { AllImages } from "@/assets/images/AllImages";
-import {
-  ConfigProvider,
-  Form,
-  Input,
-  Slider,
-  Steps,
-  Typography,
-} from "antd";
+import { ConfigProvider, Form, Input, Slider, Steps, Typography } from "antd";
 import Image from "next/image";
 import React, { useState } from "react";
 import { FaLocationArrow } from "react-icons/fa6";
@@ -19,18 +12,20 @@ const PreferedLocation = () => {
   const [current, setCurrent] = useState(0);
   const router = useRouter();
 
-  const data = {
-    longitude: 90.4125,
-    latitude: 23.8103,
-  };
 
   const radius = value;
 
+ const data = {
+  longitude: 90.4125,
+  latitude: 23.8103,
+};
+localStorage.setItem("location", JSON.stringify(data));
+
+  localStorage.setItem("radius", radius);
+
+  // localStorage.setItem("location",location);
   const handleContinue = () => {
-    router.push(
-        // "prefered-service"
-      `/prefered-service?latitude=${data.latitude}&longitude=${data.longitude}&radius=${radius}`
-    );
+    router.push(`/prefered-service`);
   };
 
   const onChange = (value) => {
@@ -48,12 +43,7 @@ const PreferedLocation = () => {
             className="w-full md:w-[600px] bg-white px-2 rounded-2xl"
           >
             <div className="mb-4 flex flex-col justify-center items-center text-center">
-              <Image
-                src={AllImages.logo}
-                width={50}
-                height={50}
-                alt="logo"
-              />
+              <Image src={AllImages.logo} width={50} height={50} alt="logo" />
               <h2 className="text-center text-2xl font-bold mt-6 mb-2 text-primary">
                 Where do you want to find artists or studios?
               </h2>
@@ -107,9 +97,7 @@ const PreferedLocation = () => {
               }}
             >
               <div className="mt-4">
-                <p className="text-gray-700 font-medium">
-                  Show results within
-                </p>
+                <p className="text-gray-700 font-medium">Show results within</p>
                 <Slider
                   value={value}
                   min={5}
