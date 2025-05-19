@@ -10,13 +10,12 @@ import React from "react";
 const PreferenceSelection = () => {
   const router = useRouter();
   const SearchParams = useSearchParams();
-
   const role = SearchParams.get("role");
-//   const { role } = router.query;
-  // console.log("role", role);
+
 
 const handleSetPreference = () => {
-  router.push(`/preferences?role=${encodeURIComponent(role)}`);
+  router.push(`/preferences`);
+
 };
 
 

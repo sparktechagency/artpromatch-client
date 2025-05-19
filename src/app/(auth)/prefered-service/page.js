@@ -18,6 +18,7 @@ const services = [
 const PreferdService = () => {
   const [current, setCurrent] = useState(0);
   const [selectedServices, setSelectedServices] = useState([]);
+  localStorage.setItem("lookingFor", selectedServices);
   console.log("selectedServices", selectedServices);
   const handleServiceChange = (service) => {
     setSelectedServices((prev) =>
@@ -76,10 +77,7 @@ const PreferdService = () => {
             </div>
 
             <Link
-              href={{
-                pathname: "/stay-updated",
-                query: { selectedServices: selectedServices },
-              }}
+              href="/stay-updated"
             >
               <button className="w-full bg-primary text-white py-3 rounded-lg mt-5">
                 Get Started

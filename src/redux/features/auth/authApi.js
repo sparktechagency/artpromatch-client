@@ -39,6 +39,16 @@ export const authApi = baseApi.injectEndpoints({
         body: credentials,
       }),
     }),
+
+    createProfile: builder.mutation({
+      query: (credentials) => ({
+        url: "/auth/create-profile",
+        method: "POST",
+        body: credentials,
+      }),
+    }),
+
+
   }),
 });
 
@@ -48,4 +58,6 @@ export const {
   useSendOtpAgainMutation,
   useUserTypeSelectionMutation,
   useLoginMutation,
+  useCreateProfileMutation
 } = authApi;
+

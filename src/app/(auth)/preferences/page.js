@@ -10,7 +10,7 @@ import React, { useState } from "react";
 const Preferences = () => {
   const [current, setCurrent] = useState(0);
   const [selectedArt, setSelectedArt] = useState([]);
-  console.log("selectedArt", selectedArt);
+  localStorage.setItem("favoriteTattoos", JSON.stringify(selectedArt));
   const handleSelect = (value) => {
     setSelectedArt((prevSelectedArt) =>
       prevSelectedArt.includes(value)
@@ -38,8 +38,6 @@ const Preferences = () => {
     "Portraits",
     "Abstract",
   ];
-
-
 
   return (
     <div className="py-16 md:py-0 h-[100vh] w-full flex items-center justify-center">
@@ -91,10 +89,7 @@ const Preferences = () => {
 
             {/* Navigation buttons */}
             <Link
-              href={{
-                pathname: "/preferd-location",
-                query: { art: selectedArt.join(",") },
-              }}
+              href="/preferd-location"
             >
               <button className="w-full bg-primary text-white py-3 rounded-lg mt-5">
                 Get Started
