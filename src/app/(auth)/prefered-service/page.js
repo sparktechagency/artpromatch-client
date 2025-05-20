@@ -4,7 +4,7 @@ import { AllImages } from "@/assets/images/AllImages";
 import { Checkbox, Form, Steps, Typography } from "antd";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const services = [
   "Tattoos",
@@ -16,21 +16,28 @@ const services = [
 ];
 
 const PreferdService = () => {
-  const [current, setCurrent] = useState(0);
-  const [selectedServices, setSelectedServices] = useState([]);
-  localStorage.setItem("lookingFor", selectedServices);
-  console.log("selectedServices", selectedServices);
-  const handleServiceChange = (service) => {
-    setSelectedServices((prev) =>
-      prev.includes(service)
-        ? prev.filter((s) => s !== service)
-        : [...prev, service]
-    );
-  };
 
-  const onChange = (value) => {
-    setCurrent(value);
-  };
+const [current, setCurrent] = useState(0);
+const [selectedServices, setSelectedServices] = useState([]);
+
+// Update localStorage whenever selectedServices changes
+useEffect(() => {
+  localStorage.setItem("lookingFor", JSON.stringify(selectedServices));
+  console.log("selectedServices", selectedServices);
+}, [selectedServices]);
+
+const handleServiceChange = (service) => {
+  setSelectedServices((prev) =>
+    prev.includes(service)
+      ? prev.filter((s) => s !== service)
+      : [...prev, service]
+  );
+};
+
+const onChange = (value) => {
+  setCurrent(value);
+};
+
 
   return (
     <div className="py-16 md:py-0 h-[100vh] w-full flex items-center justify-center ">

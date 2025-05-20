@@ -8,7 +8,7 @@ import React, { useState } from "react";
 
 const StayUpdated = () => {
   const [current, setCurrent] = useState(0);
-  const [selectedType, setSelectedType] = useState("");
+  const [selectedType, setSelectedType] = useState([]);
 
   const onChange = (value) => {
     console.log("Step Changed to:", value);
@@ -17,8 +17,8 @@ const StayUpdated = () => {
 
   const handleTypeChange = (e) => {
     setSelectedType(e.target.value);
-    console.log("Selected Type:", e.target.value);
-    localStorage.setItem("notificationPreferences", e.target.value);
+    console.log("Selected Type:",selectedType);
+    JSON.stringify(localStorage.setItem("notificationPreferences", selectedType));
   };
 
   return (
@@ -46,7 +46,7 @@ const StayUpdated = () => {
               value={selectedType}
               className="flex flex-col gap-4"
             >
-              <Radio value="in-app">
+              <Radio value="app">
                 <div className="border hover:border-primary rounded-lg p-6 md:w-96">
                   <h1 className="text-xl font-bold">In-App Notifications</h1>
                   <p>Receive updates when browsing & in app.</p>

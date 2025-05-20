@@ -26,11 +26,7 @@ const NavBar = () => {
     }
   }, []);
 
-  const handleLogin = () => {
-    localStorage.setItem("isLogin", "true");
-    setIsLogin(true);
-    router.push("/");
-  };
+
 
   const handleLogout = () => {
     localStorage.setItem("isLogin", "false");
@@ -196,7 +192,7 @@ const NavBar = () => {
           {isLogin ? (
             <div className="hidden lg:flex items-center space-x-4">
               <Link href="/favourites">
-              <CiHeart className="h-5 w-5 cursor-pointer"/>
+                <CiHeart className="h-5 w-5 cursor-pointer" />
               </Link>
               <IoIosNotificationsOutline
                 onClick={showModalForNotification}
@@ -214,19 +210,18 @@ const NavBar = () => {
                   className="h-10 w-10 rounded-full"
                 />
               </Link>
-             
+
               <button onClick={handleLogout} className="text-red-500">
                 Logout
               </button>
             </div>
           ) : (
             <div className="hidden lg:flex items-center space-x-4">
-              <button
-                onClick={handleLogin}
-                className="border border-primary bg-primary px-10 py-3 rounded-md shadow-lg"
-              >
-                Log In
-              </button>
+              <Link href="/sign-in">
+                  <button className="bg-primary text-white px-10 py-3 rounded-md shadow-lg">
+                    Log In
+                  </button>
+                </Link>
               <Link href="/sign-up">
                 <button className="border border-primary text-primary px-10 py-3 rounded-md shadow-lg">
                   Sign Up
@@ -266,12 +261,11 @@ const NavBar = () => {
               </button>
             ) : (
               <>
-                <button
-                  onClick={handleLogin}
-                  className="bg-primary text-white px-10 py-3 rounded-md shadow-lg"
-                >
-                  Log In
-                </button>
+                <Link href="/sign-in">
+                  <button className="bg-primary text-white px-10 py-3 rounded-md shadow-lg">
+                    Log In
+                  </button>
+                </Link>
                 <Link href="/sign-up">
                   <button className="border border-primary text-primary px-10 py-3 rounded-md shadow-lg">
                     Sign Up

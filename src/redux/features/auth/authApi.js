@@ -11,11 +11,15 @@ export const authApi = baseApi.injectEndpoints({
       }),
     }),
     verifySignUp: builder.mutation({
-      query: (credentials) => ({
+      query: (credentials) => {
+
+        return ({
         url: "auth/verify-signup-otp",
         method: "POST",
         body: credentials,
-      }),
+      
+      })
+      },
     }),
     sendOtpAgain: builder.mutation({
       query: (credentials) => ({

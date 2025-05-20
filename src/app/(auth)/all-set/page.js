@@ -31,22 +31,25 @@ const AllSet = () => {
   };
   const radius = parseInt(localStorage.getItem("radius") || "0", 10);
   const lookingFor = localStorage.getItem("lookingFor");
-  const notificationPreferences = localStorage.getItem("notificationPreferences");
+  const notificationPreferences = localStorage.getItem(
+    "notificationPreferences"
+  );
   const role = localStorage.getItem("role");
 
   const data = {
     role: role,
     favoriteTattoos: favoriteTattoos,
     location: {
-      longitude: location.longitude,
-      latitude: location.latitude,
+      type: "Point",
+      coordinates: [77.1025, 28.7041],
     },
     radius: radius,
     lookingFor: lookingFor,
     notificationPreferences: notificationPreferences,
   };
+  // console.log("data", data);
 
-  const [createProfile] = useCreateProfileMutation();
+  const [createProfile, { isLoading }] = useCreateProfileMutation();
 
   console.log(
     role,
@@ -58,16 +61,15 @@ const AllSet = () => {
     notificationPreferences
   );
 
-  const handleAllSet = async () => {
-    console.log("clicked");
-    try {
-      const result = await createProfile(data).unwrap();
-      console.log(result);
-      message.success("Profile created successfully!");
-      router.push("/");
-    } catch (error) {
-      console.log(error);
-    }
+  const handleAllSet = () => {
+    createProfile(data)
+      .unwrap()
+      .then((res) => {
+        console.log("res", res);
+        message.success("Profile created successfully!");
+        router.push("/");
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -97,12 +99,15 @@ const AllSet = () => {
                 </Typography.Text>
               </div>
 
-              <button
-                onClick={handleAllSet}
-                className="w-full bg-primary text-white py-3 rounded-lg mt-5"
-              >
-                Continue
-              </button>
+              {
+                <button
+                type="button"
+                  onClick={handleAllSet}
+                  className="w-full bg-primary text-white py-3 rounded-lg mt-5"
+                >
+                  {isLoading ? "Loading..." : "Continue"}
+                </button>
+              }
             </Form>
           </div>
         </div>

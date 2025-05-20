@@ -13,11 +13,13 @@ const SignIn = () => {
   const [signIn] = useLoginMutation();
 
   const onFinish = (values) => {
-    console.log(values);
-    const userInfo={
-        
-    }
+    signIn(values)
+      .unwrap()
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+    localStorage.setItem("token", res?.data?.token);
   };
+
   return (
     <div className="container mx-auto my-10 md:my-40">
       <div className="flex justify-center items-center">

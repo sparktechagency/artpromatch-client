@@ -12,19 +12,19 @@ import React, { use, useState } from "react";
 const userRoles = [
   {
     value: 1,
-    label: "Client",
+    label: "CLIENT",
     description:
       "Discover and book talented artists and piercers near you or worldwide. Save your favorites, explore guest spots, and manage appointments.",
   },
   {
     value: 2,
-    label: "Artist",
+    label: "ARTIST",
     description:
       "Showcase your portfolio, attract clients, and manage bookings. Whether you're a tattoo artist or piercer, we’ve got you covered.",
   },
   {
     value: 3,
-    label: "Business Owner",
+    label: "BUSINESS",
     description:
       "Promote your business, feature talented artists, and organize events. Perfect for tattoo studios, piercing studios, or related businesses.",
   },
@@ -43,6 +43,7 @@ const UserTypeSelection = () => {
         `/preference-selection?role=${encodeURIComponent(selectedRole?.label)}`
       );
     } catch (error) {
+      error?.message && message.error(error?.message);
       console.error("Error selecting user type:", error);
     }
   };

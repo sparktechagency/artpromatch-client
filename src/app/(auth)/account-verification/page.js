@@ -21,21 +21,24 @@ const AccountVerification = () => {
   };
 
   const handleSubmit = async () => {
-    const token = localStorage.getItem("token");
-    // console.log("token", token);
-
     try {
       const response = await verifySignUp({ otp }).unwrap();
-      //   console.log("response", response);
+      const accessToken = response?.data?.accessToken;
+
       if (response.success) {
-        message.success("Account verified!");
+        message.success(response.message);
+        localStorage.removeItem("token");
+        console.log(localStorage.getItem("token"), "token from 32");
+
+        localStorage.setItem("token", accessToken);
+        console.log(localStorage.getItem("token"), "token from 35");
         router.push("/user-type-selection");
       } else {
         message.error("Invalid OTP.");
       }
     } catch (error) {
       console.log("error", error);
-      message.error("Verification failed.");
+      message.error(error?.data?.message);
     }
   };
 
@@ -53,7 +56,7 @@ const AccountVerification = () => {
       if (error?.data?.message === "jwt expired") {
         message.error("Session expired. Please sign in again.");
         localStorage.removeItem("token");
-        // router.push("/sign-in"); 
+        // router.push("/sign-in");
         return;
       }
 
