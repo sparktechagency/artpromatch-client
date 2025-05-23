@@ -7,17 +7,22 @@ import { useLoginMutation } from "@/redux/features/auth/authApi";
 import { Checkbox, Form, Input, Typography } from "antd";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const SignIn = () => {
   const [signIn] = useLoginMutation();
-
+  const router = useRouter();
   const onFinish = (values) => {
     signIn(values)
       .unwrap()
-      .then((res) => console.log(res))
+      .then((res) => {
+        if (res?.data?.accessToken) {
+          localStorage.setItem("token", res?.data?.accessToken);
+          router.push("/");
+        }
+      })
       .catch((err) => console.log(err));
-    localStorage.setItem("token", res?.data?.token);
   };
 
   return (
