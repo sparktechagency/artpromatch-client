@@ -12,20 +12,6 @@ import React from "react";
 
 const AllSet = () => {
   const router = useRouter();
-
-  // const favoriteTattoos = JSON.parse(
-  //   localStorage.getItem("favoriteTattoos") || "[]"
-  // );
-  // const location = {
-  //   longitude: localStorage.getItem("longitude"),
-  //   latitude: localStorage.getItem("latitude"),
-  // };
-  // const radius = parseInt(localStorage.getItem("radius") || "0", 10);
-  // const lookingFor = localStorage.getItem("lookingFor");
-  // const notificationPreferences = localStorage.getItem(
-  //   "notificationPreferences"
-  // );
-  // const role = localStorage.getItem("role");
   const favoriteTattoos = JSON.parse(
     localStorage.getItem("favoriteTattoos") || "[]"
   );
@@ -73,7 +59,7 @@ const AllSet = () => {
       .then((res) => {
         console.log("res", res);
         message.success("Profile created successfully!");
-        router.push("/");
+        router.push("/sign-in");
       })
       .catch((err) => console.log(err));
   };

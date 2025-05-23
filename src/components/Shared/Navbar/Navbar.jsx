@@ -17,22 +17,27 @@ const NavBar = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
+
   const router = useRouter();
 
+console.log("isLogin", isLogin);
+
   useEffect(() => {
-    const storedLoginState = localStorage.getItem("isLogin");
+    const storedLoginState = localStorage.getItem("token");
     if (storedLoginState) {
-      setIsLogin(storedLoginState === "true");
+      setIsLogin(true);
+    } else {
+      setIsLogin(false);
     }
   }, []);
 
 
 
-  const handleLogout = () => {
-    localStorage.setItem("isLogin", "false");
-    setIsLogin(false);
-    router.push("/");
-  };
+const handleLogout = () => {
+  localStorage.removeItem("token");
+  setIsLogin(false);
+  router.push("/");
+};
 
   const [isModalOpenForNotification, setIsModalOpenForNotification] =
     useState(false);
@@ -222,11 +227,11 @@ const NavBar = () => {
                     Log In
                   </button>
                 </Link>
-              <Link href="/sign-up">
+              {/* <Link href="/sign-up">
                 <button className="border border-primary text-primary px-10 py-3 rounded-md shadow-lg">
                   Sign Up
                 </button>
-              </Link>
+              </Link> */}
             </div>
           )}
 
