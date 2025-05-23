@@ -27,7 +27,7 @@ const Preferences = () => {
   };
 
   const artStyles = [
-    "Realism",
+    // "Realism",
     "Blackwork",
     "Watercolor",
     "Minimalist",
@@ -36,7 +36,7 @@ const Preferences = () => {
     "Tribal",
     "Neo-Traditional",
     "Portraits",
-    "Abstract",
+    // "Abstract",
   ];
 
   return (

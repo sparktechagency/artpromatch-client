@@ -12,14 +12,19 @@ const PreferedLocation = () => {
   const [current, setCurrent] = useState(0);
   const router = useRouter();
 
-
   const radius = value;
 
- const data = {
-  longitude: 90.4125,
-  latitude: 23.8103,
-};
-localStorage.setItem("location", JSON.stringify(data));
+  //  const data = {
+  //   longitude: 90.4125,
+  //   latitude: 23.8103,
+  // };
+
+  const data = {
+    type: "Point",
+    coordinates: [77.1025, 28.7041],
+  };
+
+  localStorage.setItem("location", JSON.stringify(data));
 
   localStorage.setItem("radius", radius);
 

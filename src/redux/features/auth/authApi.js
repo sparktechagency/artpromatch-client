@@ -11,11 +11,15 @@ export const authApi = baseApi.injectEndpoints({
       }),
     }),
     verifySignUp: builder.mutation({
-      query: (credentials) => ({
+      query: (credentials) => {
+
+        return ({
         url: "auth/verify-signup-otp",
         method: "POST",
         body: credentials,
-      }),
+      
+      })
+      },
     }),
     sendOtpAgain: builder.mutation({
       query: (credentials) => ({
@@ -41,10 +45,10 @@ export const authApi = baseApi.injectEndpoints({
     }),
 
     createProfile: builder.mutation({
-      query: (credentials) => ({
+      query: (formData) => ({
         url: "/auth/create-profile",
         method: "POST",
-        body: credentials,
+        body: formData,
       }),
     }),
 
