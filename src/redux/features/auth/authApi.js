@@ -45,10 +45,10 @@ export const authApi = baseApi.injectEndpoints({
     }),
 
     createProfile: builder.mutation({
-      query: (credentials) => ({
+      query: (formData) => ({
         url: "/auth/create-profile",
         method: "POST",
-        body: credentials,
+        body: formData,
       }),
     }),
 

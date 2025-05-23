@@ -1,10 +1,10 @@
 "use client";
 
 import { AllImages } from "@/assets/images/AllImages";
-import { Form, Radio, Steps, Typography } from "antd";
+import { Checkbox, Form, Steps, Typography } from "antd";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const StayUpdated = () => {
   const [current, setCurrent] = useState(0);
@@ -15,11 +15,15 @@ const StayUpdated = () => {
     setCurrent(value);
   };
 
-  const handleTypeChange = (e) => {
-    setSelectedType(e.target.value);
-    console.log("Selected Type:",selectedType);
-    JSON.stringify(localStorage.setItem("notificationPreferences", selectedType));
+  const handleTypeChange = (type) => {
+    setSelectedType((prev) =>
+      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
+    );
   };
+
+  useEffect(() => {
+    localStorage.setItem("notificationPreferences", JSON.stringify(selectedType));
+  }, [selectedType]);
 
   return (
     <div className="py-16 md:py-0 h-[100vh] w-full flex items-center justify-center">
@@ -41,34 +45,39 @@ const StayUpdated = () => {
               </Typography.Text>
             </div>
 
-            <Radio.Group
-              onChange={handleTypeChange}
-              value={selectedType}
-              className="flex flex-col gap-4"
-            >
-              <Radio value="app">
+            <div className="flex flex-col gap-4">
+              <Checkbox
+                checked={selectedType.includes("app")}
+                onChange={() => handleTypeChange("app")}
+              >
                 <div className="border hover:border-primary rounded-lg p-6 md:w-96">
                   <h1 className="text-xl font-bold">In-App Notifications</h1>
                   <p>Receive updates when browsing & in app.</p>
                 </div>
-              </Radio>
-              <Radio value="email">
+              </Checkbox>
+
+              <Checkbox
+                checked={selectedType.includes("email")}
+                onChange={() => handleTypeChange("email")}
+              >
                 <div className="border hover:border-primary rounded-lg p-6 md:w-96">
                   <h1 className="text-xl font-bold">Email Alerts</h1>
                   <p>Get notifications sent to your email.</p>
                 </div>
-              </Radio>
-              <Radio value="sms">
+              </Checkbox>
+
+              <Checkbox
+                checked={selectedType.includes("sms")}
+                onChange={() => handleTypeChange("sms")}
+              >
                 <div className="border hover:border-primary rounded-lg p-6 md:w-96">
                   <h1 className="text-xl font-bold">Text Messages</h1>
                   <p>Stay updated via SMS.</p>
                 </div>
-              </Radio>
-            </Radio.Group>
+              </Checkbox>
+            </div>
 
-            <Link
-              href="/all-set"
-            >
+            <Link href="/all-set">
               <button className="w-full bg-primary text-white py-3 rounded-lg mt-5">
                 Continue
               </button>

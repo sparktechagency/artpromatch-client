@@ -4,6 +4,7 @@
 import { AllImages } from "@/assets/images/AllImages";
 import { useCreateProfileMutation } from "@/redux/features/auth/authApi";
 import { Form, message, Typography } from "antd";
+import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -11,29 +12,37 @@ import React from "react";
 
 const AllSet = () => {
   const router = useRouter();
-  //   const role = localStorage.getItem("role");
-  //   const favoriteTattoos = localStorage.getItem("favoriteTattoos");
-  //   const location = localStorage.getItem("location");
-  //   const radius = localStorage.getItem("radius");
-  //   const lookingFor = localStorage.getItem("lookingFor");
-  //   const latitude = localStorage.getItem("latitude");
-  //   const longitude = localStorage.getItem("longitude");
-  //   const notificationPreferences = localStorage.getItem(
-  //     "notificationPreferences"
-  //   );
 
+  // const favoriteTattoos = JSON.parse(
+  //   localStorage.getItem("favoriteTattoos") || "[]"
+  // );
+  // const location = {
+  //   longitude: localStorage.getItem("longitude"),
+  //   latitude: localStorage.getItem("latitude"),
+  // };
+  // const radius = parseInt(localStorage.getItem("radius") || "0", 10);
+  // const lookingFor = localStorage.getItem("lookingFor");
+  // const notificationPreferences = localStorage.getItem(
+  //   "notificationPreferences"
+  // );
+  // const role = localStorage.getItem("role");
   const favoriteTattoos = JSON.parse(
     localStorage.getItem("favoriteTattoos") || "[]"
   );
+
   const location = {
     longitude: localStorage.getItem("longitude"),
     latitude: localStorage.getItem("latitude"),
   };
+
   const radius = parseInt(localStorage.getItem("radius") || "0", 10);
-  const lookingFor = localStorage.getItem("lookingFor");
-  const notificationPreferences = localStorage.getItem(
-    "notificationPreferences"
+
+  // ✅ Parse these to convert back from string to array
+  const lookingFor = JSON.parse(localStorage.getItem("lookingFor") || "[]");
+  const notificationPreferences = JSON.parse(
+    localStorage.getItem("notificationPreferences") || "[]"
   );
+
   const role = localStorage.getItem("role");
 
   const data = {
@@ -49,20 +58,17 @@ const AllSet = () => {
   };
   // console.log("data", data);
 
-  const [createProfile, { isLoading }] = useCreateProfileMutation();
+  const [createProfile, { isLoading, data: respposeData, error }] =
+    useCreateProfileMutation();
 
-  console.log(
-    role,
-    favoriteTattoos,
-    location.longitude,
-    location.latitude,
-    radius,
-    lookingFor,
-    notificationPreferences
-  );
+  const token = localStorage.getItem("token");
 
   const handleAllSet = () => {
-    createProfile(data)
+    console.log({ data, token });
+    const formData = new FormData();
+    formData.append("data", JSON.stringify(data));
+
+    createProfile(formData)
       .unwrap()
       .then((res) => {
         console.log("res", res);
@@ -101,7 +107,7 @@ const AllSet = () => {
 
               {
                 <button
-                type="button"
+                  type="button"
                   onClick={handleAllSet}
                   className="w-full bg-primary text-white py-3 rounded-lg mt-5"
                 >

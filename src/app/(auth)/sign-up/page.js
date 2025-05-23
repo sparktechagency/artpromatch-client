@@ -11,33 +11,24 @@ import React from "react";
 
 const SignUp = () => {
   const router = useRouter();
-  const [signUp] = useSignUpMutation();
-  const onFinish = async (values) => {
-    try {
+  const [signUp, {isLoading}] = useSignUpMutation();
+  const onFinish =  (values) => {
+
       const userInfo = {
         fullName: values.name,
         email: values.email,
         phoneNumber: values.phone,
         password: values.password,
-      };
-
-      const result = await signUp(userInfo).unwrap();
-        console.log("otp:", result?.data?.otp);
-
-      if (result?.data?.token) {
-        localStorage.setItem("token", result?.data?.token);
       }
 
-      if (result.success) {
+      signUp(userInfo).unwrap().then((res) => {
+        localStorage.setItem("token", res?.data?.token);
         message.success("User Registered Successfully");
         router.push("/account-verification");
-      } else {
-        message.error("User Registration Failed");
-      }
-    } catch (error) {
-      console.error(error); 
-      message.error("User Registration Failed");
-    }
+      }).catch((error) => {
+        message.error(error?.data?.message)
+      });
+
   };
 
   return (
@@ -130,6 +121,8 @@ const SignUp = () => {
               <button
                 className="bg-primary w-full px-6 py-2 rounded-md text-white"
                 htmlType="submit"
+                loading={isLoading}
+                disabled={isLoading}
               >
                 Create Account
               </button>

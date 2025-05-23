@@ -9,7 +9,6 @@ const baseQuery = fetchBaseQuery({
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = getState().auth.token|| localStorage.getItem("token");
-    console.log("token", token);
     
     if (token) {
       headers.set("authorization", `Bearer ${token}`);
@@ -34,9 +33,9 @@ const baseQueryWithRefreshToken = async (args, api, extraOptions) => {
     message.error(result.error.data.message);
   }
   //   bad request:
-  if (result?.error?.status === 400) {
-    message.error(result.error.data.message);
-  }
+  // if (result?.error?.status === 400) {
+  //   message.error(result.error.data.message);
+  // }
 
   return result;
 };
