@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={jakarta.className}>
-        <Providers>
+        <Providers >
           <AntdRegistry>{children}</AntdRegistry>
         </Providers>
       </body>

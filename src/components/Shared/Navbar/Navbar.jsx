@@ -20,7 +20,6 @@ const NavBar = () => {
 
   const router = useRouter();
 
-console.log("isLogin", isLogin);
 
   useEffect(() => {
     const storedLoginState = localStorage.getItem("token");
