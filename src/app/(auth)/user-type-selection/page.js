@@ -110,14 +110,7 @@ localStorage.setItem("role", selectedRole?.label);
             >
               Continue
             </button>
-            {/* <Link
-              href={{
-                pathname: "/preference-selection",
-                query: { role: selectedRole?.label },
-              }}
-            >
-          
-            </Link> */}
+           
           </Form>
         </div>
       </div>

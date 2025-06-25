@@ -1,9 +1,19 @@
 "use client";
+import { useUpdatePreferenceMutation } from "@/redux/features/profileApi/profileApi";
 import { DatePicker, Radio, Select } from "antd";
 import Link from "next/link";
 import React from "react";
 import { IoIosArrowForward } from "react-icons/io";
 const PreferecnePage = () => {
+  const [updatePreference] = useUpdatePreferenceMutation();
+
+  const UpdatedSelectedArt = JSON.parse(
+    localStorage.getItem("UpdatedSelectedArt")
+  );
+  const selectedPerasing = JSON.parse(
+    localStorage.getItem("selectedPerasing")
+  );
+console.log("selectedPerasing",selectedPerasing)
   return (
     <div className="p-5">
       <div className="border rounded-xl p-5 flex justify-between items-center mb-4">
@@ -16,7 +26,7 @@ const PreferecnePage = () => {
           </p>
         </div>
         <Link href="/user-profile-page/preferences/select-style">
-        <IoIosArrowForward className="bg-slate-50 rounded-full h-8 w-8" />
+          <IoIosArrowForward className="bg-slate-50 rounded-full h-8 w-8" />
         </Link>
       </div>
       <div className="border rounded-xl p-5 flex justify-between items-center mb-4">
@@ -27,7 +37,7 @@ const PreferecnePage = () => {
           </p>
         </div>
         <Link href="/user-profile-page/preferences/piercing">
-        <IoIosArrowForward className="bg-slate-50 rounded-full h-8 w-8" />
+          <IoIosArrowForward className="bg-slate-50 rounded-full h-8 w-8" />
         </Link>
       </div>
       <h1 className="text-xl font-bold">General Preferences</h1>

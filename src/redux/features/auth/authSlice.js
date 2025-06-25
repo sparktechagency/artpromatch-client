@@ -1,5 +1,4 @@
 const { createSlice } = require("@reduxjs/toolkit");
-const { act } = require("react");
 
 const initialState = {
   user: null,

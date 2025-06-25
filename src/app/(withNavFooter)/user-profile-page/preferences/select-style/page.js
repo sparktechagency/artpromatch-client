@@ -1,12 +1,45 @@
 "use client";
 
-import { AllImages } from "@/assets/images/AllImages";
-import { Form, Typography } from "antd";
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
+import { Form } from "antd";
+import { redirect, useRouter } from "next/navigation";
+import React, { useState } from "react";
 
 const SelectStyle = () => {
+  const router = useRouter();
+  const [UpdatedSelectedArt, setUpdatedSelectedArt] = useState([]);
+  // console.log("UpdatedSelectedArt", UpdatedSelectedArt);
+  localStorage.setItem(
+    "UpdatedSelectedArt",
+    JSON.stringify(UpdatedSelectedArt)
+  );
+  const [current, setCurrent] = useState(0);
+  const handleSubmit = () => {
+    router.back();
+  };
+  const artStyles = [
+    "Realism",
+    "Blackwork",
+    "Watercolor",
+    "Minimalist",
+    "Geometric",
+    "Japanese Traditional",
+    "Tribal",
+    "Neo-Traditional",
+    "Portraits",
+    "Abstract",
+  ];
+
+  const handleSelect = (value) => {
+    setUpdatedSelectedArt((prevSelectedArt) =>
+      prevSelectedArt.includes(value)
+        ? prevSelectedArt.filter((item) => item !== value)
+        : [...prevSelectedArt, value]
+    );
+  };
+  const onChange = (value) => {
+    setCurrent(value);
+  };
+
   return (
     <div>
       <div>
@@ -17,58 +50,51 @@ const SelectStyle = () => {
           Choose the tattoo styles you love the most.
         </p>
       </div>
-    
-        <div className="">
-          <Form
-            name="select-user-type"
-            initialValues={{ remember: true }}
-            layout="vertical"
-            className="mb-10"
-          >
-              <div className="grid grid-cols-5 gap-4  mb-5">
-                  <button className="px-8 py-2 rounded-3xl border hover:border-primary">
-                    Realism
-                  </button>
-                  <button className="px-8 py-2 rounded-3xl border hover:border-primary">
-                    Blackwork
-                  </button>
-                  <button className="px-8 py-2 rounded-3xl border hover:border-primary">
-                    Watercolor
-                  </button>
-                  <button className="px-8 py-2 rounded-3xl border hover:border-primary">
-                    Minimalist
-                  </button>
 
-                  <button className="px-8 py-2 rounded-3xl border hover:border-primary">
-                    Geometric
+      <div className="">
+        <Form
+          // onFinish={onFinish}
+          name="select-preference"
+          initialValues={{ remember: true }}
+          layout="vertical"
+          className="mb-10 w-full bg-white px-2 rounded-2xl"
+        >
+          {/* Buttons in groups of 4 */}
+          <div className="flex flex-col gap-4">
+            {Array.from({ length: Math.ceil(artStyles.length / 8) }, (_, i) => (
+              <div
+                key={i}
+                className="flex justify-start items-center gap-4 flex-wrap"
+              >
+                {artStyles.slice(i * 8, i * 8 + 8).map((style) => (
+                  <button
+                    key={style}
+                    type="button"
+                    onClick={() => handleSelect(style)}
+                    className={`px-4 py-2 rounded-3xl border ${
+                      UpdatedSelectedArt.includes(style)
+                        ? "border-primary text-primary font-semibold"
+                        : "hover:border-primary"
+                    }`}
+                  >
+                    {style}
                   </button>
-                  <button className="px-8 py-2 rounded-3xl border hover:border-primary">
-                    Japanese Traditional
-                  </button>
-                  <button className="px-8 py-2 rounded-3xl border hover:border-primary">
-                    Tribal
-                  </button>
-                  <button className="px-8 py-2 rounded-3xl border hover:border-primary">
-                    Neo-Traditional
-                  </button>
-                  <button className="px-8 py-2 rounded-3xl border hover:border-primary">
-                    Portraits
-                  </button>
-                  <button className="px-8 py-2 rounded-3xl border hover:border-primary">
-                    Abstract
-                  </button>
-                </div>
-            <Link href="/user-profile-page/preferences">
-              <div className=" flex justify-end items-end">
-                <button className="bg-primary text-white py-3 px-6 rounded-lg clear-start">
-                  Save
-                </button>
+                ))}
               </div>
-            </Link>
-          </Form>
-        </div>
+            ))}
+          </div>
+
+          <div className=" flex justify-end items-end">
+            <button
+              onClick={handleSubmit}
+              className="bg-primary text-white py-3 px-6 rounded-lg clear-start"
+            >
+              Save
+            </button>
+          </div>
+        </Form>
       </div>
-   
+    </div>
   );
 };
 
