@@ -6,6 +6,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { FaLocationArrow } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
+import Maps from "@/components/WithNavFooterComponents/Maps/Maps";
 
 const PreferedLocation = () => {
   const [value, setValue] = useState(8);
@@ -74,6 +75,7 @@ const PreferedLocation = () => {
                 <FaLocationArrow />
                 <p className="text-sm">Use my current location</p>
               </button>
+              <Maps />
             </Form.Item>
 
             <Form.Item className="text-center">
