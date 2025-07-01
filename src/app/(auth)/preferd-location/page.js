@@ -6,27 +6,53 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { FaLocationArrow } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
+import Maps from "@/components/WithNavFooterComponents/Maps/Maps";
 
 const PreferedLocation = () => {
   const [value, setValue] = useState(8);
   const [current, setCurrent] = useState(0);
+  const [location, setLocation] = useState(null);
   const router = useRouter();
 
   const radius = value;
 
-  //  const data = {
-  //   longitude: 90.4125,
-  //   latitude: 23.8103,
-  // };
+  console.log("location from map:", location);
 
-  const data = {
-    type: "Point",
-    coordinates: [77.1025, 28.7041],
+  const handleUseCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const { latitude, longitude } = pos.coords;
+
+          const data = {
+            type: "point",
+            coordinates: [latitude, longitude],
+          };
+          setLocation({
+            lat: latitude,
+            lng: longitude,
+          });
+          localStorage.setItem("location", JSON.stringify(data));
+          localStorage.setItem("radius", radius);
+        },
+        (err) => {
+          console.error("Geolocation error:", err.message);
+          alert("Failed to get your location. Please allow location access.");
+        }
+      );
+    } else {
+      alert("Geolocation is not supported by your browser");
+    }
   };
 
-  localStorage.setItem("location", JSON.stringify(data));
+  // const data = {
+  //   type: "Point",
+  //   coordinates: [77.1025, 28.7041],
+  // };
 
-  localStorage.setItem("radius", radius);
+  // localStorage.setItem("location", JSON.stringify(data));
+
+  // localStorage.setItem("radius", radius);
 
   // localStorage.setItem("location",location);
   const handleContinue = () => {
@@ -66,14 +92,24 @@ const PreferedLocation = () => {
               />
             </Form.Item>
 
-            <Form.Item name="password">
+            <Form.Item name="location">
               <button
                 type="button"
+                onClick={handleUseCurrentLocation}
                 className="flex justify-center items-center gap-2 text-primary border border-primary w-full py-2 rounded-xl"
               >
                 <FaLocationArrow />
-                <p className="text-sm">Use my current location</p>
+                {location ? (
+                  <p className="text-sm">
+                    {location.lat}, {location.lng}
+                  </p>
+                ) : (
+                  <p className="text-sm">Use my current location</p>
+                )}
+                {location && <Maps location={location} />}
               </button>
+
+              <Maps />
             </Form.Item>
 
             <Form.Item className="text-center">

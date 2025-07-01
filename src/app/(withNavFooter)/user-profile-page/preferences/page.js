@@ -1,6 +1,6 @@
 "use client";
 import { useUpdatePreferenceMutation } from "@/redux/features/profileApi/profileApi";
-import { DatePicker, Form, message, Radio, Select } from "antd";
+import { Form, message, Radio, Select } from "antd";
 import Link from "next/link";
 import React from "react";
 import { IoIosArrowForward } from "react-icons/io";
