@@ -99,9 +99,16 @@ const PreferedLocation = () => {
                 className="flex justify-center items-center gap-2 text-primary border border-primary w-full py-2 rounded-xl"
               >
                 <FaLocationArrow />
-                <p className="text-sm">Use my current location</p>
+                {location ? (
+                  <p className="text-sm">
+                    {location.lat}, {location.lng}
+                  </p>
+                ) : (
+                  <p className="text-sm">Use my current location</p>
+                )}
                 {location && <Maps location={location} />}
               </button>
+
               <Maps />
             </Form.Item>
 
