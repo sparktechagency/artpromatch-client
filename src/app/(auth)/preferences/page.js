@@ -27,27 +27,73 @@ const Preferences = () => {
   };
 
   const artStyles = [
-    // "Realism",
+    "American Traditional",
+    "Neo Traditional",
+    "Traditional",
+    "Pacific Islander/Polynesian",
+    "Tatau",
+    "Maori",
+    "African",
+    "Native American",
+    "Black & Grey",
+    "Portrait",
+    "Realism",
+    "Abstract",
     "Blackwork",
+    "Heavy Blackwork",
+    "Brutal Blackwork",
+    "Ignorant",
+    "Anime",
+    "White on Black",
+    "White tattoos",
+    "Black trash",
+    "Trash Polka",
+    "Blackout",
+    "Script",
+    "Lettering",
+    "Fine Line",
+    "Calligraphy",
+    "Ornamental",
     "Watercolor",
-    "Minimalist",
     "Geometric",
-    "Japanese Traditional",
+    "Japanese style",
+    "Irezumi",
+    "Tebori",
     "Tribal",
-    "Neo-Traditional",
-    "Portraits",
-    // "Abstract",
+    "Neo Tribal",
+    "New School",
+    "Old School",
+    "Illustrative",
+    "Minimalist",
+    "Lineart",
+    "Botanical",
+    "Realistic Color",
+    "Realistic Black & Grey",
+    "Graphic",
+    "Dotwork",
+    "Stick and poke",
+    "Microrealism",
+    "Biomech",
+    "Chicano",
+    "Thai",
+    "Comic",
+    "Coverups",
+    "Scar Coverups",
+    "Microblading",
+    "Freckles",
+    "Tattoo Removal",
+    "Tooth Gems",
   ];
 
   return (
     <div className="py-16 md:py-0 h-[100vh] w-full flex items-center justify-center">
       <div className="pt-32 pb-16">
-        <div className="w-[600px]">
+        <div className="w-full">
           <Form
             name="select-user-type"
             initialValues={{ remember: true }}
             layout="vertical"
-            className="mb-10 w-full md:w-[600px] bg-white px-2 rounded-2xl"
+            className="mb-10 w-full  mx-auto bg-white px-2 rounded-2xl"
           >
             <div className="mb-4 flex flex-col justify-center items-center text-center">
               <Image src={AllImages.logo} width={50} height={50} alt="logo" />
@@ -62,13 +108,13 @@ const Preferences = () => {
             {/* Buttons in groups of 4 */}
             <div className="flex flex-col gap-4">
               {Array.from(
-                { length: Math.ceil(artStyles.length / 4) },
+                { length: Math.ceil(artStyles.length /10) },
                 (_, i) => (
                   <div
                     key={i}
                     className="flex justify-center items-center gap-4 flex-wrap"
                   >
-                    {artStyles.slice(i * 4, i * 4 + 4).map((style) => (
+                    {artStyles.slice(i *10, i *10 +10).map((style) => (
                       <button
                         key={style}
                         type="button"
@@ -88,9 +134,7 @@ const Preferences = () => {
             </div>
 
             {/* Navigation buttons */}
-            <Link
-              href="/preferd-location"
-            >
+            <Link href="/preferd-location">
               <button className="w-full bg-primary text-white py-3 rounded-lg mt-5">
                 Get Started
               </button>

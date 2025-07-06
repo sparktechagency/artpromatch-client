@@ -6,7 +6,7 @@ import React, { useState } from "react";
 
 const PiercingPage = () => {
   const [selectedPerasing, setSeletedPearsing] = useState([]);
-  // console.log("selectedPerasing", selectedPerasing);
+  console.log("selectedPerasing", selectedPerasing);
 
   localStorage.setItem("selectedPerasing", JSON.stringify(selectedPerasing));
 const preferredPiercing = [

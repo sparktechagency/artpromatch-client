@@ -7,7 +7,7 @@ import React, { useState } from "react";
 const SelectStyle = () => {
   const router = useRouter();
   const [UpdatedSelectedArt, setUpdatedSelectedArt] = useState([]);
-  // console.log("UpdatedSelectedArt", UpdatedSelectedArt);
+  console.log("UpdatedSelectedArt", UpdatedSelectedArt);
   localStorage.setItem(
     "UpdatedSelectedArt",
     JSON.stringify(UpdatedSelectedArt)

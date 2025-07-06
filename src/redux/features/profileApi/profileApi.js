@@ -4,7 +4,7 @@ const profileApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     updatePreference: builder.mutation({
       query: (preference) => ({
-        url: "clients/notification-preferences",
+        url: "/api/v1/clients/preferences",
         method: "PATCH",
         body: preference,
       }),

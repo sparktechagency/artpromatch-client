@@ -21,6 +21,7 @@ const PreferecnePage = () => {
       language: values.language,
       dateFormat: values.dateFormat,
     };
+    console.log("data:", data);
 
     try {
       const res = await updatePreference(data).unwrap();
