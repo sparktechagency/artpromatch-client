@@ -45,16 +45,7 @@ const PreferedLocation = () => {
     }
   };
 
-  // const data = {
-  //   type: "Point",
-  //   coordinates: [77.1025, 28.7041],
-  // };
 
-  // localStorage.setItem("location", JSON.stringify(data));
-
-  // localStorage.setItem("radius", radius);
-
-  // localStorage.setItem("location",location);
   const handleContinue = () => {
     router.push(`/prefered-service`);
   };

@@ -9,19 +9,59 @@ const PiercingPage = () => {
   // console.log("selectedPerasing", selectedPerasing);
 
   localStorage.setItem("selectedPerasing", JSON.stringify(selectedPerasing));
-  const preferedPerasing = [
-    "Ear Lobe",
-    " Lip (Labret, Monroe)",
-    " Triple Helix",
-    "  Industrial",
-    "Septum",
-    " Nose Nostril",
-    " Tongue",
-    "   Nasallang",
-    "  Blackwork",
-    "  Traguss",
-    "   Conch",
-  ];
+const preferredPiercing = [
+  "Earlobe",
+  "Transverse Lobe",
+  "Helix",
+  "Triple Helix",
+  "Forward Helix",
+  "Anti-Helix",
+  "Snug",
+  "Industrial",
+  "Daith",
+  "Rook",
+  "Conch",
+  "Tragus",
+  "Anti-Tragus",
+  "Nostril",
+  "High Nostril",
+  "Septum",
+  "Septril",
+  "Nasallang",
+  "Bridge",
+  "Eyebrow",
+  "Navel",
+  "Floating Navel",
+  "Nipple",
+  "Tongue",
+  "Frenum (Oral)",
+  "Cheek",
+  "Lip",
+  "Labret",
+  "Vertical Labret",
+  "Inverse Vertical Labret",
+  "Philtrum",
+  "Surface Piercing",
+  "Frenum (Genital)",
+  "PA (Genital)",
+  "Reverse PA (Genital)",
+  "Apadravya (Genital)",
+  "Ampallang (Genital)",
+  "Hafada (Genital)",
+  "Dydoe (Genital)",
+  "Lorum (Genital)",
+  "Guiche (Genital)",
+  "Pubic (Genital)",
+  "Christina (Genital)",
+  "Hood (Genital)",
+  "Triangle (Genital)",
+  "Inner Labia (Genital)",
+  "Outer Labia (Genital)",
+  "Fourchette (Genital)",
+  "Princess Albertina (Genital)",
+  "Tooth Gems"
+];
+
 
   const handleSelect = (value) => {
     setSeletedPearsing((prev) =>
@@ -86,13 +126,13 @@ const PiercingPage = () => {
 
           <div className="flex flex-col gap-4">
             {Array.from(
-              { length: Math.ceil(preferedPerasing.length / 6) },
+              { length: Math.ceil(preferredPiercing.length / 7) },
               (_, i) => (
                 <div
                   key={i}
                   className="flex justify-start items-center gap-4 flex-wrap"
                 >
-                  {preferedPerasing.slice(i * 6, i * 6 + 6).map((pearsing) => (
+                  {preferredPiercing.slice(i * 7, i * 7 + 7).map((pearsing) => (
                     <button
                       key={pearsing}
                       type="button"
