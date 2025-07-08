@@ -10,7 +10,16 @@ const profileApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Preference"],
     }),
+
+    updatePersonalInfo: builder.mutation({
+      query: (data) => ({
+        url: "/api/v1/clients/personal-info",
+        method: "PATCH",
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { useUpdatePreferenceMutation } = profileApi;
+export const { useUpdatePreferenceMutation, useUpdatePersonalInfoMutation } =
+  profileApi;
