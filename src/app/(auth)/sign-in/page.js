@@ -4,7 +4,7 @@
 import { AllImages } from "@/assets/images/AllImages";
 import { useLoginMutation } from "@/redux/features/auth/authApi";
 // import GooleLogin from '@/components/Shared/SocialLogin/GooleLogin';
-import { Checkbox, Form, Input, Typography } from "antd";
+import { Checkbox, Form, Input, message, Typography } from "antd";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -19,10 +19,14 @@ const SignIn = () => {
       .then((res) => {
         if (res?.data?.accessToken) {
           localStorage.setItem("token", res?.data?.accessToken);
+          message.success(res?.data?.message);
           router.push("/");
         }
       })
-      .catch((err) => console.log(err));
+      .catch((error) => {
+        console.log(error);
+        message.error(error?.data?.message);
+      });
   };
 
   return (
