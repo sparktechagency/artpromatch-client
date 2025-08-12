@@ -13,20 +13,19 @@ import React from "react";
 const SignIn = () => {
   const [signIn] = useLoginMutation();
   const router = useRouter();
-  const onFinish = (values) => {
-    signIn(values)
-      .unwrap()
-      .then((res) => {
-        if (res?.data?.accessToken) {
-          localStorage.setItem("token", res?.data?.accessToken);
-          message.success(res?.data?.message);
-          router.push("/");
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        message.error(error?.data?.message);
-      });
+  const onFinish = async (values) => {
+    try {
+      const res = await signIn(values).unwrap();
+
+      if (res?.data?.accessToken) {
+        localStorage.setItem("token", res.data.accessToken);
+        message.success(res.data.message);
+        router.push("/");
+      }
+    } catch (error) {
+      console.log(error);
+      message.error(error?.data?.message || "Something went wrong");
+    }
   };
 
   return (
