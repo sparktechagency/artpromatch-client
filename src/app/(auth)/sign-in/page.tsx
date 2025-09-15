@@ -74,7 +74,7 @@ const SignIn: React.FC = () => {
               name="password"
               label={<p className=" text-md">Enter your Password</p>}
             >
-              <Input
+              <Input.Password
                 required
                 style={{ padding: '6px' }}
                 className=" text-md"

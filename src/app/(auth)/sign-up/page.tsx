@@ -121,7 +121,7 @@ const SignUp = () => {
                 </p>
               }
             >
-              <Input
+              <Input.Password
                 required
                 style={{ padding: '6px' }}
                 className="text-md"
