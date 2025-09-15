@@ -1,6 +1,38 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
 
-  
+@theme inline {
+  /* existing vars */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --font-sans: var(--font-plus-jakarta);
+
+  /* 🔹 your custom colors */
+  --color-primary: #816a6b;
+  --color-secondary: #667085;
+
+  /* 🔹 gradients */
+  --background-image-gradient-radial: radial-gradient(var(--tw-gradient-stops));
+  --background-image-gradient-conic: conic-gradient(
+    from 180deg at 50% 50%,
+    var(--tw-gradient-stops)
+  );
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  /* background: var(--background); */
+  /* color: var(--foreground); */
+  font-family: var(--font-plus-jakarta), sans-serif;
+}
