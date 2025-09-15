@@ -21,6 +21,7 @@ const SignIn: React.FC = () => {
   const onFinish = async (values: SignInFormValues) => {
     try {
       const res = await loginUser(values);
+      console.log("res:", res)
       if (res.success) {
         toast.success(res?.message);
         router.push('/');

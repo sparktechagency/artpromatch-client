@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { AllImages } from '@/assets/images/AllImages';
-import { registerUser } from '@/services/AuthService';
-import { Form, Input, Button, Typography } from 'antd';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
-import { toast } from 'sonner';
+import { AllImages } from "@/assets/images/AllImages";
+import { registerUser } from "@/services/AuthService";
+import { Form, Input, Button, Typography } from "antd";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import { toast } from "sonner";
 
 const SignUp = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -35,9 +35,9 @@ const SignUp = () => {
       if (res.success) {
         toast.success(res?.message);
         if (res.data.userEmail) {
-          localStorage.setItem('userEmail', res.data.userEmail);
+          localStorage.setItem("userEmail", res.data.userEmail);
         }
-        router.push('/account-verification');
+        router.push("/account-verification");
       } else {
         toast.error(res.message);
       }
@@ -50,7 +50,7 @@ const SignUp = () => {
 
   const handleGoogleLogin = () => {
     // Implement Google login logic here
-    console.log('Google login clicked');
+    console.log("Google login clicked");
   };
 
   return (
@@ -86,7 +86,7 @@ const SignUp = () => {
             >
               <Input
                 required
-                style={{ padding: '6px' }}
+                style={{ padding: "6px" }}
                 className="text-md"
                 placeholder="Olivia Reiss"
               />
@@ -97,7 +97,7 @@ const SignUp = () => {
             >
               <Input
                 required
-                style={{ padding: '6px' }}
+                style={{ padding: "6px" }}
                 className="text-md"
                 placeholder="oliviareiss91@gmail.com"
               />
@@ -108,7 +108,7 @@ const SignUp = () => {
             >
               <Input
                 required
-                style={{ padding: '6px' }}
+                style={{ padding: "6px" }}
                 className="text-md"
                 placeholder="oliviareiss91@gmail.com"
               />
@@ -123,7 +123,7 @@ const SignUp = () => {
             >
               <Input.Password
                 required
-                style={{ padding: '6px' }}
+                style={{ padding: "6px" }}
                 className="text-md"
                 type="password"
                 placeholder="Password"
@@ -137,13 +137,15 @@ const SignUp = () => {
               </Link>
             </p>
             <Form.Item className="text-center">
-              <button
-                className="bg-primary w-full px-6 py-2 rounded-md text-white"
-                type="submit"
-                disabled={isLoading}
-              >
-                Create Account
-              </button>
+              <div className="text-white">
+                <button
+                  className="bg-primary w-full px-6 py-2 rounded-md text-white"
+                  type="submit"
+                  disabled={isLoading}
+                >
+                  Create Account
+                </button>
+              </div>
             </Form.Item>
             <p className="text-center my-6"> Or Sign up with</p>
             <Form.Item className="text-center">

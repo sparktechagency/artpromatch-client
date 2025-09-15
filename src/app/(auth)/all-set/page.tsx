@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { AllImages } from '@/assets/images/AllImages';
-import { useCreateProfileMutation } from '@/redux/features/auth/authApi';
+// import { useCreateProfileMutation } from '@/redux/features/auth/authApi';
 import { Form, message, Typography } from 'antd';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -44,7 +44,7 @@ const AllSet: React.FC = () => {
     notificationPreferences,
   };
 
-  const [createProfile, { isLoading }] = useCreateProfileMutation();
+  // const [createProfile, { isLoading }] = useCreateProfileMutation();
   const token = localStorage.getItem('token');
 
   const handleAllSet = async () => {
@@ -52,7 +52,7 @@ const AllSet: React.FC = () => {
       const formData = new FormData();
       formData.append('data', JSON.stringify(profileData));
 
-      const res = await createProfile(formData).unwrap();
+      // const res = await createProfile(formData).unwrap();
       message.success('Profile created successfully!');
       router.push('/sign-in');
     } catch (err) {
@@ -94,7 +94,7 @@ const AllSet: React.FC = () => {
                   onClick={handleAllSet}
                   className="w-full bg-primary text-white py-3 rounded-lg mt-5"
                 >
-                  {isLoading ? 'Loading...' : 'Continue'}
+                  {/* {isLoading ? 'Loading...' : 'Continue'} */} continue
                 </button>
               }
             </Form>
