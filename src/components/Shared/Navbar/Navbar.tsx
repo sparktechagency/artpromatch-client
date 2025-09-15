@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import 'antd/dist/reset.css';
-import { Button, Drawer, Dropdown, Modal } from 'antd';
-import { RxHamburgerMenu } from 'react-icons/rx';
-import Link from 'next/link';
-import Image from 'next/image';
-import { AllImages } from '@/assets/images/AllImages';
-import { RiArrowDropDownLine } from 'react-icons/ri';
-import { CiHeart } from 'react-icons/ci';
-import { IoIosNotificationsOutline } from 'react-icons/io';
-import { AiOutlineMessage } from 'react-icons/ai';
-import NotificationModal from '@/components/WithNavFooterComponents/Profile/NotificationModal/NotificationModal';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState } from "react";
+import "antd/dist/reset.css";
+import { Button, Drawer, Dropdown, Modal } from "antd";
+import { RxHamburgerMenu } from "react-icons/rx";
+import Link from "next/link";
+import Image from "next/image";
+import { AllImages } from "@/assets/images/AllImages";
+import { RiArrowDropDownLine } from "react-icons/ri";
+import { CiHeart } from "react-icons/ci";
+import { IoIosNotificationsOutline } from "react-icons/io";
+import { AiOutlineMessage } from "react-icons/ai";
+import NotificationModal from "@/components/WithNavFooterComponents/Profile/NotificationModal/NotificationModal";
+import { useRouter } from "next/navigation";
 
 const NavBar = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -21,8 +21,11 @@ const NavBar = () => {
 
   const router = useRouter();
 
+  const token = localStorage.getItem("accessToken");
+  console.log("token", token);
+
   useEffect(() => {
-    const storedLoginState = localStorage.getItem('token');
+    const storedLoginState = localStorage.getItem("accessToken");
     if (storedLoginState) {
       setIsLogin(true);
     } else {
@@ -31,9 +34,9 @@ const NavBar = () => {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem("token");
     setIsLogin(false);
-    router.push('/');
+    router.push("/");
   };
 
   const [isModalOpenForNotification, setIsModalOpenForNotification] =
@@ -51,21 +54,21 @@ const NavBar = () => {
   };
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       setIsMobile(window.innerWidth < 1024);
 
       const handleResize = () => {
         setIsMobile(window.innerWidth < 1024);
       };
 
-      window.addEventListener('resize', handleResize);
-      return () => window.removeEventListener('resize', handleResize);
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
     }
   }, []);
 
   const items = [
     {
-      key: '1',
+      key: "1",
       label: (
         <Link
           target="_blank"
@@ -77,7 +80,7 @@ const NavBar = () => {
       ),
     },
     {
-      key: '2',
+      key: "2",
       label: (
         <Link
           target="_blank"
@@ -89,7 +92,7 @@ const NavBar = () => {
       ),
     },
     {
-      key: '3',
+      key: "3",
       label: (
         <a
           target="_blank"
@@ -104,23 +107,23 @@ const NavBar = () => {
 
   const beforeLoginLabels = [
     {
-      name: 'Discover',
-      link: '/',
-      icon: '',
+      name: "Discover",
+      link: "/",
+      icon: "",
       isDropdown: false,
       dropdownItems: [],
     },
     {
-      name: 'Guest Spots',
-      link: '/guest-spot',
-      icon: '',
+      name: "Guest Spots",
+      link: "/guest-spot",
+      icon: "",
       isDropdown: false,
       dropdownItems: [],
     },
     {
-      name: 'Help',
-      link: '/help',
-      icon: '',
+      name: "Help",
+      link: "/help",
+      icon: "",
       isDropdown: false,
       dropdownItems: [],
     },
@@ -128,35 +131,35 @@ const NavBar = () => {
 
   const labels = [
     {
-      name: 'Discover',
-      link: '/',
-      icon: '',
+      name: "Discover",
+      link: "/",
+      icon: "",
       isDropdown: false,
       dropdownItems: [],
     },
     {
-      name: 'Book an Artist',
+      name: "Book an Artist",
       icon: <RiArrowDropDownLine className="text-black text-4xl" />,
       isDropdown: true,
       dropdownItems: [
-        { key: '1', label: <Link href="">Tattoo Artists</Link> },
-        { key: '2', label: <Link href="">Body Piercers</Link> },
-        { key: '3', label: <Link href="">Studios</Link> },
+        { key: "1", label: <Link href="">Tattoo Artists</Link> },
+        { key: "2", label: <Link href="">Body Piercers</Link> },
+        { key: "3", label: <Link href="">Studios</Link> },
       ],
     },
     {
-      name: 'Guest Spots',
-      link: '/guest-spot',
-      icon: '',
+      name: "Guest Spots",
+      link: "/guest-spot",
+      icon: "",
       isDropdown: false,
       dropdownItems: [],
     },
     {
-      name: 'Join As',
+      name: "Join As",
       isDropdown: true,
       dropdownItems: [
         {
-          key: '1',
+          key: "1",
           label: (
             <Link href="https://client-artpromatch-4cq2vqx1n-rabeyaakter78s-projects.vercel.app/">
               Client
@@ -164,7 +167,7 @@ const NavBar = () => {
           ),
         },
         {
-          key: '2',
+          key: "2",
           label: (
             <Link href="https://artist-artpromatch-ckakmcc6u-rabeyaakter78s-projects.vercel.app/">
               Artist
@@ -172,7 +175,7 @@ const NavBar = () => {
           ),
         },
         {
-          key: '3',
+          key: "3",
           label: (
             <Link href="https://artpromatch-business-nh3gxj7po-rabeyaakter78s-projects.vercel.app/">
               Business Owner
@@ -182,7 +185,7 @@ const NavBar = () => {
       ],
       icon: <RiArrowDropDownLine className="text-black text-4xl" />,
     },
-    { name: 'Help', link: '/help', isDropdown: false, dropdownItems: [] },
+    { name: "Help", link: "/help", isDropdown: false, dropdownItems: [] },
   ];
 
   return (
@@ -216,7 +219,7 @@ const NavBar = () => {
                 </Dropdown>
               ) : (
                 <Link
-                  href={item.link || '/'}
+                  href={item.link || "/"}
                   key={index}
                   className="text-lg font-medium hover:text-blue-600 transition flex items-center"
                 >
@@ -284,7 +287,7 @@ const NavBar = () => {
           <div className="flex flex-col items-center space-y-4">
             {(isLogin ? labels : beforeLoginLabels).map((item, index) => (
               <Link
-                href={item.link || '/'}
+                href={item.link || "/"}
                 key={index}
                 className="text-lg font-medium hover:text-blue-600 transition"
                 onClick={() => setDrawerVisible(false)}

@@ -1,4 +1,6 @@
-'use client';
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
 
 import { AllImages } from '@/assets/images/AllImages';
 import { loginUser } from '@/services/AuthService';
@@ -23,7 +25,7 @@ const SignIn: React.FC = () => {
       const res = await loginUser(values);
       if (res.success) {
         toast.success(res?.message);
-        router.push('/');
+        router.push("/");
       } else {
         toast.error(res.message);
       }
@@ -65,7 +67,7 @@ const SignIn: React.FC = () => {
             >
               <Input
                 required
-                style={{ padding: '6px' }}
+                style={{ padding: "6px" }}
                 className=" text-md"
                 placeholder="oliviareiss91@gmail.com"
               />
@@ -76,7 +78,7 @@ const SignIn: React.FC = () => {
             >
               <Input.Password
                 required
-                style={{ padding: '6px' }}
+                style={{ padding: "6px" }}
                 className=" text-md"
                 type="password"
                 placeholder="Password"
