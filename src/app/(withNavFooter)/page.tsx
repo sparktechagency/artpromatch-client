@@ -1,19 +1,34 @@
 'use client';
-import AfterLogin from '@/components/Shared/HomeComponent/AfterLogin/AfterLogin';
-import BeforeLogin from '@/components/Shared/HomeComponent/BeforeLogin/BeforeLogin';
+
+import ClientAfterLogin from '@/components/Shared/HomeComponent/AfterLogin/ClientAfterLogin';
+import BeforeLogin from '@/components/Shared/HomeComponent/BeforeLogin';
+import { useUser } from '@/context/UserContext';
 import React, { useEffect, useState } from 'react';
 
 const Homepage = () => {
-  const [isLogin, setIsLogin] = useState<boolean>(false);
-  useEffect(() => {
-    const storedLoginState = localStorage.getItem('isLogin');
-    console.log(storedLoginState);
+  const { isLoading, setIsLoading, user } = useUser();
 
-    if (storedLoginState) {
-      setIsLogin(storedLoginState === 'true');
+  console.log({ user });
+
+  const renderContent = () => {
+    if (!user) return <BeforeLogin />;
+
+    switch (user.role) {
+      case 'CLIENT':
+        return <ClientAfterLogin />;
+
+      // case 'ARTIST':
+      //   return <ArtistAfterLogin />;
+
+      // case 'BUSINESS':
+      //   return <BusinessAfterLogin />;
+
+      default:
+        return <BeforeLogin />;
     }
-  }, [setIsLogin]);
-  return <div>{isLogin ? <AfterLogin /> : <BeforeLogin />}</div>;
+  };
+
+  return <div>{renderContent()}</div>;
 };
 
 export default Homepage;

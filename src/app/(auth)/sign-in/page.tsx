@@ -2,7 +2,7 @@
 
 import { AllImages } from '@/assets/images/AllImages';
 import { loginUser } from '@/services/AuthService';
-import { Button, Checkbox, Form, Input, Typography } from 'antd';
+import { Checkbox, Form, Input } from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -21,7 +21,6 @@ const SignIn: React.FC = () => {
   const onFinish = async (values: SignInFormValues) => {
     try {
       const res = await loginUser(values);
-      console.log("res:", res)
       if (res.success) {
         toast.success(res?.message);
         router.push('/');
