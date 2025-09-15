@@ -1,13 +1,15 @@
-'use client';
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
 
-import { AllImages } from '@/assets/images/AllImages';
-import { loginUser } from '@/services/AuthService';
-import { Button, Checkbox, Form, Input, Typography } from 'antd';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import React from 'react';
-import { toast } from 'sonner';
+import { AllImages } from "@/assets/images/AllImages";
+import { loginUser } from "@/services/AuthService";
+import { Checkbox, Form, Input } from "antd";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import React from "react";
+import { toast } from "sonner";
 
 type SignInFormValues = {
   email: string;
@@ -21,10 +23,11 @@ const SignIn: React.FC = () => {
   const onFinish = async (values: SignInFormValues) => {
     try {
       const res = await loginUser(values);
-      console.log("res:", res)
+      console.log("res:", res);
+      localStorage.setItem("accessToken", res?.data?.accessToken);
       if (res.success) {
         toast.success(res?.message);
-        router.push('/');
+        router.push("/");
       } else {
         toast.error(res.message);
       }
@@ -66,7 +69,7 @@ const SignIn: React.FC = () => {
             >
               <Input
                 required
-                style={{ padding: '6px' }}
+                style={{ padding: "6px" }}
                 className=" text-md"
                 placeholder="oliviareiss91@gmail.com"
               />
@@ -77,7 +80,7 @@ const SignIn: React.FC = () => {
             >
               <Input.Password
                 required
-                style={{ padding: '6px' }}
+                style={{ padding: "6px" }}
                 className=" text-md"
                 type="password"
                 placeholder="Password"
