@@ -1,20 +1,30 @@
-import { AllImages } from '@/assets/images/AllImages';
-import { Dropdown, Typography } from 'antd';
-import Image from 'next/image';
-import { IoIosArrowDown } from 'react-icons/io';
-import { IoLocationOutline } from 'react-icons/io5';
-import { CiSearch } from 'react-icons/ci';
-import Link from 'next/link';
+"use client";
+
+import { AllImages } from "@/assets/images/AllImages";
+import { Dropdown, Typography } from "antd";
+import Image from "next/image";
+import { IoIosArrowDown } from "react-icons/io";
+import { IoLocationOutline } from "react-icons/io5";
+import { CiSearch } from "react-icons/ci";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const AfterLoginHeader = () => {
+  const router = useRouter();
+  const [searchValue, setSearchValue] = useState<string>("");
 
-  const onSearch = (value: string) => {
-    console.log('Search input: ', value);
+  const onSearch = () => {
+    if (!searchValue.trim()) return;
+    console.log("Search input:", searchValue);
+
+    // ✅ Redirect to a results page
+    router.push(`/search?query=${encodeURIComponent(searchValue)}`);
   };
-  
+
   const items = [
     {
-      key: '1',
+      key: "1",
       label: (
         <Link target="_blank" rel="noopener noreferrer" href="">
           Current Location
@@ -22,7 +32,7 @@ const AfterLoginHeader = () => {
       ),
     },
     {
-      key: '2',
+      key: "2",
       label: (
         <Link target="_blank" rel="noopener noreferrer" href="">
           Change Location
@@ -30,10 +40,11 @@ const AfterLoginHeader = () => {
       ),
     },
   ];
+
   return (
     <div>
       <div className="mb-4 flex flex-col justify-center items-center text-center pt-16 ">
-        <Image src={AllImages.logo} width={50} height={50} alt="logo"></Image>
+        <Image src={AllImages.logo} width={50} height={50} alt="logo" />
         <h2 className="text-center md:text-6xl font-bold mt-6 mb-2 ">
           Discover Artists and Studios <br /> Near You
         </h2>
@@ -41,29 +52,32 @@ const AfterLoginHeader = () => {
           Discover tattoo artists, piercers, and studios tailored to <br /> your
           preferences.
         </Typography.Text>
+
         <div className="bg-slate-100 rounded-3xl p-1 flex justify-center items-center gap-3">
           <IoLocationOutline className="h-5 w-5 text-primary" />
           <h4 className="text-sm">
             118-06 Atlantic Ave, South Richmond Hill, New York
           </h4>
-          <Dropdown
-            menu={{
-              items,
-            }}
-            placement="bottom"
-          >
-            <IoIosArrowDown className="h-5 w-5 text-primary" />
+          <Dropdown menu={{ items }} placement="bottom">
+            <IoIosArrowDown className="h-5 w-5 text-primary cursor-pointer" />
           </Dropdown>
         </div>
+
         <div className="mt-2 md:mt-5 md:w-[650px] border rounded-lg p-2 flex justify-between items-center">
-          <div>
-            <p className="text-sm text-primary">
-              Search for tattoo artists, piercers and studios
-            </p>
-          </div>
-          <div className="bg-primary h-8 w-8 rounded-xl flex justify-center items-center">
+          <input
+            type="text"
+            placeholder="Search for tattoo artists, piercers and studios"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && onSearch()}
+            className="w-full text-sm outline-none bg-transparent px-2"
+          />
+          <button
+            onClick={onSearch}
+            className="bg-primary h-8 w-8 rounded-xl flex justify-center items-center"
+          >
             <CiSearch className="text-white h-5 w-5 font-bold" />
-          </div>
+          </button>
         </div>
       </div>
     </div>
