@@ -1,28 +1,13 @@
 "use client";
 import AfterLogin from "@/components/Shared/HomeComponent/AfterLogin/AfterLogin";
 import BeforeLogin from "@/components/Shared/HomeComponent/BeforeLogin/BeforeLogin";
-import React, { useEffect, useState } from "react";
+import { useUser } from "@/context/UserContext";
 
 const Homepage = () => {
-  const [token, setToken] = useState<string | null>(null);
+  const { user } = useUser();
 
-  useEffect(() => {
-    // Initial load
-    setToken(localStorage.getItem("accessToken"));
 
-    // Listen for token changes from other parts of the app (login/logout)
-    const handleStorageChange = () => {
-      setToken(localStorage.getItem("accessToken"));
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, []);
-
-  return <div>{token ? <AfterLogin /> : <BeforeLogin />}</div>;
+  return <div>{user ? <AfterLogin /> : <BeforeLogin />}</div>;
 };
 
 export default Homepage;
