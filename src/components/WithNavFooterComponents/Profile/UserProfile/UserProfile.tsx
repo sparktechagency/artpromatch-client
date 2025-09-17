@@ -1,6 +1,6 @@
 'use client';
 
-import { useUpdatePersonalInfoMutation } from '@/redux/features/profileApi/profileApi';
+// import { useUpdatePersonalInfoMutation } from '@/redux/features/profileApi/profileApi';
 import { ConfigProvider, Form, Input, Select } from 'antd';
 import React from 'react';
 
@@ -12,7 +12,7 @@ interface UserProfileFormValues {
 }
 
 const UserProfile: React.FC = () => {
-  const [updatePersonalInfo] = useUpdatePersonalInfoMutation();
+  // const [updatePersonalInfo] = useUpdatePersonalInfoMutation();
 
   const onFinish = (values: UserProfileFormValues) => {
     console.log('Received values of form:', values);
