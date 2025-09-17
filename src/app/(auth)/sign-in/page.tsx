@@ -2,14 +2,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { AllImages } from "@/assets/images/AllImages";
-import { loginUser } from "@/services/AuthService";
-import { Checkbox, Form, Input } from "antd";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import React from "react";
-import { toast } from "sonner";
+import { AllImages } from '@/assets/images/AllImages';
+import { loginUser } from '@/services/AuthService';
+import { Checkbox, Form, Input } from 'antd';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import React from 'react';
+import { toast } from 'sonner';
 
 type SignInFormValues = {
   email: string;
@@ -23,8 +23,6 @@ const SignIn: React.FC = () => {
   const onFinish = async (values: SignInFormValues) => {
     try {
       const res = await loginUser(values);
-      console.log("res:", res);
-      localStorage.setItem("accessToken", res?.data?.accessToken);
       if (res.success) {
         toast.success(res?.message);
         router.push("/");
