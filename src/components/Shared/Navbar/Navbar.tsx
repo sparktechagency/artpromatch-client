@@ -33,10 +33,18 @@ const NavBar = () => {
     }
   }, []);
 
+  // const handleLogout = () => {
+  //   localStorage.removeItem("accessToken");
+  //   setIsLogin(false);
+  //   router.push("/");
+  // };
+
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("accessToken");
+
     setIsLogin(false);
-    router.push("/");
+
+    window.location.reload();
   };
 
   const [isModalOpenForNotification, setIsModalOpenForNotification] =
@@ -256,17 +264,17 @@ const NavBar = () => {
               </button>
             </div>
           ) : (
-            <div className="hidden lg:flex items-center space-x-4 text-white">
-              <Link href="/sign-in">
+            <div className="hidden lg:flex items-center space-x-4 ">
+              <Link href="/sign-in" className="text-white">
                 <button className="bg-primary px-10 py-3 rounded-md shadow-lg">
                   Log In
                 </button>
               </Link>
-              {/* <Link href="/sign-up">
+              <Link href="/sign-up">
                 <button className="border border-primary text-primary px-10 py-3 rounded-md shadow-lg">
                   Sign Up
                 </button>
-              </Link> */}
+              </Link>
             </div>
           )}
 

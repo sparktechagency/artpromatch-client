@@ -1,12 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { useUpdatePreferenceMutation } from '@/redux/features/profileApi/profileApi';
+// import { useUpdatePreferenceMutation } from '@/redux/features/profileApi/profileApi';
 import { Form, message, Radio, Select } from 'antd';
 import Link from 'next/link';
 import React from 'react';
 import { IoIosArrowForward } from 'react-icons/io';
 const PreferecnePage = () => {
-  const [updatePreference] = useUpdatePreferenceMutation();
+  // const [updatePreference] = useUpdatePreferenceMutation();
 
   interface PreferenceFormValues {
     defaultHomeView: 'grid' | 'map' | 'both';
@@ -35,9 +36,9 @@ const PreferecnePage = () => {
     // console.log("data:", data);
 
     try {
-      const res = await updatePreference(data).unwrap();
-      console.log('res', res);
-      message.success(res?.message);
+      // const res = await updatePreference(data).unwrap();
+      // console.log('res', res);
+      // message.success(res?.message);
     } catch (error: any) {
       // RTK Query এর error type সাধারণত unknown, তাই any দিয়ে access করা হলো
       message.error(error?.data?.message || 'Something went wrong');
