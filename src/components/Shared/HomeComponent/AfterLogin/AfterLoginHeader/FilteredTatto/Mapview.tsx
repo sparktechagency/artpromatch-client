@@ -10,7 +10,7 @@ const Mapview = () => {
         height={800}
         width={1280}
         className="h-full w-full object-cover"
-      ></Image>
+      />
     </div>
   );
 };

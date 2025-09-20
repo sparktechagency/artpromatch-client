@@ -22,12 +22,7 @@ const LinkedAccounts = () => {
       </div>
       <div className="border rounded-xl p-5 flex justify-between items-center mb-4">
         <div className="flex justify-start items-center gap-2">
-          <Image
-            src={AllImages.google}
-            width={50}
-            height={50}
-            alt="logo"
-          ></Image>
+          <Image src={AllImages.google} width={50} height={50} alt="logo" />
           <div>
             <h1 className="text-xl font-bold"> Google</h1>
             <p className="text-secondary">Connected on Jan 10, 2024</p>

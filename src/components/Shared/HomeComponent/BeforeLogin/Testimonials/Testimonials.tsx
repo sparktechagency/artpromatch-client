@@ -30,7 +30,7 @@ const Testimonials = () => {
                 height={50}
                 width={50}
                 className="rounded-full"
-              ></Image>
+              />
               <div>
                 <h1 className="text-xl font-semibold">Lora Craft</h1>
                 <p className="text-xs text-neutral-500">New York,USA</p>
@@ -58,7 +58,7 @@ const Testimonials = () => {
                 height={50}
                 width={50}
                 className="rounded-full"
-              ></Image>
+              />
               <div>
                 <h1 className="text-xl font-semibold">Lora Craft</h1>
                 <p className="text-xs text-neutral-500">New York,USA</p>
@@ -86,7 +86,7 @@ const Testimonials = () => {
                 height={50}
                 width={50}
                 className="rounded-full"
-              ></Image>
+              />
               <div>
                 <h1 className="text-xl font-semibold">Lora Craft</h1>
                 <p className="text-xs text-neutral-500">New York,USA</p>
@@ -116,7 +116,7 @@ const Testimonials = () => {
                 height={50}
                 width={50}
                 className="rounded-full"
-              ></Image>
+              />
               <div>
                 <h1 className="text-xl font-semibold">Lora Craft</h1>
                 <p className="text-xs text-neutral-500">New York,USA</p>
@@ -144,7 +144,7 @@ const Testimonials = () => {
                 height={50}
                 width={50}
                 className="rounded-full"
-              ></Image>
+              />
               <div>
                 <h1 className="text-xl font-semibold">Lora Craft</h1>
                 <p className="text-xs text-neutral-500">New York,USA</p>
@@ -172,7 +172,7 @@ const Testimonials = () => {
                 height={50}
                 width={50}
                 className="rounded-full"
-              ></Image>
+              />
               <div>
                 <h1 className="text-xl font-semibold">Lora Craft</h1>
                 <p className="text-xs text-neutral-500">New York,USA</p>

@@ -19,7 +19,7 @@ const DeleteAccount = () => {
             </p>
           </div>
         </div>
-        <Link href="/user-profile-page/delete-account/deactive">
+        <Link href="/profile/delete-account/deactive">
           <IoIosArrowForward className="bg-slate-50 rounded-full h-8 w-8" />
         </Link>
       </div>
@@ -36,7 +36,7 @@ const DeleteAccount = () => {
           </div>
         </div>
 
-        <Link href="/user-profile-page/delete-account/confirm-delete">
+        <Link href="/profile/delete-account/confirm-delete">
           <IoIosArrowForward className="bg-slate-50 rounded-full h-8 w-8" />
         </Link>
       </div>

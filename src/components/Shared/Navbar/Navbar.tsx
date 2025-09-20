@@ -1,54 +1,57 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import "antd/dist/reset.css";
-import { Button, Drawer, Dropdown, Modal } from "antd";
-import { RxHamburgerMenu } from "react-icons/rx";
-import Link from "next/link";
-import Image from "next/image";
-import { AllImages } from "@/assets/images/AllImages";
-import { RiArrowDropDownLine } from "react-icons/ri";
-import { CiHeart } from "react-icons/ci";
-import { IoIosNotificationsOutline } from "react-icons/io";
-import { AiOutlineMessage } from "react-icons/ai";
-import NotificationModal from "@/components/WithNavFooterComponents/Profile/NotificationModal/NotificationModal";
-import { useRouter } from "next/navigation";
+import { useState } from 'react';
+import 'antd/dist/reset.css';
+import { Button, Drawer, Dropdown, Modal } from 'antd';
+import { RxHamburgerMenu } from 'react-icons/rx';
+import Link from 'next/link';
+import Image from 'next/image';
+import { AllImages } from '@/assets/images/AllImages';
+import { RiArrowDropDownLine } from 'react-icons/ri';
+// import { CiHeart } from 'react-icons/ci';
+import { IoIosNotificationsOutline } from 'react-icons/io';
+import { AiOutlineMessage } from 'react-icons/ai';
+import NotificationModal from '@/components/WithNavFooterComponents/Profile/NotificationModal/NotificationModal';
+import { usePathname, useRouter } from 'next/navigation';
+import { useUser } from '@/context/UserContext';
+import { logOut } from '@/services/Auth';
+import { protectedRoutes } from '@/constants';
+import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
 
 const NavBar = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const [isLogin, setIsLogin] = useState(false);
+  // const [isMobile, setIsMobile] = useState(false);
+  const { user, setUser, setIsLoading } = useUser();
 
   const router = useRouter();
+  const pathname = usePathname();
 
-  const token = localStorage.getItem("accessToken");
-  console.log("token", token);
+  // useEffect(() => {
+  //   if (typeof window !== 'undefined') {
+  //     setIsMobile(window.innerWidth < 1024);
 
-  useEffect(() => {
-    const storedLoginState = localStorage.getItem("accessToken");
-    if (storedLoginState) {
-      setIsLogin(true);
-    } else {
-      setIsLogin(false);
+  //     const handleResize = () => {
+  //       setIsMobile(window.innerWidth < 1024);
+  //     };
+
+  //     window.addEventListener('resize', handleResize);
+  //     return () => window.removeEventListener('resize', handleResize);
+  //   }
+  // }, []);
+
+  const handleLogout = async () => {
+    await logOut();
+    setUser(null);
+    setIsLoading(true);
+
+    if (protectedRoutes.some(route => pathname.match(route))) {
+      router.push('/sign-in');
     }
-  }, []);
-
-  // const handleLogout = () => {
-  //   localStorage.removeItem("accessToken");
-  //   setIsLogin(false);
-  //   router.push("/");
-  // };
-
-  const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-
-    setIsLogin(false);
-
-    window.location.reload();
   };
 
   const [isModalOpenForNotification, setIsModalOpenForNotification] =
     useState(false);
+
   const showModalForNotification = () => {
     setIsModalOpenForNotification(true);
   };
@@ -61,139 +64,125 @@ const NavBar = () => {
     setIsModalOpenForNotification(false);
   };
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setIsMobile(window.innerWidth < 1024);
-
-      const handleResize = () => {
-        setIsMobile(window.innerWidth < 1024);
-      };
-
-      window.addEventListener("resize", handleResize);
-      return () => window.removeEventListener("resize", handleResize);
-    }
-  }, []);
-
-  const items = [
-    {
-      key: "1",
-      label: (
-        <Link
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.antgroup.com"
-        >
-          1st menu item
-        </Link>
-      ),
-    },
-    {
-      key: "2",
-      label: (
-        <Link
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.aliyun.com"
-        >
-          2nd menu item
-        </Link>
-      ),
-    },
-    {
-      key: "3",
-      label: (
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.luohanacademy.com"
-        >
-          3rd menu item
-        </a>
-      ),
-    },
-  ];
+  // const items = [
+  //   {
+  //     key: '1',
+  //     label: (
+  //       <Link
+  //         target="_blank"
+  //         rel="noopener noreferrer"
+  //         href="https://www.antgroup.com"
+  //       >
+  //         1st menu item
+  //       </Link>
+  //     ),
+  //   },
+  //   {
+  //     key: '2',
+  //     label: (
+  //       <Link
+  //         target="_blank"
+  //         rel="noopener noreferrer"
+  //         href="https://www.aliyun.com"
+  //       >
+  //         2nd menu item
+  //       </Link>
+  //     ),
+  //   },
+  //   {
+  //     key: '3',
+  //     label: (
+  //       <a
+  //         target="_blank"
+  //         rel="noopener noreferrer"
+  //         href="https://www.luohanacademy.com"
+  //       >
+  //         3rd menu item
+  //       </a>
+  //     ),
+  //   },
+  // ];
 
   const beforeLoginLabels = [
     {
-      name: "Discover",
-      link: "/",
-      icon: "",
+      name: 'Home',
+      link: '/',
+      icon: '',
       isDropdown: false,
       dropdownItems: [],
     },
     {
-      name: "Guest Spots",
-      link: "/guest-spot",
-      icon: "",
+      name: 'Guest Spots',
+      link: '/guest-spots',
+      icon: '',
       isDropdown: false,
       dropdownItems: [],
     },
     {
-      name: "Help",
-      link: "/help",
-      icon: "",
+      name: 'Help',
+      link: '/help',
+      icon: '',
       isDropdown: false,
       dropdownItems: [],
     },
   ];
 
-  const labels = [
+  const afterLoginLabels = [
     {
-      name: "Discover",
-      link: "/",
-      icon: "",
+      name: 'Home',
+      link: '/',
+      icon: '',
       isDropdown: false,
       dropdownItems: [],
     },
     {
-      name: "Book an Artist",
-      icon: <RiArrowDropDownLine className="text-black text-4xl" />,
-      isDropdown: true,
-      dropdownItems: [
-        { key: "1", label: <Link href="">Tattoo Artists</Link> },
-        { key: "2", label: <Link href="">Body Piercers</Link> },
-        { key: "3", label: <Link href="">Studios</Link> },
-      ],
-    },
-    {
-      name: "Guest Spots",
-      link: "/guest-spot",
-      icon: "",
+      name: 'Guest Spots',
+      link: '/guest-spots',
+      icon: '',
       isDropdown: false,
       dropdownItems: [],
     },
+    ...(user
+      ? [
+          {
+            name: 'Join As',
+            isDropdown: true,
+            dropdownItems: [
+              {
+                key: '1',
+                label: (
+                  <Link href="https://client-artpromatch-4cq2vqx1n-rabeyaakter78s-projects.vercel.app/">
+                    Client
+                  </Link>
+                ),
+              },
+              {
+                key: '2',
+                label: (
+                  <Link href="https://artist-artpromatch-ckakmcc6u-rabeyaakter78s-projects.vercel.app/">
+                    Artist
+                  </Link>
+                ),
+              },
+              {
+                key: '3',
+                label: (
+                  <Link href="https://artpromatch-business-nh3gxj7po-rabeyaakter78s-projects.vercel.app/">
+                    Business Owner
+                  </Link>
+                ),
+              },
+            ],
+            icon: <RiArrowDropDownLine className="text-black text-4xl" />,
+          },
+        ]
+      : []),
     {
-      name: "Join As",
-      isDropdown: true,
-      dropdownItems: [
-        {
-          key: "1",
-          label: (
-            <Link href="https://client-artpromatch-4cq2vqx1n-rabeyaakter78s-projects.vercel.app/">
-              Client
-            </Link>
-          ),
-        },
-        {
-          key: "2",
-          label: (
-            <Link href="https://artist-artpromatch-ckakmcc6u-rabeyaakter78s-projects.vercel.app/">
-              Artist
-            </Link>
-          ),
-        },
-        {
-          key: "3",
-          label: (
-            <Link href="https://artpromatch-business-nh3gxj7po-rabeyaakter78s-projects.vercel.app/">
-              Business Owner
-            </Link>
-          ),
-        },
-      ],
-      icon: <RiArrowDropDownLine className="text-black text-4xl" />,
+      name: 'Help',
+      link: '/help',
+      isDropdown: false,
+      dropdownItems: [],
     },
-    { name: "Help", link: "/help", isDropdown: false, dropdownItems: [] },
   ];
 
   return (
@@ -214,7 +203,7 @@ const NavBar = () => {
           </Link>
 
           <div className="hidden lg:flex flex-grow justify-center space-x-6">
-            {(isLogin ? labels : beforeLoginLabels).map((item, index) =>
+            {(user ? afterLoginLabels : beforeLoginLabels).map((item, index) =>
               item?.isDropdown ? (
                 <Dropdown
                   key={index}
@@ -227,7 +216,7 @@ const NavBar = () => {
                 </Dropdown>
               ) : (
                 <Link
-                  href={item.link || "/"}
+                  href={item.link || '/'}
                   key={index}
                   className="text-lg font-medium hover:text-blue-600 transition flex items-center"
                 >
@@ -237,11 +226,11 @@ const NavBar = () => {
             )}
           </div>
 
-          {isLogin ? (
+          {user ? (
             <div className="hidden lg:flex items-center space-x-4">
-              <Link href="/favourites">
+              {/* <Link href="/favourites">
                 <CiHeart className="h-5 w-5 cursor-pointer" />
-              </Link>
+              </Link> */}
               <IoIosNotificationsOutline
                 onClick={showModalForNotification}
                 className="cursor-pointer h-5 w-5"
@@ -249,9 +238,9 @@ const NavBar = () => {
               <Link href="/message">
                 <AiOutlineMessage className="h-5 w-5" />
               </Link>
-              <Link href="/user-profile-page">
+              <Link href="/profile">
                 <Image
-                  src={AllImages.user}
+                  src={getCleanImageUrl(user?.image)}
                   alt="user"
                   height={40}
                   width={40}
@@ -293,17 +282,19 @@ const NavBar = () => {
           open={drawerVisible}
         >
           <div className="flex flex-col items-center space-y-4">
-            {(isLogin ? labels : beforeLoginLabels).map((item, index) => (
-              <Link
-                href={item.link || "/"}
-                key={index}
-                className="text-lg font-medium hover:text-blue-600 transition"
-                onClick={() => setDrawerVisible(false)}
-              >
-                {item.name}
-              </Link>
-            ))}
-            {isLogin ? (
+            {(user ? afterLoginLabels : beforeLoginLabels).map(
+              (item, index) => (
+                <Link
+                  href={item.link || '/'}
+                  key={index}
+                  className="text-lg font-medium hover:text-blue-600 transition"
+                  onClick={() => setDrawerVisible(false)}
+                >
+                  {item.name}
+                </Link>
+              )
+            )}
+            {user ? (
               <button onClick={handleLogout} className="text-red-500">
                 Logout
               </button>

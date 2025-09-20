@@ -15,7 +15,7 @@ const TattoArtistProfile = () => {
           height={300}
           width={300}
           className="h-40 md:h-auto w-full "
-        ></Image>
+        />
       </div>
       <div className="container mx-auto ">
         <div className="flex flex-col lg:flex-row justify-between items-center gap-5 lg:gap-0 my-5">
@@ -26,7 +26,7 @@ const TattoArtistProfile = () => {
               height={160}
               width={160}
               className="h-40 w-40 md:h-32 md:w-32 xl:h-52 xl:w-52 top-56 md:top-48 lg:top-56 xl:top-64   rounded-full border-2 border-white lg:absolute  absolute"
-            ></Image>
+            />
             <div className="mt-24 md:mt-16 lg:mt-0 lg:ml-36 xl:ml-56">
               <h1 className="text-xl font-bold">Alex Rivera</h1>
               <h4 className="text-sm text-neutral-500">Brooklyn, NY</h4>

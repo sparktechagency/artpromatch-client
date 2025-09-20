@@ -1,20 +1,44 @@
-import { ConfigProvider, Form, Input } from 'antd';
-import React from 'react';
+'use client';
 
-interface ChangePasswordValues {
+import { useUser } from '@/context/UserContext';
+import { changePassword } from '@/services/Auth';
+import { ConfigProvider, Form, Input } from 'antd';
+import { toast } from 'sonner';
+
+interface ChangePasswordFormValues {
   email: string;
   oldPassword: string;
   newPassword: string;
   confirmPassword: string;
 }
 
-const ChangePassword: React.FC = () => {
-  const onFinish = (values: ChangePasswordValues) => {
-    console.log(values);
+const ChangePassword = () => {
+  const { user, setIsLoading } = useUser();
+
+  const [form] = Form.useForm<ChangePasswordFormValues>();
+
+  const handleChangePassword = async (values: ChangePasswordFormValues) => {
+    const userInfo = {
+      newPassword: values.newPassword,
+      oldPassword: values.oldPassword,
+    };
+
+    try {
+      const res = await changePassword(userInfo);
+
+      if (res?.success) {
+        toast.success(res?.message);
+        setIsLoading(true);
+      } else {
+        toast.error(res.message);
+      }
+    } catch (err: any) {
+      console.error(err);
+    }
   };
 
   return (
-    <div>
+    <div className="max-w-md mx-auto p-5">
       <ConfigProvider
         theme={{
           components: {
@@ -27,64 +51,55 @@ const ChangePassword: React.FC = () => {
           },
         }}
       >
-        <Form
-          name="change-password"
-          initialValues={{ remember: false }}
-          onFinish={onFinish}
+        <Form<ChangePasswordFormValues>
+          form={form}
+          name="changePassword"
+          initialValues={{
+            email: user?.email,
+          }}
+          onFinish={handleChangePassword}
           layout="vertical"
         >
-          {/* Email */}
           <Form.Item
             name="email"
-            label={<p className="text-md">Email</p>}
+            label="Email"
             rules={[{ required: true, message: 'Please input your email!' }]}
           >
-            <Input
-              style={{ padding: '6px' }}
-              className="text-md"
-              placeholder="Your Email"
-              type="email"
-            />
+            <Input readOnly placeholder="Your Email" className="p-2" />
           </Form.Item>
 
-          {/* Old Password */}
           <Form.Item
             name="oldPassword"
-            label={<p className="text-md">Old Password</p>}
+            label="Old Password"
             rules={[
               { required: true, message: 'Please input your old password!' },
             ]}
           >
-            <Input
-              required
-              style={{ padding: '6px' }}
-              className="text-md"
+            <Input.Password
               type="password"
               placeholder="Old Password"
+              className="p-2"
             />
           </Form.Item>
 
-          {/* New Password */}
           <Form.Item
             name="newPassword"
-            label={<p className="text-md">New Password</p>}
+            label="New Password"
             rules={[
               { required: true, message: 'Please input your new password!' },
             ]}
           >
-            <Input
-              required
-              style={{ padding: '6px' }}
-              className="text-md"
+            <Input.Password
               type="password"
               placeholder="New Password"
+              className="p-2"
             />
           </Form.Item>
 
-          {/* Confirm Password */}
           <Form.Item
             name="confirmPassword"
-            label={<p className="text-md">Confirm Password</p>}
+            label="Confirm Password"
+            dependencies={['newPassword']}
             rules={[
               { required: true, message: 'Please confirm your password!' },
               ({ getFieldValue }) => ({
@@ -97,21 +112,19 @@ const ChangePassword: React.FC = () => {
               }),
             ]}
           >
-            <Input
-              required
-              style={{ padding: '6px' }}
-              className="text-md"
+            <Input.Password
               type="password"
               placeholder="Confirm Password"
+              className="p-2"
             />
           </Form.Item>
 
           <Form.Item className="text-end">
             <button
-              className="px-5 py-2 bg-primary text-white rounded-xl font-bold "
               type="submit"
+              className="px-5 py-2 bg-primary rounded-xl font-bold"
             >
-              Update
+              <span className="text-white"> Update</span>
             </button>
           </Form.Item>
         </Form>

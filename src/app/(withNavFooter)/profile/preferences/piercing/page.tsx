@@ -158,7 +158,7 @@ const PiercingPage: React.FC = () => {
             )}
           </div>
 
-          <Link href="/user-profile-page/preferences">
+          <Link href="/profile/preferences">
             <div className=" flex justify-end items-end">
               <button className="bg-primary text-white py-3 px-6 rounded-lg clear-start">
                 Save

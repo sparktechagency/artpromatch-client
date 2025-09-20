@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { AllImages } from '@/assets/images/AllImages';
@@ -10,86 +9,35 @@ import { IoIosArrowForward } from 'react-icons/io';
 import TattoDetailsModal from './TattoDetailsModal';
 import Mapview from './Mapview';
 import Link from 'next/link';
+import { IMeta, IService } from '@/types';
+import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
 
-interface Artist {
-  id: number;
-  name: string;
-  location: string;
-  distance: string;
-  price: string;
-  availability: string;
-  categories: string[];
-  image: any;
-}
+const FilteredTatto = ({
+  page,
+  services,
+  meta,
+}: {
+  page: string;
+  services: IService[];
+  meta: IMeta;
+}) => {
+  console.log({ services });
 
-const FilteredTatto: React.FC = () => {
   const tattooCategories = [
-    'Tattoo Artists',
-    'Neo-Traditional',
-    'Realism',
-    'Black & Grey',
-    'Watercolor',
-    'Geometric',
-    'Minimalist',
-    'Tribal',
-    'New School',
+    ...new Set(services?.flatMap(service => service?.artist?.expertise)),
   ];
 
-  const artistsData: Artist[] = [
-    {
-      id: 1,
-      name: 'Lora Craft',
-      location: 'New York, USA',
-      distance: '3.2 miles away',
-      price: '400/hr',
-      availability: 'Next Week',
-      categories: ['Tattoo Artists', 'Neo-Traditional'],
-      image: AllImages.image2,
-    },
-    {
-      id: 2,
-      name: 'John Doe',
-      location: 'Los Angeles, USA',
-      distance: '2.8 miles away',
-      price: '350/hr',
-      availability: 'Next Week',
-      categories: ['Tattoo Artists', 'Realism'],
-      image: AllImages.image2,
-    },
-    {
-      id: 3,
-      name: 'Jane Smith',
-      location: 'Miami, USA',
-      distance: '5.1 miles away',
-      price: '500/hr',
-      availability: 'This Weekend',
-      categories: ['Tattoo Artists', 'Black & Grey'],
-      image: AllImages.image3,
-    },
-    {
-      id: 4,
-      name: 'Mike Johnson',
-      location: 'Chicago, USA',
-      distance: '4.3 miles away',
-      price: '450/hr',
-      availability: 'Next Month',
-      categories: ['Tattoo Artists', 'Watercolor'],
-      image: AllImages.image4,
-    },
-    // ...add remaining artists
-  ];
-
-  const [selectedTab, setSelectedTab] = useState<string>('Tattoo Artists');
+  const [selectedTab, setSelectedTab] = useState<string>(tattooCategories[0]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [selectedArtist, setSelectedArtist] = useState<Artist | null>(null);
+  const [selectedService, setSelectedService] = useState<IService | null>(null);
   const [view, setView] = useState<'list' | 'map'>('list');
 
-  const filteredArtists = artistsData.filter(artist =>
-    artist.categories.includes(selectedTab)
+  const filteredServices = services?.filter(service =>
+    service?.artist?.expertise.includes(selectedTab)
   );
 
-  const openModal = (id: number) => {
-    setSelectedArtist(artistsData.find(artist => artist.id === id) || null);
+  const openModal = (id: string) => {
+    setSelectedService(services?.find(service => service._id === id) || null);
     setIsModalOpen(true);
   };
 
@@ -109,13 +57,10 @@ const FilteredTatto: React.FC = () => {
     <div className="container mx-auto md:my-8">
       <div className="flex flex-col md:flex-row gap-5 md:gap-0 justify-between items-center">
         <Select
-          defaultValue="Tattoo Artists"
+          defaultValue={tattooCategories[0]}
           style={{ width: 150 }}
           onChange={handleCategoryChange}
-          options={[
-            { value: 'Tattoo Artists', label: 'Tattoo Artists' },
-            { value: 'Piercing Artists', label: 'Piercing Artists' },
-          ]}
+          options={tattooCategories.map(cat => ({ label: cat, value: cat }))}
         />
         <div>
           {tattooCategories.map(category => (
@@ -136,10 +81,10 @@ const FilteredTatto: React.FC = () => {
 
       <div className="my-8 flex flex-col md:flex-row justify-between items-center">
         <p>
-          {filteredArtists.length} {selectedTab}
+          {filteredServices.length} {selectedTab}
         </p>
         <div className="flex gap-2">
-          <button
+          <div
             onClick={() => handleViewChange('list')}
             className={`py-2 px-6 rounded-2xl ${
               view === 'list'
@@ -148,8 +93,8 @@ const FilteredTatto: React.FC = () => {
             }`}
           >
             List View
-          </button>
-          <button
+          </div>
+          <div
             onClick={() => handleViewChange('map')}
             className={`py-2 px-6 rounded-2xl ${
               view === 'map'
@@ -158,19 +103,19 @@ const FilteredTatto: React.FC = () => {
             }`}
           >
             Map View
-          </button>
+          </div>
         </div>
       </div>
 
       {view === 'list' ? (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-            {filteredArtists.map(artist => (
-              <div key={artist.id} className="border rounded-xl p-2">
+            {filteredServices.map(service => (
+              <div key={service?._id} className="border rounded-xl p-2">
                 <Image
-                  onClick={() => openModal(artist.id)}
-                  src={artist.image}
-                  alt={artist.name}
+                  onClick={() => openModal(service?._id)}
+                  src={getCleanImageUrl(service?.thumbnail)}
+                  alt={service?.title}
                   height={300}
                   width={500}
                   className="cursor-pointer"
@@ -179,47 +124,48 @@ const FilteredTatto: React.FC = () => {
                   <div className="flex items-center gap-2">
                     <Link href="/profile-page">
                       <Image
-                        src={artist.image}
-                        alt={artist.name}
+                        src={getCleanImageUrl(service?.artist?.auth?.image)}
+                        alt={service?.title}
                         height={50}
                         width={50}
-                        className="rounded-full"
+                        className="rounded-full h-12 w-12"
                       />
                     </Link>
                     <div>
-                      <h1 className="text-xl font-semibold">{artist.name}</h1>
+                      <h1 className="text-xl font-semibold">
+                        {service?.title}
+                      </h1>
                       <p className="text-xs text-neutral-500">
-                        {artist.location}
+                        {service?.artist?.stringLocation}
                       </p>
                     </div>
                   </div>
-                  <p className="text-secondary">{artist.distance}</p>
+                  <p className="text-secondary">{service?.distance}</p>
                 </div>
                 <div className="flex justify-between items-center gap-2 mb-5">
-                  <div className="flex gap-2">
-                    <button className="bg-neutral-200 px-2 py-1 rounded-3xl font-semibold">
-                      Ear
-                    </button>
-                    <button className="bg-neutral-200 px-2 py-1 rounded-3xl font-semibold">
-                      Facial
-                    </button>
-                    <button className="bg-neutral-200 px-2 py-1 rounded-3xl font-semibold">
-                      Oral
-                    </button>
-                    <button className="bg-neutral-200 px-2 py-1 rounded-3xl font-semibold">
-                      Genital
-                    </button>
+                  {service?.artist?.expertise
+                    ?.slice(0, 2)
+                    ?.map((exp: string, index: number) => (
+                      <div
+                        key={index}
+                        className="bg-neutral-200 px-3 py-2 rounded-3xl font-medium text-sm truncate"
+                      >
+                        {exp}
+                      </div>
+                    ))}
+
+                  <div className="text-secondary">
+                    +{service?.artist?.expertise?.length - 2}
                   </div>
-                  <button className="text-secondary">+5</button>
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="flex gap-1">
                     <FaCalendarDay />
-                    <p className="text-xs">{artist.availability}</p>
+                    <p className="text-xs">{service?.availability}</p>
                   </div>
                   <div className="flex items-center text-primary font-bold">
                     <FaDollarSign />
-                    {artist.price}
+                    {service?.price}
                     <IoIosArrowForward />
                   </div>
                 </div>
@@ -244,7 +190,7 @@ const FilteredTatto: React.FC = () => {
         width={800}
       >
         <TattoDetailsModal
-          selectedArtist={selectedArtist}
+          selectedService={selectedService}
           // onClose={handleCancel}
         />
       </Modal>

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 // import { useUpdatePreferenceMutation } from '@/redux/features/profileApi/profileApi';
@@ -56,7 +55,7 @@ const PreferecnePage = () => {
             Choose the tattoo styles you love the most.
           </p>
         </div>
-        <Link href="/user-profile-page/preferences/select-style">
+        <Link href="/profile/preferences/select-style">
           <IoIosArrowForward className="bg-slate-50 rounded-full h-8 w-8" />
         </Link>
       </div>
@@ -65,7 +64,7 @@ const PreferecnePage = () => {
           <h1 className="text-xl font-bold">Select Your Favorite Piercings</h1>
           <p className="text-secondary">Pick the ones that match your vibe.</p>
         </div>
-        <Link href="/user-profile-page/preferences/piercing">
+        <Link href="/profile/preferences/piercing">
           <IoIosArrowForward className="bg-slate-50 rounded-full h-8 w-8" />
         </Link>
       </div>

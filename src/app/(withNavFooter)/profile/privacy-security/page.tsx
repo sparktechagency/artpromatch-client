@@ -19,7 +19,7 @@ const PrivacyPage = () => {
           <h1 className="text-xl font-bold">Protect Account</h1>
           <p className="text-secondary">Change account Password</p>
         </div>
-        <Link href="/user-profile-page/change-password-page">
+        <Link href="/profile/change-password">
           <button className="border rounded-xl px-4 py-2 text-secondary">
             Update Password
           </button>

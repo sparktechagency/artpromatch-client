@@ -1,34 +1,24 @@
-'use client';
+import HomeComponent from '@/components/Shared/HomeComponent';
+import { getAllServices } from '@/services/Service';
 
-import ClientAfterLogin from '@/components/Shared/HomeComponent/AfterLogin/ClientAfterLogin';
-import BeforeLogin from '@/components/Shared/HomeComponent/BeforeLogin';
-import { useUser } from '@/context/UserContext';
-import React, { useEffect, useState } from 'react';
+const Homepage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ page: string }>;
+}) => {
+  const query = await searchParams;
 
-const Homepage = () => {
-  const { isLoading, setIsLoading, user } = useUser();
+  const { data: services, meta } = await getAllServices(
+    query.page,
+    '12',
+    query
+  );
 
-  console.log({ user });
-
-  const renderContent = () => {
-    if (!user) return <BeforeLogin />;
-
-    switch (user.role) {
-      case 'CLIENT':
-        return <ClientAfterLogin />;
-
-      // case 'ARTIST':
-      //   return <ArtistAfterLogin />;
-
-      // case 'BUSINESS':
-      //   return <BusinessAfterLogin />;
-
-      default:
-        return <BeforeLogin />;
-    }
-  };
-
-  return <div>{renderContent()}</div>;
+  return (
+    <div>
+      <HomeComponent page={query.page} services={services} meta={meta} />
+    </div>
+  );
 };
 
 export default Homepage;

@@ -1,10 +1,10 @@
-import ChnagePassword from '@/components/WithNavFooterComponents/Profile/UserProfile/ChangePassword';
+import ChangePassword from '@/components/WithNavFooterComponents/Profile/UserProfile/ChangePassword';
 import React from 'react';
 
 const ChangePasswordPage = () => {
   return (
     <div>
-      <ChnagePassword />
+      <ChangePassword />
     </div>
   );
 };

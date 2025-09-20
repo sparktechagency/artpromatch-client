@@ -7,28 +7,20 @@ import { useState } from 'react';
 import { AiOutlineMessage } from 'react-icons/ai';
 import { CiHeart } from 'react-icons/ci';
 import Link from 'next/link';
+import { IService } from '@/types';
 
 // Reuse Artist type from FilteredTatto or define here
-export interface Artist {
-  id: number;
-  name: string;
-  location: string;
-  distance: string;
-  price: string;
-  availability: string;
-  categories: string[];
-  image: any;
-}
+
 
 interface TattoDetailsModalProps {
-  selectedArtist: Artist | null;
+  selectedService: IService;
   // onClose: () => void;
 }
 
 const TattoDetailsModal: React.FC<TattoDetailsModalProps> = ({
-  selectedArtist,
+  selectedService,
 }) => {
-  const artistsData: Artist[] = [
+  const artistsData: IService[] = [
     {
       id: 1,
       name: 'Lora Craft',
@@ -72,26 +64,26 @@ const TattoDetailsModal: React.FC<TattoDetailsModalProps> = ({
     // ...rest of your mock artists
   ];
 
-  const [currentArtist, setCurrentArtist] = useState<Artist>(
-    selectedArtist || artistsData[0]
-  );
+  // const [currentService, setCurrentService] = useState<IService>(
+  //   selectedService 
+  // );
 
-  const handlePrev = () => {
-    const currentIndex = artistsData.findIndex(
-      artist => artist.id === currentArtist.id
-    );
-    const prevArtist =
-      artistsData[currentIndex - 1] || artistsData[artistsData.length - 1];
-    setCurrentArtist(prevArtist);
-  };
+  // const handlePrev = () => {
+  //   const currentIndex = artistsData.findIndex(
+  //     artist => artist?._id === currentService?._id
+  //   );
+  //   const prevService =
+  //     artistsData[currentIndex - 1] || artistsData[artistsData.length - 1];
+  //   setCurrentService(prevService);
+  // };
 
-  const handleNext = () => {
-    const currentIndex = artistsData.findIndex(
-      artist => artist.id === currentArtist.id
-    );
-    const nextArtist = artistsData[currentIndex + 1] || artistsData[0];
-    setCurrentArtist(nextArtist);
-  };
+  // const handleNext = () => {
+  //   const currentIndex = artistsData.findIndex(
+  //     artist => artist._id === currentService?._id
+  //   );
+  //   const nextArtist = artistsData[currentIndex + 1] || artistsData[0];
+  //   setCurrentService(nextArtist);
+  // };
 
   return (
     <div className="relative p-4">
@@ -107,7 +99,7 @@ const TattoDetailsModal: React.FC<TattoDetailsModalProps> = ({
             />
           </Link>
           <div>
-            <h1 className="font-bold">{currentArtist.name}</h1>
+            <h1 className="font-bold">{currentArtist.title}</h1>
             <p className="text-sm text-gray-500">{currentArtist.location}</p>
           </div>
         </div>

@@ -132,7 +132,7 @@ const BookingModalTwo: React.FC<BookingModalTwoProps> = ({
                 alt="upload"
                 width={30}
                 height={30}
-              ></Image>
+              />
             </Upload>
           </div>
         </Form.Item>

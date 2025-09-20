@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { AllImages } from '@/assets/images/AllImages';
 import { useRouter } from 'next/navigation';
 import { Flex, Input } from 'antd';
-import { sendSignupOtpAgain, verifySignUpByOTP } from '@/services/AuthService';
+import { sendSignupOtpAgain, verifySignUpByOTP } from '@/services/Auth';
 import { toast } from 'sonner';
 
 const AccountVerification: React.FC = () => {
@@ -35,7 +35,7 @@ const AccountVerification: React.FC = () => {
     try {
       const res = await verifySignUpByOTP(userEmail!, otp);
 
-      if (res.success) {
+      if (res?.success) {
         toast.success(res.message);
         router.push('/user-type-selection');
       } else {
@@ -51,7 +51,7 @@ const AccountVerification: React.FC = () => {
     try {
       const res = await sendSignupOtpAgain(userEmail!);
 
-      if (res.success) {
+      if (res?.success) {
         toast.success(res?.message);
       } else {
         toast.error(res?.message);
