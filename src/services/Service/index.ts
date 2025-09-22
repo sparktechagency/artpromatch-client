@@ -4,6 +4,7 @@ import {
   getValidAccessTokenForActions,
   getValidAccessTokenForServerBasedGet,
 } from '@/lib/getValidAccessToken';
+import { FieldValues } from '@/types';
 
 // getAllServices
 export const getAllServices = async (
@@ -39,6 +40,35 @@ export const getAllServices = async (
     );
 
     const result = await res.json();
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
+// requestAServiceBooking
+export const requestAServiceBooking = async (
+  bookingData: FieldValues
+): Promise<any> => {
+  const accessToken = await getValidAccessTokenForActions();
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API}/bookings/create`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: accessToken,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bookingData),
+      }
+    );
+
+    const result = await res.json();
+
+    console.log({ result });
+
     return result;
   } catch (error: any) {
     return Error(error);

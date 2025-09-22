@@ -1,16 +1,13 @@
 'use client';
 
 import { AllImages } from '@/assets/images/AllImages';
-import { Dropdown, Typography } from 'antd';
+import { Typography } from 'antd';
 import Image from 'next/image';
-import { IoIosArrowDown } from 'react-icons/io';
 import { IoLocationOutline } from 'react-icons/io5';
 import { CiSearch } from 'react-icons/ci';
-import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { useUser } from '@/context/UserContext';
-import { IArtist, IMeta } from '@/types';
 import { RxCross2 } from 'react-icons/rx';
 
 const ClientAfterLoginHeader = () => {
@@ -20,7 +17,6 @@ const ClientAfterLoginHeader = () => {
 
   const { user } = useUser();
   const [searchTerm, setSearchTerm] = useState<string>('');
-
 
   const handleSearch = () => {
     // router.push(`/discover?searchTerm=${encodeURIComponent(searchTerm)}`);

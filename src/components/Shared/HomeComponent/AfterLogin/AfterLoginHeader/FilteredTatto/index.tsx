@@ -4,7 +4,7 @@ import { AllImages } from '@/assets/images/AllImages';
 import { Modal, Select } from 'antd';
 import Image from 'next/image';
 import { useState } from 'react';
-import { FaCalendarDay, FaDollarSign } from 'react-icons/fa6';
+import { FaCalendarDay, FaDollarSign, FaStar } from 'react-icons/fa6';
 import { IoIosArrowForward } from 'react-icons/io';
 import TattoDetailsModal from './TattoDetailsModal';
 import Mapview from './Mapview';
@@ -21,8 +21,6 @@ const FilteredTatto = ({
   services: IService[];
   meta: IMeta;
 }) => {
-  console.log({ services });
-
   const tattooCategories = [
     ...new Set(services?.flatMap(service => service?.artist?.expertise)),
   ];
@@ -48,6 +46,16 @@ const FilteredTatto = ({
   const handleViewChange = (view: 'list' | 'map') => {
     setView(view);
   };
+
+  const uniqueArtistsMap = new Map();
+
+  services.forEach(service => {
+    if (service.artist?._id) {
+      uniqueArtistsMap.set(service.artist._id.toString(), service.artist);
+    }
+  });
+
+  const uniqueArtists = Array.from(uniqueArtistsMap.values());
 
   const handleCategoryChange = (value: string) => {
     console.log(`selected ${value}`);
@@ -81,7 +89,7 @@ const FilteredTatto = ({
 
       <div className="my-8 flex flex-col md:flex-row justify-between items-center">
         <p>
-          {filteredServices.length} {selectedTab}
+          {filteredServices?.length} {selectedTab}
         </p>
         <div className="flex gap-2">
           <div
@@ -110,7 +118,7 @@ const FilteredTatto = ({
       {view === 'list' ? (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-            {filteredServices.map(service => (
+            {filteredServices?.map(service => (
               <div key={service?._id} className="border rounded-xl p-2">
                 <Image
                   onClick={() => openModal(service?._id)}
@@ -140,7 +148,9 @@ const FilteredTatto = ({
                       </p>
                     </div>
                   </div>
-                  <p className="text-secondary">{service?.distance}</p>
+                  <div className="text-secondary whitespace-nowrap">
+                    {(service?.artist?.distance! / 1000).toFixed(2)} km
+                  </div>
                 </div>
                 <div className="flex justify-between items-center gap-2 mb-5">
                   {service?.artist?.expertise
@@ -161,8 +171,16 @@ const FilteredTatto = ({
                 <div className="flex justify-between items-center">
                   <div className="flex gap-1">
                     <FaCalendarDay />
-                    <p className="text-xs">{service?.availability}</p>
+                    {service?.artist?.totalCompletedService}
                   </div>
+                  {service?.artist?.avgRating > 0 && (
+                    <div className="flex gap-1 text-amber-600">
+                      <FaStar />
+                      {service?.artist?.avgRating}
+                      <IoIosArrowForward />
+                    </div>
+                  )}
+
                   <div className="flex items-center text-primary font-bold">
                     <FaDollarSign />
                     {service?.price}
@@ -179,7 +197,7 @@ const FilteredTatto = ({
           </div>
         </>
       ) : (
-        <Mapview />
+        <Mapview artists={uniqueArtists} />
       )}
 
       <Modal
@@ -189,10 +207,7 @@ const FilteredTatto = ({
         centered
         width={800}
       >
-        <TattoDetailsModal
-          selectedService={selectedService}
-          // onClose={handleCancel}
-        />
+        <TattoDetailsModal selectedService={selectedService} />
       </Modal>
     </div>
   );
