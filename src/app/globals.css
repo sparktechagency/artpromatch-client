@@ -36,3 +36,51 @@ body {
   /* color: var(--foreground); */
   font-family: var(--font-plus-jakarta), sans-serif;
 }
+
+/* @layer utilities {
+  .text-white {
+    color: #fff !important;
+  }
+} */
+
+/* All For LeafLet */
+@import 'leaflet/dist/leaflet.css';
+
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+}
+
+.leaflet-popup-content {
+  margin: 12px;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+}
+
+.custom-profile-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Optional: Add a pulsing animation to the markers */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+  }
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  }
+}
+
+.custom-profile-marker div:first-child {
+  animation: pulse 2s infinite;
+}

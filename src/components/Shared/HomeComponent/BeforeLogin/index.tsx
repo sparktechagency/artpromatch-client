@@ -15,7 +15,7 @@ const BeforeLogin = () => {
   return (
     <div className="container mx-auto px-2 md:px-0">
       <div className="mb-4 flex flex-col justify-center items-center text-center pt-16 bg-[#fafafa] border rounded-lg border-gray-300/50">
-        <Image src={AllImages.logo} width={50} height={50} alt="logo"></Image>
+        <Image src={AllImages.logo} width={50} height={50} alt="logo" />
         <h1>
           <div className="text-center md:text-6xl font-bold mt-6 mb-2 ">
             Your next masterpiece <br /> starts here

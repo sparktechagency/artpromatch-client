@@ -1,95 +1,120 @@
 'use client';
 
-// import { useUpdatePersonalInfoMutation } from '@/redux/features/profileApi/profileApi';
-import { ConfigProvider, Form, Input, Select } from 'antd';
-import React from 'react';
+import { useUser } from '@/context/UserContext';
+import { updateAuthData } from '@/services/Auth';
+import { ConfigProvider, Form, Input } from 'antd';
+import { toast } from 'sonner';
 
 interface UserProfileFormValues {
   fullName: string;
   email: string;
-  contactNumber: string;
+  phoneNumber: string;
   country: string;
 }
 
-const UserProfile: React.FC = () => {
-  // const [updatePersonalInfo] = useUpdatePersonalInfoMutation();
+const UserProfile = () => {
+  const { user, setIsLoading } = useUser();
+  const [form] = Form.useForm<UserProfileFormValues>();
 
-  const onFinish = (values: UserProfileFormValues) => {
-    console.log('Received values of form:', values);
-    // Call your mutation here
-    // updatePersonalInfo(values);
+  const handleUpdateData = async (values: UserProfileFormValues) => {
+    try {
+      const res = await updateAuthData(values.fullName);
+      if (res?.success) {
+        toast.success(res?.message);
+        setIsLoading(true);
+      } else {
+        toast.error(res.message);
+      }
+    } catch (err: any) {
+      console.error(err);
+    }
   };
-
-  const { Option } = Select;
 
   return (
     <div className="px-2 md:px-0">
       <ConfigProvider
         theme={{
           components: {
-            Form: { borderRadius: 0 },
-            Input: { borderRadius: 5 },
+            Form: {
+              borderRadius: 0,
+            },
+            Input: {
+              borderRadius: 5,
+            },
           },
         }}
       >
         <Form<UserProfileFormValues>
-          name="userProfile"
-          initialValues={{}}
-          onFinish={onFinish}
+          form={form}
+          name="personalInfo"
+          initialValues={{
+            fullName: user?.fullName,
+            email: user?.email,
+            phoneNumber: user?.phoneNumber,
+            // country: 'USA',
+          }}
+          onFinish={handleUpdateData}
           layout="vertical"
           className="my-5"
         >
           <Form.Item
             name="fullName"
-            label={<p className="text-md">Full Name</p>}
-            rules={[
-              { required: true, message: 'Please input your Full Name!' },
-            ]}
-          >
-            <Input placeholder="Your Name" required className="text-md" />
-          </Form.Item>
-
-          <Form.Item
-            name="email"
-            label={<p className="text-md">Email</p>}
-            rules={[{ required: true, message: 'Please input your Email!' }]}
-          >
-            <Input placeholder="Your Email" required className="text-md" />
-          </Form.Item>
-
-          <Form.Item
-            name="contactNumber"
-            label={<p className="text-md">Contact Number</p>}
-            rules={[
-              { required: true, message: 'Please input your Contact Number!' },
-            ]}
+            label={<p className=" text-md">Full Name</p>}
+            rules={[{ required: true, message: 'Please enter your name!' }]}
           >
             <Input
-              placeholder="Contact Number"
-              required
-              type="tel"
-              className="text-md"
+              style={{ padding: '6px' }}
+              className=" text-md"
+              placeholder="Your Name"
             />
           </Form.Item>
 
           <Form.Item
+            name="email"
+            label={<p className=" text-md">Email</p>}
+            rules={[{ required: true, message: 'Please enter your email!' }]}
+          >
+            <Input
+              readOnly
+              style={{ padding: '6px' }}
+              className=" text-md"
+              placeholder="Your Email"
+            />
+          </Form.Item>
+
+          <Form.Item
+            name="phoneNumber"
+            label={<p className=" text-md">Contact Number</p>}
+            rules={[
+              { required: true, message: 'Please enter your phone number' },
+            ]}
+          >
+            <Input
+              readOnly
+              style={{ padding: '6px' }}
+              className="text-md"
+              placeholder="Contact Number"
+            />
+          </Form.Item>
+
+          {/* <Form.Item
             name="country"
-            label={<p className="text-md">Country</p>}
-            rules={[{ required: true, message: 'Please select your country!' }]}
+            label={<p className=" text-md">Country</p>}
+            rules={[{ required: true, message: 'Please select your country' }]}
           >
             <Select placeholder="Select Country">
-              <Option value="UK">UK</Option>
-              <Option value="USA">USA</Option>
-              <Option value="UAE">UAE</Option>
+              <Option value="UAE">UAE </Option>
+              <Option value="UK">UK </Option>
+              <Option value="USA">USA </Option>
             </Select>
-          </Form.Item>
+          </Form.Item> */}
 
           <Form.Item className="text-end">
             <button
               type="submit"
-              className="px-5 py-2 bg-primary text-white rounded-xl font-bold"
+              className="px-5 py-2 bg-primary rounded-xl font-bold"
             >
-              Save Changes
+              <span className="text-white">Save Changes</span>
             </button>
           </Form.Item>
         </Form>

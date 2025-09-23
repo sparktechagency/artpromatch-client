@@ -17,12 +17,7 @@ const WantATattto = () => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
         <div className="border rounded-xl border-gray-300/50 p-2">
-          <Image
-            src={AllImages.image1}
-            alt="image"
-            height={300}
-            width={500}
-          ></Image>
+          <Image src={AllImages.image1} alt="image" height={300} width={500} />
           <div className="flex justify-between items-center my-3">
             <div className="flex justify-center items-center gap-2">
               <Image
@@ -31,7 +26,7 @@ const WantATattto = () => {
                 height={50}
                 width={50}
                 className="rounded-full"
-              ></Image>
+              />
               <div>
                 <h1 className="text-xl font-semibold">Lora Craft</h1>
                 <p className="text-xs text-neutral-500">New York,USA</p>
@@ -69,12 +64,7 @@ const WantATattto = () => {
           </div>
         </div>
         <div className="border rounded-xl border-gray-300/50 p-2">
-          <Image
-            src={AllImages.image2}
-            alt="image"
-            height={300}
-            width={500}
-          ></Image>
+          <Image src={AllImages.image2} alt="image" height={300} width={500} />
           <div className="flex justify-between items-center my-3">
             <div className="flex justify-center items-center gap-2">
               <Image
@@ -83,7 +73,7 @@ const WantATattto = () => {
                 height={50}
                 width={50}
                 className="rounded-full"
-              ></Image>
+              />
               <div>
                 <h1 className="text-xl font-semibold">Lora Craft</h1>
                 <p className="text-xs text-neutral-500">New York,USA</p>
@@ -121,12 +111,7 @@ const WantATattto = () => {
           </div>
         </div>
         <div className="border rounded-xl border-gray-300/50 p-2">
-          <Image
-            src={AllImages.image3}
-            alt="image"
-            height={300}
-            width={500}
-          ></Image>
+          <Image src={AllImages.image3} alt="image" height={300} width={500} />
           <div className="flex justify-between items-center my-3">
             <div className="flex justify-center items-center gap-2">
               <Image
@@ -135,7 +120,7 @@ const WantATattto = () => {
                 height={50}
                 width={50}
                 className="rounded-full"
-              ></Image>
+              />
               <div>
                 <h1 className="text-xl font-semibold">Lora Craft</h1>
                 <p className="text-xs text-neutral-500">New York,USA</p>
@@ -173,12 +158,7 @@ const WantATattto = () => {
           </div>
         </div>
         <div className="border rounded-xl border-gray-300/50 p-2">
-          <Image
-            src={AllImages.image4}
-            alt="image"
-            height={300}
-            width={500}
-          ></Image>
+          <Image src={AllImages.image4} alt="image" height={300} width={500} />
           <div className="flex justify-between items-center my-3">
             <div className="flex justify-center items-center gap-2">
               <Image
@@ -187,7 +167,7 @@ const WantATattto = () => {
                 height={50}
                 width={50}
                 className="rounded-full"
-              ></Image>
+              />
               <div>
                 <h1 className="text-xl font-semibold">Lora Craft</h1>
                 <p className="text-xs text-neutral-500">New York,USA</p>

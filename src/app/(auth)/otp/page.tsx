@@ -22,12 +22,7 @@ const Otp: React.FC = () => {
       <div className="mx-4 md:mx-0 w-auto md:w-[600px]">
         <div className=" py-10 px-5 md:px-14">
           <div className="flex flex-col justify-center items-center">
-            <Image
-              src={AllImages.logo}
-              width={50}
-              height={50}
-              alt="logo"
-            ></Image>
+            <Image src={AllImages.logo} width={50} height={50} alt="logo" />
             <h1 className="text-3xl text-center font-bold py-5">OTP</h1>
             <p className="text-center">
               To reset you account, please enter the verification code you get

@@ -13,12 +13,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
 }) => {
   return (
     <div className="flex  flex-col justify-center items-center">
-      <Image
-        src={AllImages.checkCircle}
-        width={50}
-        height={50}
-        alt="logo"
-      ></Image>
+      <Image src={AllImages.checkCircle} width={50} height={50} alt="logo" />
 
       <h1 className="text-2xl font-bold">Your booking is confirmed!</h1>
       <p className="text-gray-500 my-2">

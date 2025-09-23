@@ -19,12 +19,7 @@ const PreferenceSelection = () => {
               className="w-full md:w-[600px] bg-white px-2 rounded-2xl"
             >
               <div className="mb-4 flex flex-col justify-center items-center text-center">
-                <Image
-                  src={AllImages.logo}
-                  width={50}
-                  height={50}
-                  alt="logo"
-                ></Image>
+                <Image src={AllImages.logo} width={50} height={50} alt="logo" />
                 <h2 className="text-center text-2xl font-bold mt-6 mb-2 text-primary">
                   Let&apos;s Personalize Your Experience!
                 </h2>

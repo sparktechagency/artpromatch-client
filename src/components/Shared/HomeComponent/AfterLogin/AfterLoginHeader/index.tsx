@@ -1,45 +1,60 @@
-"use client";
+'use client';
 
-import { AllImages } from "@/assets/images/AllImages";
-import { Dropdown, Typography } from "antd";
-import Image from "next/image";
-import { IoIosArrowDown } from "react-icons/io";
-import { IoLocationOutline } from "react-icons/io5";
-import { CiSearch } from "react-icons/ci";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { AllImages } from '@/assets/images/AllImages';
+import { Typography } from 'antd';
+import Image from 'next/image';
+import { IoLocationOutline } from 'react-icons/io5';
+import { CiSearch } from 'react-icons/ci';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
+import { useUser } from '@/context/UserContext';
+import { RxCross2 } from 'react-icons/rx';
 
-const AfterLoginHeader = () => {
+const ClientAfterLoginHeader = () => {
   const router = useRouter();
-  const [searchValue, setSearchValue] = useState<string>("");
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  const onSearch = () => {
-    if (!searchValue.trim()) return;
-    console.log("Search input:", searchValue);
+  const { user } = useUser();
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
-    // ✅ Redirect to a results page
-    router.push(`/search?query=${encodeURIComponent(searchValue)}`);
+  const handleSearch = () => {
+    // router.push(`/discover?searchTerm=${encodeURIComponent(searchTerm)}`);
+
+    const params = new URLSearchParams(searchParams.toString());
+    if (searchTerm) {
+      params.set('searchTerm', searchTerm);
+    } else {
+      params.delete('searchTerm');
+    }
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
-  const items = [
-    {
-      key: "1",
-      label: (
-        <Link target="_blank" rel="noopener noreferrer" href="">
-          Current Location
-        </Link>
-      ),
-    },
-    {
-      key: "2",
-      label: (
-        <Link target="_blank" rel="noopener noreferrer" href="">
-          Change Location
-        </Link>
-      ),
-    },
-  ];
+  const handleReset = () => {
+    setSearchTerm('');
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete('searchTerm');
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  };
+
+  // const items = [
+  //   {
+  //     key: '1',
+  //     label: (
+  //       <Link target="_blank" rel="noopener noreferrer" href="">
+  //         Current Location
+  //       </Link>
+  //     ),
+  //   },
+  //   {
+  //     key: '2',
+  //     label: (
+  //       <Link target="_blank" rel="noopener noreferrer" href="">
+  //         Change Location
+  //       </Link>
+  //     ),
+  //   },
+  // ];
 
   return (
     <div>
@@ -52,28 +67,35 @@ const AfterLoginHeader = () => {
           Discover tattoo artists, piercers, and studios tailored to <br /> your
           preferences.
         </Typography.Text>
-
-        <div className="bg-slate-100 rounded-3xl p-1 flex justify-center items-center gap-3">
+        <div className="bg-slate-100 rounded-3xl p-2 flex justify-center items-center gap-3">
           <IoLocationOutline className="h-5 w-5 text-primary" />
-          <h4 className="text-sm">
-            118-06 Atlantic Ave, South Richmond Hill, New York
-          </h4>
-          <Dropdown menu={{ items }} placement="bottom">
+          <div className="text-sm">{user?.stringLocation}</div>
+          {/* <Dropdown menu={{ items }} placement="bottom">
             <IoIosArrowDown className="h-5 w-5 text-primary cursor-pointer" />
-          </Dropdown>
+          </Dropdown> */}
         </div>
-
+        {/* Search field */}
         <div className="mt-2 md:mt-5 md:w-[650px] border rounded-lg p-2 flex justify-between items-center">
           <input
             type="text"
-            placeholder="Search for tattoo artists, piercers and studios"
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && onSearch()}
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && handleSearch()}
             className="w-full text-sm outline-none bg-transparent px-2"
+            placeholder="Search for tattoo artists, piercers and studios"
           />
+
+          {searchTerm && (
+            <button
+              onClick={handleReset}
+              className="h-7 w-7 rounded-full flex justify-center items-center hover:bg-gray-200"
+            >
+              <RxCross2 className="text-gray-500" />
+            </button>
+          )}
+
           <button
-            onClick={onSearch}
+            onClick={handleSearch}
             className="bg-primary h-8 w-8 rounded-xl flex justify-center items-center"
           >
             <CiSearch className="text-white h-5 w-5 font-bold" />
@@ -84,4 +106,4 @@ const AfterLoginHeader = () => {
   );
 };
 
-export default AfterLoginHeader;
+export default ClientAfterLoginHeader;

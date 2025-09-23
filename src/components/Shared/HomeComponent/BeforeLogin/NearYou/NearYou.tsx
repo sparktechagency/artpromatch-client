@@ -27,15 +27,10 @@ const NearYou = () => {
             alt="logo"
             height={200}
             width={200}
-          ></Image>
+          />
         </div>
         <div className=" flex items-center justify-center">
-          <Image
-            src={AllImages.image9}
-            alt="logo"
-            height={300}
-            width={300}
-          ></Image>
+          <Image src={AllImages.image9} alt="logo" height={300} width={300} />
         </div>
       </div>
     </div>
