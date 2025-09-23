@@ -1,10 +1,11 @@
+import Pagination from '../../Pagination';
 import ClientAfterLoginHeader from './AfterLoginHeader';
-import FilteredTatto from './AfterLoginHeader/FilteredTatto';
+import Services from './AfterLoginHeader/Services';
 import { IMeta, IService } from '@/types';
 
 const ClientAfterLogin = ({
   page,
-  services,
+  services = [],
   meta,
 }: {
   page: string;
@@ -14,7 +15,8 @@ const ClientAfterLogin = ({
   return (
     <div className="container mx-auto px-2 md:px-0">
       <ClientAfterLoginHeader />
-      <FilteredTatto page={page} services={services} meta={meta} />
+      <Services page={page} services={services} meta={meta} />
+      <Pagination meta={meta} />
     </div>
   );
 };

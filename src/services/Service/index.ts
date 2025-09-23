@@ -5,6 +5,7 @@ import {
   getValidAccessTokenForServerBasedGet,
 } from '@/lib/getValidAccessToken';
 import { FieldValues } from '@/types';
+import { revalidateTag } from 'next/cache';
 
 // getAllServices
 export const getAllServices = async (
@@ -69,6 +70,32 @@ export const requestAServiceBooking = async (
 
     console.log({ result });
 
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
+// updateUserRadius
+export const updateClientRadius = async (radius: string): Promise<any> => {
+  const accessToken = await getValidAccessTokenForActions();
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API}/clients/radius`,
+      {
+        method: 'PATCH',
+        headers: {
+          Authorization: accessToken,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ radius }),
+      }
+    );
+
+    revalidateTag('SERVICES');
+
+    const result = await res.json();
     return result;
   } catch (error: any) {
     return Error(error);

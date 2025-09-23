@@ -67,7 +67,6 @@ const ClientAfterLoginHeader = () => {
           Discover tattoo artists, piercers, and studios tailored to <br /> your
           preferences.
         </Typography.Text>
-
         <div className="bg-slate-100 rounded-3xl p-2 flex justify-center items-center gap-3">
           <IoLocationOutline className="h-5 w-5 text-primary" />
           <div className="text-sm">{user?.stringLocation}</div>
@@ -75,9 +74,7 @@ const ClientAfterLoginHeader = () => {
             <IoIosArrowDown className="h-5 w-5 text-primary cursor-pointer" />
           </Dropdown> */}
         </div>
-
         {/* Search field */}
-
         <div className="mt-2 md:mt-5 md:w-[650px] border rounded-lg p-2 flex justify-between items-center">
           <input
             type="text"

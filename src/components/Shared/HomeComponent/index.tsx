@@ -7,7 +7,7 @@ import { IMeta, IService } from '@/types';
 
 const HomeComponent = ({
   page,
-  services,
+  services = [],
   meta,
 }: {
   page: string;
