@@ -18,30 +18,30 @@ export const isTokenExpired = async (token: string): Promise<boolean> => {
   }
 };
 
-// getValidAccessTokenForActions
-export const getValidAccessTokenForActions = async (): Promise<string> => {
-  const cookieStore = await cookies();
+// getValidAccessTokenForServerActions
+export const getValidAccessTokenForServerActions =
+  async (): Promise<string> => {
+    const cookieStore = await cookies();
 
-  let accessToken = cookieStore.get('accessToken')!.value;
+    let accessToken = cookieStore.get('accessToken')!.value;
 
-  if (!accessToken || (await isTokenExpired(accessToken))) {
-    const refreshToken = cookieStore.get('refreshToken')!.value;
+    if (!accessToken || (await isTokenExpired(accessToken))) {
+      const refreshToken = cookieStore.get('refreshToken')!.value;
 
-    const { data } = await getNewAccessToken(refreshToken);
+      const { data } = await getNewAccessToken(refreshToken);
 
-    accessToken = data?.accessToken;
+      accessToken = data?.accessToken;
 
-    (await cookies()).set('accessToken', accessToken);
-  }
+      (await cookies()).set('accessToken', accessToken);
+    }
 
-  return accessToken;
-};
+    return accessToken;
+  };
 
-// getValidAccessTokenForServerBasedGet
-
+// getValidAccessTokenForServerHandlerGet
 let cachedAccessToken: string | null = null; // for not getting new token again and again
 let tokenExpiry: number | null = null; // for not getting new token again and again
-export const getValidAccessTokenForServerBasedGet =
+export const getValidAccessTokenForServerHandlerGet =
   async (): Promise<string> => {
     const now = Date.now();
 
