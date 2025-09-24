@@ -4,65 +4,22 @@ import {
   getValidAccessTokenForServerActions,
   getValidAccessTokenForServerHandlerGet,
 } from '@/lib/getValidAccessToken';
-import { FieldValues } from '@/types';
 import { revalidateTag } from 'next/cache';
 
-// getAllServices
-export const getAllServices = async (
-  page = '1',
-  limit?: string,
-  query?: { [key: string]: string | string[] | undefined }
+// confirmPaymentForClient
+export const confirmPaymentForClient = async (
+  session_id: string
 ): Promise<any> => {
-  let token: string | null = null;
-  try {
-    token = await getValidAccessTokenForServerHandlerGet();
-  } catch (error) {
-    token = null;
-  }
-
-  const params = new URLSearchParams();
-
-  if (query?.searchTerm) {
-    params.append('searchTerm', query?.searchTerm.toString());
-  }
+  const accessToken = await getValidAccessTokenForServerHandlerGet();
 
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_API}/clients?limit=${limit}&page=${page}&${params}`,
-      {
-        method: 'GET',
-        headers: {
-          ...(token ? { Authorization: token } : {}),
-        },
-        next: {
-          tags: ['SERVICES'],
-        },
-      }
-    );
-
-    const result = await res.json();
-    return result;
-  } catch (error: any) {
-    return Error(error);
-  }
-};
-
-// requestAServiceBooking
-export const requestAServiceBooking = async (
-  bookingData: FieldValues
-): Promise<any> => {
-  const accessToken = await getValidAccessTokenForServerActions();
-
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_API}/bookings/create`,
+      `${process.env.NEXT_PUBLIC_BASE_API}/bookings/confirm-payment?sessionId=${session_id}`,
       {
         method: 'POST',
         headers: {
           Authorization: accessToken,
-          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(bookingData),
       }
     );
 
