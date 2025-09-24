@@ -20,7 +20,7 @@ const MainChat = () => {
               alt="User"
             />
             <div className="bg-gray-100 text-gray-900 text-sm px-4 py-2 rounded-lg max-w-xs">
-              Hey, this is a demo message text. I'm writing to check the
+              Hey, this is a demo message text. I&apos;m writing to check the
               responsiveness of this message box
             </div>
           </div>

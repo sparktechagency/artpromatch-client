@@ -1,5 +1,5 @@
 import { AllImages } from '@/assets/images/AllImages';
-import { Form, Typography } from 'antd';
+import { Form } from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';

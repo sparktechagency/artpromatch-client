@@ -168,7 +168,7 @@ const ProfileMarker = ({
             </div>
             <div>
               <div className="font-semibold">Distance:</div>
-              <div>{(artist?.distance! / 1000).toFixed(2)} km</div>
+              <div>{((artist?.distance ?? 0) / 1000).toFixed(2)} km</div>
             </div>
           </div>
         </div>

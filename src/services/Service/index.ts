@@ -17,6 +17,7 @@ export const getAllServices = async (
   try {
     token = await getValidAccessTokenForServerHandlerGet();
   } catch (error) {
+    console.error(error);
     token = null;
   }
 

@@ -178,7 +178,9 @@ const Services = ({
                           {service?.title}
                         </h1>
                         <div className="text-secondary whitespace-nowrap">
-                          {(service?.artist?.distance! / 1000).toFixed(2)} km
+                          {(service?.artist?.distance ?? 0 / 1000).toFixed(2) ||
+                            0}{' '}
+                          km
                         </div>
                       </div>
                     </div>

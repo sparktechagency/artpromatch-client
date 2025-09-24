@@ -23,14 +23,14 @@ const PreferecnePage = () => {
       localStorage.getItem('selectedPerasing') || '[]'
     );
 
-    const data = {
-      favoriteTattooStyles: UpdatedSelectedArt,
-      favoritePiercings: selectedPerasing,
-      defaultHomeView: values.defaultHomeView,
-      preferredArtistType: values.preferredArtistType,
-      language: values.language,
-      dateFormat: values.dateFormat,
-    };
+    // const data = {
+    //   favoriteTattooStyles: UpdatedSelectedArt,
+    //   favoritePiercings: selectedPerasing,
+    //   defaultHomeView: values.defaultHomeView,
+    //   preferredArtistType: values.preferredArtistType,
+    //   language: values.language,
+    //   dateFormat: values.dateFormat,
+    // };
 
     // console.log("data:", data);
 
