@@ -41,31 +41,34 @@ export const getValidAccessTokenForServerActions =
 // getValidAccessTokenForServerHandlerGet
 let cachedAccessToken: string | null = null; // for not getting new token again and again
 let tokenExpiry: number | null = null; // for not getting new token again and again
-export const getValidAccessTokenForServerHandlerGet =
-  async (): Promise<string> => {
-    const now = Date.now();
+export const getValidAccessTokenForServerHandlerGet = async (): Promise<
+  string | null
+> => {
+  const now = Date.now();
 
-    if (cachedAccessToken && tokenExpiry && now < tokenExpiry) {
-      return cachedAccessToken;
-    }
-
-    const cookieStore = await cookies();
-    const refreshToken = cookieStore.get('refreshToken')?.value;
-
-    if (!refreshToken) {
-      throw new Error('No refresh token found');
-    }
-
-    const { data } = await getNewAccessToken(refreshToken);
-    cachedAccessToken = data?.accessToken;
-
-    if (!cachedAccessToken) {
-      throw new Error('No cached access token found');
-    }
-
-    const payload: { exp: number } = jwtDecode(cachedAccessToken);
-
-    tokenExpiry = payload.exp * 1000;
-
+  // if token is valid in cache
+  if (cachedAccessToken && tokenExpiry && now < tokenExpiry) {
     return cachedAccessToken;
-  };
+  }
+
+  const cookieStore = await cookies();
+  const refreshToken = cookieStore.get('refreshToken')?.value;
+
+  // 🚫 if user is not logged in null, will return null instead throwing error
+  if (!refreshToken) {
+    return null;
+  }
+
+  const { data } = await getNewAccessToken(refreshToken);
+
+  if (!data?.accessToken) {
+    return null;
+  }
+
+  cachedAccessToken = data.accessToken;
+
+  const payload: { exp: number } = jwtDecode(cachedAccessToken!);
+  tokenExpiry = payload.exp * 1000;
+
+  return cachedAccessToken;
+};

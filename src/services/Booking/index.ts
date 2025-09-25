@@ -18,7 +18,7 @@ export const confirmPaymentForClient = async (
       {
         method: 'POST',
         headers: {
-          Authorization: accessToken,
+          Authorization: accessToken!,
         },
       }
     );
