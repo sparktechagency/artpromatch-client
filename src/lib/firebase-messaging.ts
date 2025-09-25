@@ -3,20 +3,12 @@
 import { getMessaging, getToken } from 'firebase/messaging';
 import { app } from './firebase';
 
-let messaging: ReturnType<typeof getMessaging> | null = null;
-
-// will run only in browser
-if (
+export const messaging: ReturnType<typeof getMessaging> | null =
   typeof window !== 'undefined' &&
   'Notification' in window &&
   'serviceWorker' in navigator
-) {
-  try {
-    messaging = getMessaging(app);
-  } catch (err) {
-    console.error('Messaging init failed:', err);
-  }
-}
+    ? getMessaging(app)
+    : null;
 
 // getFcmToken
 export const getFcmToken = async (): Promise<string | null> => {
