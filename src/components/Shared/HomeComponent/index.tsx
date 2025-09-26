@@ -17,7 +17,8 @@ const HomeComponent = ({
   const { user } = useUser();
 
   const renderContent = () => {
-    if (!user) return <BeforeLogin />;
+    if (!user)
+      return <BeforeLogin page={page} services={services} meta={meta} />;
 
     switch (user.role) {
       case 'CLIENT':
@@ -30,7 +31,7 @@ const HomeComponent = ({
       //   return <BusinessAfterLogin />;
 
       default:
-        return <BeforeLogin />;
+        return <BeforeLogin page={page} services={services} meta={meta} />;
     }
   };
 

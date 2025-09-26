@@ -258,6 +258,7 @@ export const getNewAccessToken = async (refreshToken: string): Promise<any> => {
   }
 };
 
+// updateFcmTokenToServer
 export const updateFcmTokenToServer = async (data: FieldValues) => {
   const accessToken = await getValidAccessTokenForServerActions();
 
@@ -275,10 +276,6 @@ export const updateFcmTokenToServer = async (data: FieldValues) => {
     );
 
     const result = await res.json();
-
-    console.log({ result });
-
-
     return result;
   } catch (error: any) {
     return Error(error);
