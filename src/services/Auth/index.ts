@@ -133,7 +133,7 @@ export const signInUser = async (userData: FieldValues): Promise<any> => {
 
 // updateProfilePhoto
 export const updateProfilePhoto = async (data: FormData): Promise<any> => {
-  const token = await getValidAccessTokenForServerActions();
+  const accessToken = await getValidAccessTokenForServerActions();
 
   try {
     const res = await fetch(
@@ -142,7 +142,7 @@ export const updateProfilePhoto = async (data: FormData): Promise<any> => {
         method: 'PUT',
         body: data,
         headers: {
-          Authorization: token,
+          Authorization: `Bearer ${accessToken}`,
         },
       }
     );
@@ -268,7 +268,7 @@ export const updateFcmTokenToServer = async (data: FieldValues) => {
       {
         method: 'PUT',
         headers: {
-          Authorization: accessToken,
+          Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),

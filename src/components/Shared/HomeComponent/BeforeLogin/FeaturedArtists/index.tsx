@@ -1,19 +1,21 @@
 import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
 import { IService } from '@/types';
 import Image from 'next/image';
-import { FaCalendarDay, FaDollarSign, FaStar } from 'react-icons/fa6';
-import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
+import { SiGoogletasks } from 'react-icons/si';
+import { FaDollarSign, FaStar } from 'react-icons/fa6';
 
-const FeaturedTattooArtists = ({
-  tattooServices = [],
+const FeaturedArtists = ({
+  services = [],
+  title,
 }: {
-  tattooServices: IService[];
+  services: IService[];
+  title: string;
 }) => {
   return (
     <div className="container mx-auto md:my-20">
       <div className="flex justify-between items-center">
         <h1>
-          <div className="text-2xl font-bold">Featured Tattoo Artists</div>
+          <div className="text-2xl font-bold">{title}</div>
         </h1>
         {/* <div className="flex justify-center items-center gap-5">
           <IoIosArrowBack className="h-8 w-8 border rounded-full" />
@@ -30,7 +32,7 @@ const FeaturedTattooArtists = ({
         </div> */}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-        {tattooServices?.slice(0, 4)?.map(service => (
+        {services?.slice(0, 4)?.map(service => (
           <div
             key={service?._id}
             className="border rounded-xl border-gray-300/50 p-2"
@@ -82,21 +84,20 @@ const FeaturedTattooArtists = ({
             </div>
             <div className="flex justify-between items-center">
               <div className="flex gap-1">
-                <FaCalendarDay />
+                <SiGoogletasks  />
                 {service?.totalCompletedOrder}
               </div>
               {service?.avgRating > 0 && (
                 <div className="flex gap-1 text-amber-600">
                   <FaStar />
-                  {service?.avgRating}
-                  <IoIosArrowForward />
+                  {service?.avgRating} ({service?.totalReviewCount})
                 </div>
               )}
 
               <div className="flex items-center text-primary font-bold">
                 <FaDollarSign />
                 {service?.price}
-                <IoIosArrowForward />
+                {/* <IoIosArrowForward /> */}
               </div>
             </div>
           </div>
@@ -106,4 +107,4 @@ const FeaturedTattooArtists = ({
   );
 };
 
-export default FeaturedTattooArtists;
+export default FeaturedArtists;

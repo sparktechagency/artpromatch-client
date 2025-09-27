@@ -3,26 +3,19 @@
 import { Input, Modal, Select } from 'antd';
 import Image from 'next/image';
 import { useState } from 'react';
-import { FaCalendarDay, FaDollarSign, FaStar } from 'react-icons/fa6';
-import { IoIosArrowForward } from 'react-icons/io';
-import TattoDetailsModal from './TattoDetailsModal';
+import { FaDollarSign, FaStar } from 'react-icons/fa6';
+import ServiceDetailsModal from './ServiceDetailsModal';
 import Mapview from './Mapview';
 import Link from 'next/link';
-import { IMeta, IService } from '@/types';
+import { IService } from '@/types';
 import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
 import { toast } from 'sonner';
 import { updateClientRadius } from '@/services/Service';
+import { SiGoogletasks } from 'react-icons/si';
 
-const Services = ({
-  page,
-  services = [],
-  meta,
-}: {
-  page: string;
-  services: IService[];
-  meta: IMeta;
-}) => {
+const Services = ({ services = [] }: { services: IService[] }) => {
   console.log({ services });
+
   const tattooCategories = [
     ...new Set(services?.flatMap(service => service?.artist?.expertise)),
   ];
@@ -214,21 +207,20 @@ const Services = ({
                     </div> */}
                     <div className="flex justify-between items-center">
                       <div className="flex gap-1">
-                        <FaCalendarDay />
+                        <SiGoogletasks />
                         {service?.totalCompletedOrder}
                       </div>
-                      {service?.artist?.avgRating > 0 && (
+                      {service?.avgRating > 0 && (
                         <div className="flex gap-1 text-amber-600">
                           <FaStar />
-                          {service?.artist?.avgRating}
-                          <IoIosArrowForward />
+                          {service?.avgRating} ({service?.totalReviewCount})
                         </div>
                       )}
 
                       <div className="flex items-center text-primary font-bold">
                         <FaDollarSign />
                         {service?.price}
-                        <IoIosArrowForward />
+                        {/* <IoIosArrowForward /> */}
                       </div>
                     </div>
                   </div>
@@ -260,7 +252,7 @@ const Services = ({
             centered
             width={800}
           >
-            <TattoDetailsModal selectedService={selectedService} />
+            <ServiceDetailsModal selectedService={selectedService} />
           </Modal>
         </>
       ) : (

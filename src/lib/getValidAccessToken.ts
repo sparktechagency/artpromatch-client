@@ -9,7 +9,7 @@ export const isTokenExpired = async (token: string): Promise<boolean> => {
   if (!token) return true;
 
   try {
-    const decoded: { exp: number } = jwtDecode(token);
+    const decoded: { exp: number } = await jwtDecode(token);
 
     return decoded.exp * 1000 < Date.now();
   } catch (err: any) {
@@ -41,34 +41,49 @@ export const getValidAccessTokenForServerActions =
 // getValidAccessTokenForServerHandlerGet
 let cachedAccessToken: string | null = null; // for not getting new token again and again
 let tokenExpiry: number | null = null; // for not getting new token again and again
-export const getValidAccessTokenForServerHandlerGet = async (): Promise<
-  string | null
-> => {
+export const getValidAccessTokenForServerHandlerGet = async (
+  clientCall = false
+): Promise<string | null> => {
   const now = Date.now();
 
-  // if token is valid in cache
+  // ✅ Step 1: if cached token is still valid
   if (cachedAccessToken && tokenExpiry && now < tokenExpiry) {
     return cachedAccessToken;
   }
 
+  // ✅ Step 2: get refreshToken from cookies
   const cookieStore = await cookies();
-  const refreshToken = cookieStore.get('refreshToken')?.value;
+  let accessToken = cookieStore.get('accessToken')?.value;
 
-  // 🚫 if user is not logged in null, will return null instead throwing error
-  if (!refreshToken) {
-    return null;
+  if (!accessToken) {
+    return null; // 🚫 user not logged in
   }
 
-  const { data } = await getNewAccessToken(refreshToken);
+  if (accessToken && (await isTokenExpired(accessToken))) {
+    const refreshToken = cookieStore.get('refreshToken')!.value;
 
-  if (!data?.accessToken) {
-    return null;
+    // ✅ Step 3: get new access token from server
+    const { data } = await getNewAccessToken(refreshToken);
+
+    if (!data?.accessToken) {
+      return null; // 🚫 refresh failed
+    }
+
+    const newAccessToken: string = data?.accessToken!;
+
+    // ✅ Step 4: decode expiry from JWT payload
+    const payload: { exp: number } = jwtDecode(newAccessToken);
+    tokenExpiry = payload.exp * 1000; // convert sec → ms
+
+    // ✅ Step 5: save in cookie if clientCall = true
+    if (clientCall) {
+      (await cookies()).set('accessToken', newAccessToken);
+    }
+
+    cachedAccessToken = newAccessToken;
+
+    return cachedAccessToken;
   }
 
-  cachedAccessToken = data.accessToken;
-
-  const payload: { exp: number } = jwtDecode(cachedAccessToken!);
-  tokenExpiry = payload.exp * 1000;
-
-  return cachedAccessToken;
+  return accessToken;
 };

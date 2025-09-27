@@ -7,7 +7,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { AllImages } from '@/assets/images/AllImages';
 
-const LeftsideBar = () => {
+const LeftSideBar = () => {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -261,4 +261,4 @@ const LeftsideBar = () => {
   );
 };
 
-export default LeftsideBar;
+export default LeftSideBar;

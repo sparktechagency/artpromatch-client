@@ -27,7 +27,7 @@ export const getAllServices = async (
       {
         method: 'GET',
         headers: {
-          ...(accessToken ? { Authorization: accessToken } : {}),
+          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
         },
         next: {
           tags: ['SERVICES'],
@@ -54,7 +54,7 @@ export const requestAServiceBooking = async (
       {
         method: 'POST',
         headers: {
-          Authorization: accessToken,
+          Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(bookingData),
@@ -81,7 +81,7 @@ export const updateClientRadius = async (radius: string): Promise<any> => {
       {
         method: 'PATCH',
         headers: {
-          Authorization: accessToken,
+          Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ radius }),

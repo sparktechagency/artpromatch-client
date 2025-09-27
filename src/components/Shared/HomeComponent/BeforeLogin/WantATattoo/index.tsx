@@ -4,8 +4,9 @@ import { useState } from 'react';
 import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
 import { IService } from '@/types';
 import Image from 'next/image';
-import { FaCalendarDay, FaDollarSign, FaStar } from 'react-icons/fa6';
+import { FaDollarSign, FaStar } from 'react-icons/fa6';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
+import { SiGoogletasks } from 'react-icons/si';
 
 const WantATattoo = ({
   tattooServices = [],
@@ -98,7 +99,7 @@ const WantATattoo = ({
 
             <div className="flex justify-between items-center">
               <div className="flex gap-1">
-                <FaCalendarDay />
+                <SiGoogletasks  />
                 {service?.totalCompletedOrder}
               </div>
               {service?.avgRating > 0 && (

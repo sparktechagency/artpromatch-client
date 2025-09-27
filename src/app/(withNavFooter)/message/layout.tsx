@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { ConfigProvider, Drawer, Tag } from 'antd';
 import { FaUsers } from 'react-icons/fa';
 import { FaX } from 'react-icons/fa6';
-import LeftsideBar from '@/components/WithNavFooterComponents/Profile/Message/LeftsideBar/LeftsideBar';
+import LeftSideBar from '@/components/WithNavFooterComponents/Profile/Message/LeftSideBar';
 import Image from 'next/image';
 import { AllImages } from '@/assets/images/AllImages';
 import { SearchOutlined, MoreOutlined } from '@ant-design/icons';
@@ -24,7 +24,7 @@ const MessegeLayout = ({ children }: { children: React.ReactNode }) => {
       </div>
 
       <div className="hidden lg:block w-[30%] border-r border-neutral-400">
-        <LeftsideBar />
+        <LeftSideBar />
       </div>
       <ConfigProvider
         theme={{
@@ -47,7 +47,7 @@ const MessegeLayout = ({ children }: { children: React.ReactNode }) => {
           width="80%"
           closeIcon={<FaX className="text-black " />}
         >
-          <LeftsideBar />
+          <LeftSideBar />
         </Drawer>
       </ConfigProvider>
       {/* Main Chat Area */}

@@ -136,6 +136,13 @@ const NavBar = () => {
       dropdownItems: [],
     },
     {
+      name: 'Bookings',
+      link: '/bookings',
+      icon: '',
+      isDropdown: false,
+      dropdownItems: [],
+    },
+    {
       name: 'Guest Spots',
       link: '/guest-spots',
       icon: '',

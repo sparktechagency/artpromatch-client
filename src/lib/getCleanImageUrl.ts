@@ -1,9 +1,13 @@
-export const getCleanImageUrl = (path: string) => {
+export const getCleanImageUrl = (path?: string) => {
   if (!path) return '/404.png';
 
   if (path.startsWith('http')) {
     return path;
   }
 
-  return `${process.env.NEXT_PUBLIC_IMAGE_API}/${path}`;
+  return `${process.env.NEXT_PUBLIC_MAIN_API}/${path}`;
+};
+
+export const makeImageUrl = (path: string) => {
+  return path.replace(`${process.env.NEXT_PUBLIC_MAIN_API}/`, '');
 };

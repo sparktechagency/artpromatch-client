@@ -2,8 +2,7 @@ import { AllImages } from '@/assets/images/AllImages';
 import Image from 'next/image';
 import { IoIosArrowForward } from 'react-icons/io';
 import MarqueeComponent from './MarqueeComponent/MarqueeComponent';
-import FeaturedTattooArtists from './FeaturedTattooArtists';
-import FeaturedPiercingArtist from './FeaturedPiercingArtist';
+import FeaturedArtists from './FeaturedArtists';
 import NearYou from './NearYou/NearYou';
 import WantATattoo from './WantATattoo';
 import PiercingNow from './PiercingNow/PiercingNow';
@@ -67,11 +66,17 @@ const BeforeLogin = ({
       </div>
 
       {tattooServices?.length > 0 && (
-        <FeaturedTattooArtists tattooServices={tattooServices} />
+        <FeaturedArtists
+          services={tattooServices}
+          title="Featured Tattoo Artists"
+        />
       )}
 
       {pierceServices?.length > 0 && (
-        <FeaturedPiercingArtist pierceServices={pierceServices} />
+        <FeaturedArtists
+          services={pierceServices}
+          title="Featured Piercing Artists"
+        />
       )}
 
       <NearYou />
