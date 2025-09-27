@@ -6,16 +6,16 @@ import Image from 'next/image';
 import { AllImages } from '@/assets/images/AllImages';
 import Link from 'next/link';
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 const Otp: React.FC = () => {
   const handleChange = (value: string) => {
     console.log('onChange:', value);
   };
 
-  const handleInput = (value: string) => {
-    console.log('onInput:', value);
-  };
+  // const handleInput = (value: string) => {
+  //   console.log('onInput:', value);
+  // };
 
   return (
     <div className="py-16 md:py-0 h-[100vh] w-full flex items-center justify-center ">

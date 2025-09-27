@@ -4,10 +4,46 @@ import {
   getValidAccessTokenForServerActions,
   getValidAccessTokenForServerHandlerGet,
 } from '@/lib/getValidAccessToken';
+import { FieldValues } from '@/types';
 import { revalidateTag } from 'next/cache';
 
+// getSingleClientBookings
+export const getSingleClientBookings = async (
+  page = '1',
+  limit?: string,
+  query?: { [key: string]: string | string[] | undefined }
+): Promise<any> => {
+  const accessToken = await getValidAccessTokenForServerHandlerGet();
+
+  const params = new URLSearchParams();
+
+  if (query?.searchTerm) {
+    params.append('searchTerm', query?.searchTerm.toString());
+  }
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API}/bookings/list?limit=${limit}&page=${page}&${params}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        next: {
+          tags: ['BOOKINGS'],
+        },
+      }
+    );
+
+    const result = await res.json();
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
 // confirmPaymentForClient
-export const confirmPaymentForClient = async (
+export const validatePaymentStatusForClient = async (
   session_id: string
 ): Promise<any> => {
   const accessToken = await getValidAccessTokenForServerHandlerGet();
@@ -18,15 +54,14 @@ export const confirmPaymentForClient = async (
       {
         method: 'POST',
         headers: {
-          Authorization: accessToken,
+          Authorization: `Bearer ${accessToken}`,
         },
       }
     );
 
+    revalidateTag('BOOKINGS');
+
     const result = await res.json();
-
-    console.log({ result });
-
     return result;
   } catch (error: any) {
     return Error(error);
@@ -43,7 +78,7 @@ export const updateClientRadius = async (radius: string): Promise<any> => {
       {
         method: 'PATCH',
         headers: {
-          Authorization: accessToken,
+          Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ radius }),
@@ -51,6 +86,34 @@ export const updateClientRadius = async (radius: string): Promise<any> => {
     );
 
     revalidateTag('SERVICES');
+
+    const result = await res.json();
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
+// reviewAfterAServiceIsCompleted
+export const reviewAfterAServiceIsCompleted = async (
+  data: FieldValues
+): Promise<any> => {
+  const accessToken = await getValidAccessTokenForServerActions();
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API}/bookings/review`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      }
+    );
+
+    // revalidateTag('BOOKINGS');
 
     const result = await res.json();
     return result;

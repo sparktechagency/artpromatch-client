@@ -206,7 +206,7 @@ const SignInForm: React.FC<SignInWithRedirectPath> = ({ redirectPath }) => {
           </div>
 
           <div className="text-center text-sm my-5">
-            Don't have an Account?
+            Don&apos;t have an Account?
             <Link href="/sign-up" className="text-blue-600 font-medium pl-2">
               Sign Up
             </Link>

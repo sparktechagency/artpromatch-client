@@ -1,4 +1,4 @@
-import { confirmPaymentForClient } from '@/services/Booking';
+import { validatePaymentStatusForClient } from '@/services/Booking';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { BiCheck } from 'react-icons/bi';
@@ -14,7 +14,7 @@ const SuccessPage = async ({
 
   if (!session_id) redirect('/');
 
-  const res = await confirmPaymentForClient(session_id as string);
+  const res = await validatePaymentStatusForClient(session_id as string);
 
   if (!res.success) redirect('/');
 

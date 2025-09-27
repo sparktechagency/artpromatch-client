@@ -13,12 +13,7 @@ export const getAllServices = async (
   limit?: string,
   query?: { [key: string]: string | string[] | undefined }
 ): Promise<any> => {
-  let token: string | null = null;
-  try {
-    token = await getValidAccessTokenForServerHandlerGet();
-  } catch (error) {
-    token = null;
-  }
+  const accessToken = await getValidAccessTokenForServerHandlerGet();
 
   const params = new URLSearchParams();
 
@@ -32,7 +27,7 @@ export const getAllServices = async (
       {
         method: 'GET',
         headers: {
-          ...(token ? { Authorization: token } : {}),
+          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
         },
         next: {
           tags: ['SERVICES'],
@@ -59,7 +54,7 @@ export const requestAServiceBooking = async (
       {
         method: 'POST',
         headers: {
-          Authorization: accessToken,
+          Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(bookingData),
@@ -86,7 +81,7 @@ export const updateClientRadius = async (radius: string): Promise<any> => {
       {
         method: 'PATCH',
         headers: {
-          Authorization: accessToken,
+          Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ radius }),

@@ -1,26 +1,28 @@
 import { AllImages } from '@/assets/images/AllImages';
+import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
 import Image from 'next/image';
 import React from 'react';
 import Marquee from 'react-fast-marquee';
 
-const MarqueeCOmponent = () => {
+const MarqueeComponent = ({ allImages = [] }: { allImages: string[] }) => {
   return (
     <div>
       <Marquee className="">
-        <div className=" flex justify-between items-center gap-4">
-          <Image src={AllImages.image} width={300} height={300} alt="logo" />
-          <Image src={AllImages.image1} width={300} height={300} alt="logo" />
-          <Image src={AllImages.image2} width={300} height={300} alt="logo" />
-          <Image src={AllImages.image3} width={300} height={300} alt="logo" />
-          <Image src={AllImages.image4} width={300} height={300} alt="logo" />
-          <Image src={AllImages.image5} width={300} height={300} alt="logo" />
-          <Image src={AllImages.image6} width={300} height={300} alt="logo" />
-          <Image src={AllImages.image7} width={300} height={300} alt="logo" />
-          <Image src={AllImages.image8} width={300} height={300} alt="logo" />
+        <div className="flex justify-between items-center gap-4 pr-4">
+          {allImages?.map((image, index) => (
+            <Image
+              key={index}
+              src={getCleanImageUrl(image)}
+              width={300}
+              height={300}
+              alt={`Image-${index + 1}`}
+              className="w-90 h-60 object-cover rounded-xl"
+            />
+          ))}
         </div>
       </Marquee>
     </div>
   );
 };
 
-export default MarqueeCOmponent;
+export default MarqueeComponent;

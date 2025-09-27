@@ -1,28 +1,21 @@
 'use client';
 
-import { AllImages } from '@/assets/images/AllImages';
 import { Input, Modal, Select } from 'antd';
 import Image from 'next/image';
 import { useState } from 'react';
-import { FaCalendarDay, FaDollarSign, FaStar } from 'react-icons/fa6';
-import { IoIosArrowForward } from 'react-icons/io';
-import TattoDetailsModal from './TattoDetailsModal';
+import { FaDollarSign, FaStar } from 'react-icons/fa6';
+import ServiceDetailsModal from './ServiceDetailsModal';
 import Mapview from './Mapview';
 import Link from 'next/link';
-import { IMeta, IService } from '@/types';
+import { IService } from '@/types';
 import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
 import { toast } from 'sonner';
 import { updateClientRadius } from '@/services/Service';
+import { SiGoogletasks } from 'react-icons/si';
 
-const Services = ({
-  page,
-  services = [],
-  meta,
-}: {
-  page: string;
-  services: IService[];
-  meta: IMeta;
-}) => {
+const Services = ({ services = [] }: { services: IService[] }) => {
+  console.log({ services });
+
   const tattooCategories = [
     ...new Set(services?.flatMap(service => service?.artist?.expertise)),
   ];
@@ -174,18 +167,28 @@ const Services = ({
                       </Link>
 
                       <div className="py-5">
-                        <h1 className="text-xl font-semibold">
-                          {service?.title}
-                        </h1>
+                        <div className="text-xl font-semibold">
+                          {service?.title} <br />
+                          <div className="text-sm pb-3 text-primary">
+                            by {service?.artist?.auth?.fullName}
+                          </div>
+                        </div>
+
                         <div className="text-secondary whitespace-nowrap">
-                          {(service?.artist?.distance! / 1000).toFixed(2)} km
+                          {(service?.artist?.distance ?? 0 / 1000).toFixed(2) ||
+                            0}{' '}
+                          km
                         </div>
                       </div>
                     </div>
                     <div className="text-xs text-neutral-500">
                       {service?.artist?.stringLocation}
                     </div>
+                    <div className="bg-neutral-200 w-fit my-5 px-2 py-1 rounded-3xl font-semibold capitalize">
+                      {service?.bodyLocation}
+                    </div>
 
+                    {/* 
                     <div className="flex justify-between items-center gap-2 my-5">
                       {service?.artist?.expertise
                         ?.slice(0, 2)
@@ -201,24 +204,23 @@ const Services = ({
                       <div className="text-secondary">
                         +{service?.artist?.expertise?.length - 2}
                       </div>
-                    </div>
+                    </div> */}
                     <div className="flex justify-between items-center">
                       <div className="flex gap-1">
-                        <FaCalendarDay />
-                        {service?.artist?.totalCompletedService}
+                        <SiGoogletasks />
+                        {service?.totalCompletedOrder}
                       </div>
-                      {service?.artist?.avgRating > 0 && (
+                      {service?.avgRating > 0 && (
                         <div className="flex gap-1 text-amber-600">
                           <FaStar />
-                          {service?.artist?.avgRating}
-                          <IoIosArrowForward />
+                          {service?.avgRating} ({service?.totalReviewCount})
                         </div>
                       )}
 
                       <div className="flex items-center text-primary font-bold">
                         <FaDollarSign />
                         {service?.price}
-                        <IoIosArrowForward />
+                        {/* <IoIosArrowForward /> */}
                       </div>
                     </div>
                   </div>
@@ -250,7 +252,7 @@ const Services = ({
             centered
             width={800}
           >
-            <TattoDetailsModal selectedService={selectedService} />
+            <ServiceDetailsModal selectedService={selectedService} />
           </Modal>
         </>
       ) : (

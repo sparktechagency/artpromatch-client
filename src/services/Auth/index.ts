@@ -133,7 +133,7 @@ export const signInUser = async (userData: FieldValues): Promise<any> => {
 
 // updateProfilePhoto
 export const updateProfilePhoto = async (data: FormData): Promise<any> => {
-  const token = await getValidAccessTokenForServerActions();
+  const accessToken = await getValidAccessTokenForServerActions();
 
   try {
     const res = await fetch(
@@ -142,7 +142,7 @@ export const updateProfilePhoto = async (data: FormData): Promise<any> => {
         method: 'PUT',
         body: data,
         headers: {
-          Authorization: token,
+          Authorization: `Bearer ${accessToken}`,
         },
       }
     );
@@ -248,6 +248,30 @@ export const getNewAccessToken = async (refreshToken: string): Promise<any> => {
         headers: {
           Authorization: `Bearer ${refreshToken}`,
         },
+      }
+    );
+
+    const result = await res.json();
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
+// updateFcmTokenToServer
+export const updateFcmTokenToServer = async (data: FieldValues) => {
+  const accessToken = await getValidAccessTokenForServerActions();
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API}/auth/save-fcm-token`,
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
       }
     );
 

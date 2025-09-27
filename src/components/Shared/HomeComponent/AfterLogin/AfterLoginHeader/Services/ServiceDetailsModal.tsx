@@ -9,11 +9,11 @@ import { FaChevronLeft, FaChevronRight } from 'react-icons/fa6';
 import { AiOutlineMessage } from 'react-icons/ai';
 import { CiHeart } from 'react-icons/ci';
 
-interface TattoDetailsModalProps {
+interface ServiceDetailsModalProps {
   selectedService: IService | null;
 }
 
-const TattoDetailsModal: React.FC<TattoDetailsModalProps> = ({
+const ServiceDetailsModal: React.FC<ServiceDetailsModalProps> = ({
   selectedService,
 }) => {
   const images =
@@ -124,4 +124,4 @@ const TattoDetailsModal: React.FC<TattoDetailsModalProps> = ({
   );
 };
 
-export default TattoDetailsModal;
+export default ServiceDetailsModal;

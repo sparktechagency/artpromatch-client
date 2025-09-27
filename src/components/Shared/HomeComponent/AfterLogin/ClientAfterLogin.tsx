@@ -11,11 +11,15 @@ const ClientAfterLogin = ({
   page: string;
   services: IService[];
   meta: IMeta;
-}) => {
+  }) => {
+  
+  console.log({ services });
+
+
   return (
     <div className="container mx-auto px-2 md:px-0">
       <ClientAfterLoginHeader />
-      <Services page={page} services={services} meta={meta} />
+      <Services services={services} />
       <Pagination meta={meta} />
     </div>
   );

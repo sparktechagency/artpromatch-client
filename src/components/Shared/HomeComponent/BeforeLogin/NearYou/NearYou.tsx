@@ -15,7 +15,7 @@ const NearYou = () => {
             Don&apos;t miss out on limited-time opportunities to book guest
             <br /> artists in your city.
           </p>
-          <Link href="/sign-in">
+          <Link href="/guest-spots">
             <div className="px-4 py-2 rounded-lg text-white bg-black w-fit">
               Explore Now
             </div>

@@ -1,6 +1,7 @@
 import { AllImages } from '@/assets/images/AllImages';
 import Image from 'next/image';
-import { FaCalendarDay, FaDollarSign } from 'react-icons/fa6';
+import { SiGoogletasks } from 'react-icons/si';
+import { FaDollarSign } from 'react-icons/fa6';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 
 const PiercingNow = () => {
@@ -53,7 +54,7 @@ const PiercingNow = () => {
           </div>
           <div className="flex justify-between items-center">
             <div className="flex  gap-1">
-              <FaCalendarDay />
+              <SiGoogletasks  />
               <p className="text-xs">Next Week</p>
             </div>
             <div className="flex justify-center items-center text-primary font-bold">
@@ -100,7 +101,7 @@ const PiercingNow = () => {
           </div>
           <div className="flex justify-between items-center">
             <div className="flex  gap-1">
-              <FaCalendarDay />
+              <SiGoogletasks  />
               <p className="text-xs">Next Week</p>
             </div>
             <div className="flex justify-center items-center text-primary font-bold">
@@ -147,7 +148,7 @@ const PiercingNow = () => {
           </div>
           <div className="flex justify-between items-center">
             <div className="flex  gap-1">
-              <FaCalendarDay />
+              <SiGoogletasks  />
               <p className="text-xs">Next Week</p>
             </div>
             <div className="flex justify-center items-center text-primary font-bold">
@@ -194,7 +195,7 @@ const PiercingNow = () => {
           </div>
           <div className="flex justify-between items-center">
             <div className="flex  gap-1">
-              <FaCalendarDay />
+              <SiGoogletasks  />
               <p className="text-xs">Next Week</p>
             </div>
             <div className="flex justify-center items-center text-primary font-bold">
