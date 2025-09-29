@@ -18,7 +18,7 @@ const MainChatPage = ({ conversationId }: { conversationId: string }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user?.id) return;
 
     socket = io(process.env.NEXT_PUBLIC_MAIN_API, {
       query: { id: user?.id },

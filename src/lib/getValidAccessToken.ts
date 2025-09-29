@@ -1,6 +1,6 @@
 'use server';
 
-import { getNewAccessToken } from '@/services/Auth';
+import { getNewAccessToken, logOut } from '@/services/Auth';
 import { jwtDecode } from 'jwt-decode';
 import { cookies } from 'next/headers';
 
@@ -19,24 +19,33 @@ export const isTokenExpired = async (token: string): Promise<boolean> => {
 };
 
 // getValidAccessTokenForServerActions
-export const getValidAccessTokenForServerActions =
-  async (): Promise<string> => {
-    const cookieStore = await cookies();
+export const getValidAccessTokenForServerActions = async (): Promise<
+  string | void
+> => {
+  const cookieStore = await cookies();
 
-    let accessToken = cookieStore.get('accessToken')!.value;
+  let accessToken = cookieStore.get('accessToken')?.value;
 
-    if (!accessToken || (await isTokenExpired(accessToken))) {
-      const refreshToken = cookieStore.get('refreshToken')!.value;
+  if (!accessToken || (await isTokenExpired(accessToken))) {
+    const refreshToken = cookieStore.get('refreshToken')?.value;
 
-      const { data } = await getNewAccessToken(refreshToken);
-
-      accessToken = data?.accessToken;
-
-      (await cookies()).set('accessToken', accessToken);
+    if (!refreshToken) {
+      return logOut();
     }
 
-    return accessToken;
-  };
+    const { data } = await getNewAccessToken(refreshToken);
+
+    accessToken = data?.accessToken;
+
+    if (!data?.accessToken || !accessToken) {
+      return logOut();
+    }
+
+    (await cookies()).set('accessToken', accessToken);
+  }
+
+  return accessToken;
+};
 
 // getValidAccessTokenForServerHandlerGet
 let cachedAccessToken: string | null = null; // for not getting new token again and again
@@ -53,7 +62,7 @@ export const getValidAccessTokenForServerHandlerGet = async (
 
   // ✅ Step 2: get refreshToken from cookies
   const cookieStore = await cookies();
-  let accessToken = cookieStore.get('accessToken')?.value;
+  const accessToken = cookieStore.get('accessToken')?.value;
 
   if (!accessToken) {
     return null; // 🚫 user not logged in
@@ -69,7 +78,7 @@ export const getValidAccessTokenForServerHandlerGet = async (
       return null; // 🚫 refresh failed
     }
 
-    const newAccessToken: string = data?.accessToken!;
+    const newAccessToken: string = data?.accessToken;
 
     // ✅ Step 4: decode expiry from JWT payload
     const payload: { exp: number } = jwtDecode(newAccessToken);
