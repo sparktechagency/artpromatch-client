@@ -65,102 +65,100 @@ const artStyles = [
   'Tooth Gems',
 ];
 
-const Preferences = ({ role }: { role: string }) => {
+const Preferences = () => {
   const [current, setCurrent] = useState<number>(0);
-  const [selectedArt, setSelectedArt] = useState<string[]>([]);
+  const [favoriteTattoos, setFavoriteTattoos] = useState<string[]>([]);
 
-  console.log({ role });
-
-  // Save selected arts to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('favoriteTattoos', JSON.stringify(selectedArt));
-  }, [selectedArt]);
+    const stored = localStorage.getItem('favoriteTattoos');
+    if (stored) {
+      try {
+        setFavoriteTattoos(JSON.parse(stored));
+      } catch (e) {
+        console.error('Error parsing favorite tattoos', e);
+      }
+    }
+  }, []);
 
   const handleSelect = (style: string) => {
-    setSelectedArt(prev =>
-      prev.includes(style)
-        ? prev.filter(item => item !== style)
-        : [...prev, style]
-    );
-  };
+    const updated = favoriteTattoos.includes(style)
+      ? favoriteTattoos.filter(item => item !== style)
+      : [...favoriteTattoos, style];
 
-  const onChange = (value: number) => {
-    setCurrent(value);
+    setFavoriteTattoos(updated);
+    localStorage.setItem('favoriteTattoos', JSON.stringify(updated));
   };
 
   return (
     <div className="py-16 md:py-0 h-[100vh] w-full flex items-center justify-center">
       <div className="pt-32 pb-16">
-        <div className="w-full">
-          <Form
-            name="select-user-type"
-            initialValues={{ remember: true }}
-            layout="vertical"
-            className="mb-10 w-full  mx-auto bg-white px-2 rounded-2xl"
-          >
-            <div className="mb-4 flex flex-col justify-center items-center text-center">
-              <Image src={AllImages.logo} width={50} height={50} alt="logo" />
-              <h2 className="text-center text-2xl font-bold mt-6 mb-2 text-primary">
-                What styles of art do you love?
-              </h2>
-              <Typography.Text className="text-center text-base">
-                Pick as many as you’d like.
-              </Typography.Text>
-            </div>
+        <Form
+          name="select-user-type"
+          layout="vertical"
+          className="pb-10 w-full mx-auto bg-white px-2 rounded-2xl"
+        >
+          <div className="mb-4 flex flex-col justify-center items-center text-center">
+            <Image src={AllImages.logo} width={50} height={50} alt="logo" />
+            <h2 className="text-center text-2xl font-bold mt-6 mb-2 text-primary">
+              What styles of art do you love?
+            </h2>
+            <Typography.Text className="text-center text-base">
+              Pick as many as you&apos;d like.
+            </Typography.Text>
+          </div>
 
-            {/* Buttons in groups of 4 */}
-            <div className="flex flex-col gap-4">
-              {Array.from(
-                { length: Math.ceil(artStyles.length / 10) },
-                (_, i) => (
-                  <div
-                    key={i}
-                    className="flex justify-center items-center gap-4 flex-wrap"
-                  >
-                    {artStyles.slice(i * 10, i * 10 + 10).map(style => (
-                      <button
-                        key={style}
-                        type="button"
-                        onClick={() => handleSelect(style)}
-                        className={`px-4 py-2 rounded-3xl border ${
-                          selectedArt.includes(style)
-                            ? 'border-primary text-primary font-semibold'
-                            : 'hover:border-primary'
-                        }`}
-                      >
-                        {style}
-                      </button>
-                    ))}
-                  </div>
-                )
-              )}
-            </div>
+          {/* Buttons in groups of 10 */}
+          <div className="flex flex-col gap-4">
+            {Array.from(
+              { length: Math.ceil(artStyles.length / 10) },
+              (_, i) => (
+                <div
+                  key={i}
+                  className="flex justify-center items-center gap-4 flex-wrap"
+                >
+                  {artStyles.slice(i * 10, i * 10 + 10).map(style => (
+                    <button
+                      key={style}
+                      type="button"
+                      onClick={() => handleSelect(style)}
+                      className={`px-4 py-2 rounded-3xl border transition ${
+                        favoriteTattoos.includes(style)
+                          ? 'border-primary text-blue-500 font-semibold bg-gray-400/30'
+                          : 'hover:border-primary'
+                      }`}
+                    >
+                      {style}
+                    </button>
+                  ))}
+                </div>
+              )
+            )}
+          </div>
 
-            {/* Navigation buttons */}
-            <Link href="/preferd-location">
-              <button className="w-full bg-primary text-white py-3 rounded-lg mt-5">
-                Get Started
-              </button>
-            </Link>
+          {/* Navigation buttons */}
+          <Link href="/preferd-location">
+            <button
+              type="button"
+              className="w-full bg-primary text-white py-2 rounded-lg mt-5 mb-10"
+            >
+              <div className="text-lg text-white"> Get Started</div>
+            </button>
+          </Link>
+        </Form>
 
-            <button className="w-full mt-5">Skip</button>
-          </Form>
-
-          {/* Steps */}
-          <Steps
-            current={current}
-            onChange={onChange}
-            direction="horizontal"
-            size="small"
-            items={[
-              { title: '', status: 'finish' },
-              { title: '', status: current >= 1 ? 'finish' : 'wait' },
-              { title: '', status: current >= 2 ? 'finish' : 'wait' },
-              { title: '', status: current >= 3 ? 'finish' : 'wait' },
-            ]}
-            style={{ width: '100%' }}
-          />
-        </div>
+        {/* Steps */}
+        <Steps
+          current={current}
+          direction="horizontal"
+          size="small"
+          items={[
+            { title: '', status: current >= 0 ? 'finish' : 'wait' },
+            { title: '', status: current >= 1 ? 'finish' : 'wait' },
+            { title: '', status: current >= 2 ? 'finish' : 'wait' },
+            { title: '', status: current >= 3 ? 'finish' : 'wait' },
+          ]}
+          style={{ width: '100%' }}
+        />
       </div>
     </div>
   );

@@ -8,19 +8,19 @@ import { useState } from 'react';
 
 const userRoles = [
   {
-    value: 1,
+    // value: 1,
     label: 'CLIENT',
     description:
       'Discover and book talented artists and piercers near you or worldwide. Save your favorites, explore guest spots, and manage appointments.',
   },
   {
-    value: 2,
+    // value: 2,
     label: 'ARTIST',
     description:
       "Showcase your portfolio, attract clients, and manage bookings. Whether you're a tattoo artist or piercer, we&apos;ve got you covered.",
   },
   {
-    value: 3,
+    // value: 3,
     label: 'BUSINESS',
     description:
       'Promote your business, feature talented artists, and organize events. Perfect for tattoo studios, piercing studios, or related businesses.',
@@ -28,9 +28,9 @@ const userRoles = [
 ];
 
 const UserTypeSelection = () => {
-  const [value, setValue] = useState<number>(1);
+  const [label, setLabel] = useState<string>('CLIENT');
   const router = useRouter();
-  const selectedRole = userRoles.find(role => role.value === value);
+  const selectedRole = userRoles.find(role => role.label === label);
 
   const handleNext = () => {
     if (selectedRole) {
@@ -61,20 +61,16 @@ const UserTypeSelection = () => {
 
             <div className="flex flex-col gap-4">
               <Radio.Group
-                onChange={e => setValue(e.target.value as number)}
-                value={value}
+                onChange={e => setLabel(e.target.value)}
+                value={label}
               >
                 {userRoles.map(role => (
-                  <Radio
-                    key={role.value}
-                    value={role.value}
-                    className="!w-full"
-                  >
+                  <Radio key={role.label} value={role.label} className="w-full">
                     <div
                       className={`border rounded-lg p-6 mb-5 ${
-                        value === role.value
-                          ? 'border-primary shadow-md'
-                          : 'hover:border-primary'
+                        label === role.label
+                          ? 'border-blue-500 shadow-md'
+                          : 'hover:border-blue-500'
                       }`}
                     >
                       <h1 className="text-xl font-bold">{role.label}</h1>
@@ -89,9 +85,9 @@ const UserTypeSelection = () => {
 
             <button
               onClick={handleNext}
-              className="w-full bg-primary text-white py-3 rounded-lg mt-5"
+              className="w-full bg-primary py-2 rounded-lg mt-5"
             >
-              Continue
+              <div className="text-lg text-white">Continue</div>
             </button>
           </Form>
         </div>

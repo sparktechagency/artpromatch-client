@@ -107,6 +107,63 @@ export const verifySignUpByOTP = async (userEmail: string, otp: string) => {
   }
 };
 
+// createProfile
+export const createProfile = async (data: FormData) => {
+  const accessToken = await getValidAccessTokenForServerActions();
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API}/auth/create-profile`,
+      {
+        method: 'POST',
+        body: data,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    const result = await res.json();
+
+    if (result?.success) {
+      (await cookies()).set('accessToken', result?.data?.accessToken);
+      (await cookies()).set('refreshToken', result?.data?.refreshToken);
+    }
+
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
+// checkProfileStatus
+export const checkProfileStatus = async () => {
+  const accessToken = await getValidAccessTokenForServerActions();
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API}/auth/check-status`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    const result = await res.json();
+
+    if (result?.success) {
+      (await cookies()).set('accessToken', result?.data?.accessToken);
+      (await cookies()).set('refreshToken', result?.data?.refreshToken);
+    }
+
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
 // signInUser
 export const signInUser = async (userData: FieldValues): Promise<any> => {
   try {

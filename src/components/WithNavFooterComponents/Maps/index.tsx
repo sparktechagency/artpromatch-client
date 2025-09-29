@@ -3,10 +3,9 @@
 import { useRef } from 'react';
 import { useEffect } from 'react';
 import { Loader } from '@googlemaps/js-api-loader';
+import { LocationType } from '@/app/(auth)/preferd-location/page';
 
-type Location = { location: { lat: number; lng: number } };
-
-const Maps = ({ location }: Location) => {
+const Maps = ({ location }: { location: LocationType }) => {
   const mapRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -23,8 +22,8 @@ const Maps = ({ location }: Location) => {
       const { Marker } = await loader.importLibrary('marker');
 
       const position = {
-        lat: location.lat,
-        lng: location.lng,
+        lat: location.latitude,
+        lng: location.longitude,
       };
 
       // map options:

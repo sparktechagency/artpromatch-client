@@ -18,7 +18,7 @@ const localizer = momentLocalizer(moment);
 
 const BookingAvailability = ({ serviceId }: { serviceId: string }) => {
   const router = useRouter();
-  const [selectedRange, setSelectedRange] = useState<{
+  const [radius, setRadius] = useState<{
     start: Date | null;
     end: Date | null;
   }>({ start: null, end: null });
@@ -54,7 +54,7 @@ const BookingAvailability = ({ serviceId }: { serviceId: string }) => {
       return;
     }
 
-    // Check if selection is within allowed range
+    // Check if selection is within allowed radius
     if (endDate > maxSelectableDate) {
       toast.warning(
         `Bookings are only available up to ${moment(maxSelectableDate).format(
@@ -64,12 +64,12 @@ const BookingAvailability = ({ serviceId }: { serviceId: string }) => {
       return;
     }
 
-    setSelectedRange({ start: startDate, end: endDate });
+    setRadius({ start: startDate, end: endDate });
   };
 
   // Clear selection
   const clearSelection = () => {
-    setSelectedRange({ start: null, end: null });
+    setRadius({ start: null, end: null });
   };
 
   // Custom slot prop getter to disable past dates
@@ -96,7 +96,7 @@ const BookingAvailability = ({ serviceId }: { serviceId: string }) => {
 
   // handleSubmit
   const handleSubmit = async () => {
-    if (!selectedRange.start || !selectedRange.end) {
+    if (!radius.start || !radius.end) {
       toast.warning('Please select a date range first!');
       return;
     }
@@ -105,8 +105,8 @@ const BookingAvailability = ({ serviceId }: { serviceId: string }) => {
 
     const bookingData = {
       serviceId,
-      preferredStartDate: selectedRange.start.toISOString(),
-      preferredEndDate: selectedRange.end.toISOString(),
+      preferredStartDate: radius.start.toISOString(),
+      preferredEndDate: radius.end.toISOString(),
     };
 
     try {
@@ -145,15 +145,15 @@ const BookingAvailability = ({ serviceId }: { serviceId: string }) => {
 
   // Custom day style for selected range
   const dayPropGetter = (date: Date) => {
-    if (!selectedRange.start || !selectedRange.end) return {};
+    if (!radius.start || !radius.end) return {};
 
     const currentDate = new Date(date);
     currentDate.setHours(0, 0, 0, 0);
 
-    const startDate = new Date(selectedRange.start);
+    const startDate = new Date(radius.start);
     startDate.setHours(0, 0, 0, 0);
 
-    const endDate = new Date(selectedRange.end);
+    const endDate = new Date(radius.end);
     endDate.setHours(0, 0, 0, 0);
 
     const isSelected = currentDate >= startDate && currentDate <= endDate;
@@ -211,7 +211,7 @@ const BookingAvailability = ({ serviceId }: { serviceId: string }) => {
         />
       </div>
 
-      {selectedRange.start && selectedRange.end && (
+      {radius.start && radius.end && (
         <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 mb-6 transition-all duration-300">
           <div className="flex justify-between items-start mb-4">
             <h3 className="text-lg font-semibold text-primary flex items-center">
@@ -231,13 +231,13 @@ const BookingAvailability = ({ serviceId }: { serviceId: string }) => {
             <div className="bg-white p-4 rounded-lg border border-blue-100">
               <p className="text-sm text-gray-600 mb-1">Start Date</p>
               <p className="text-lg font-semibold text-gray-800">
-                {moment(selectedRange.start).format('MMMM D, YYYY')}
+                {moment(radius.start).format('MMMM D, YYYY')}
               </p>
             </div>
             <div className="bg-white p-4 rounded-lg border border-blue-100">
               <p className="text-sm text-gray-600 mb-1">End Date</p>
               <p className="text-lg font-semibold text-gray-800">
-                {moment(selectedRange.end).format('MMMM D, YYYY')}
+                {moment(radius.end).format('MMMM D, YYYY')}
               </p>
             </div>
           </div>
@@ -245,11 +245,7 @@ const BookingAvailability = ({ serviceId }: { serviceId: string }) => {
           <div className="mb-4 bg-white p-3 rounded-lg border border-blue-100">
             <p className="text-sm text-gray-600 mb-1">Duration</p>
             <p className="text-lg font-semibold text-gray-800">
-              {moment(selectedRange.end).diff(
-                moment(selectedRange.start),
-                'days'
-              ) + 1}{' '}
-              days
+              {moment(radius.end).diff(moment(radius.start), 'days') + 1} days
             </p>
           </div>
 

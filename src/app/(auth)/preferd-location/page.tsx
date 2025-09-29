@@ -3,37 +3,68 @@
 import { AllImages } from '@/assets/images/AllImages';
 import { ConfigProvider, Form, Input, Slider, Steps, Typography } from 'antd';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaLocationArrow } from 'react-icons/fa6';
 import { useRouter } from 'next/navigation';
-import Maps from '@/components/WithNavFooterComponents/Maps/Maps';
 import { toast } from 'sonner';
 
-interface LocationType {
-  lat: number;
-  lng: number;
+export interface LocationType {
+  longitude: number;
+  latitude: number;
 }
 
 const PreferedLocation: React.FC = () => {
-  const [value, setValue] = useState<number>(8);
-  const [current, setCurrent] = useState<number>(0);
+  const [form] = Form.useForm();
+  const [stringLocation, setStringLocation] = useState<string>('');
   const [location, setLocation] = useState<LocationType | null>(null);
+  const [radius, setRadius] = useState<number>(50);
+  const [current, setCurrent] = useState<number>(1);
   const router = useRouter();
 
+  // Load from localStorage on mount
+  useEffect(() => {
+    const savedStringLocation = localStorage.getItem('stringLocation');
+    const savedLocation = localStorage.getItem('location');
+    const savedRadius = localStorage.getItem('radius');
+
+    if (savedStringLocation) {
+      setStringLocation(savedStringLocation);
+      form.setFieldsValue({ address: savedStringLocation });
+    }
+
+    if (savedLocation) {
+      try {
+        const parsed = JSON.parse(savedLocation);
+        setLocation(parsed);
+      } catch (e) {
+        console.error('Error parsing location', e);
+      }
+    }
+
+    if (savedRadius) {
+      try {
+        const parsedRadius = JSON.parse(savedRadius);
+        setRadius(parsedRadius);
+      } catch (e) {
+        console.error('Error parsing radius', e);
+      }
+    }
+  }, [form]);
+
+  // Use current location button
   const handleUseCurrentLocation = () => {
     if (!navigator.geolocation) {
-      alert('Geolocation is not supported by your browser');
+      toast.error('Geolocation is not supported by your browser');
       return;
     }
 
     navigator.geolocation.getCurrentPosition(
       pos => {
         const { latitude, longitude } = pos.coords;
-        const data = { type: 'Point', coordinates: [latitude, longitude] };
+        const location = { longitude, latitude };
+        setLocation(location);
 
-        setLocation({ lat: latitude, lng: longitude });
-        localStorage.setItem('location', JSON.stringify(data));
-        localStorage.setItem('radius', value.toString());
+        localStorage.setItem('location', JSON.stringify(location));
       },
       err => {
         toast.warning(
@@ -44,21 +75,20 @@ const PreferedLocation: React.FC = () => {
     );
   };
 
+  // Continue button
   const handleContinue = () => {
+    localStorage.setItem('stringLocation', stringLocation);
+    localStorage.setItem('radius', radius.toString());
     router.push('/prefered-service');
-  };
-
-  const onChange = (value: number) => {
-    setCurrent(value);
   };
 
   return (
     <div className="py-16 md:py-0 h-[100vh] w-full flex items-center justify-center">
       <div className="pt-32 pb-16">
-        <div className="w-[450px]">
+        <div className="w-full">
           <Form
+            form={form}
             name="select-user-type"
-            initialValues={{ remember: true }}
             layout="vertical"
             className="w-full md:w-[600px] bg-white px-2 rounded-2xl"
           >
@@ -72,16 +102,18 @@ const PreferedLocation: React.FC = () => {
               </Typography.Text>
             </div>
 
+            {/* Address Input */}
             <Form.Item name="address">
               <Input
-                required
-                style={{ padding: '6px' }}
-                className="text-md"
+                value={stringLocation}
+                onChange={e => setStringLocation(e.target.value)}
                 placeholder="Enter your address"
+                className="text-md"
               />
             </Form.Item>
 
-            <Form.Item name="location">
+            {/* Use Current Location */}
+            <Form.Item>
               <button
                 type="button"
                 onClick={handleUseCurrentLocation}
@@ -90,30 +122,26 @@ const PreferedLocation: React.FC = () => {
                 <FaLocationArrow />
                 {location ? (
                   <p className="text-sm">
-                    {location.lat}, {location.lng}
+                    {location.latitude}, {location.longitude}
                   </p>
                 ) : (
                   <p className="text-sm">Use my current location</p>
                 )}
-                {location && <Maps location={location} />}
               </button>
-
-              {/* <Maps location={location} /> */}
             </Form.Item>
 
+            {/* Continue Button */}
             <Form.Item className="text-center">
               <button
                 type="button"
                 onClick={handleContinue}
-                className="bg-primary w-full px-6 py-2 rounded-md text-white"
+                className="bg-primary w-full px-6 py-2 rounded-md"
               >
-                Continue
-              </button>
-              <button className="mt-5" type="button">
-                Skip
+                <div className="text-lg text-white">Continue</div>
               </button>
             </Form.Item>
 
+            {/* Radius Slider */}
             <ConfigProvider
               theme={{
                 components: {
@@ -129,38 +157,36 @@ const PreferedLocation: React.FC = () => {
               <div className="mt-4">
                 <p className="text-gray-700 font-medium">Show results within</p>
                 <Slider
-                  value={value}
-                  min={5}
-                  max={100}
-                  onChange={val => setValue(val)}
+                  value={radius}
+                  min={50}
+                  max={1000}
+                  onChange={val => setRadius(val)}
                   tooltip={{ open: false }}
                 />
                 <div className="flex justify-between text-gray-400 text-sm">
-                  <span>5 miles</span>
-                  <span>100 Miles</span>
+                  <span>50 km</span>
+                  <span>1000 km</span>
                 </div>
-                <p className="text-gray-600 text-sm mt-1 text-center">
-                  Selected range: {value} miles
+                <p className="text-gray-600 text-sm mt-1 text-center mb-5">
+                  Selected radius: {radius} km
                 </p>
               </div>
             </ConfigProvider>
           </Form>
 
-          <div className="mt-5">
-            <Steps
-              current={current}
-              onChange={onChange}
-              direction="horizontal"
-              size="small"
-              items={[
-                { title: '', status: 'finish' },
-                { title: '', status: current >= 1 ? 'finish' : 'wait' },
-                { title: '', status: current >= 2 ? 'finish' : 'wait' },
-                { title: '', status: current >= 3 ? 'finish' : 'wait' },
-              ]}
-              style={{ width: '100%' }}
-            />
-          </div>
+          {/* Steps */}
+          <Steps
+            current={current}
+            direction="horizontal"
+            size="small"
+            items={[
+              { title: '', status: 'finish' },
+              { title: '', status: current >= 1 ? 'finish' : 'wait' },
+              { title: '', status: current >= 2 ? 'finish' : 'wait' },
+              { title: '', status: current >= 3 ? 'finish' : 'wait' },
+            ]}
+            style={{ width: '100%' }}
+          />
         </div>
       </div>
     </div>

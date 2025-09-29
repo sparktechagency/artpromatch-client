@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Collapse, Input, Modal, Form, message } from 'antd';
+import { Collapse, Input, Modal, Form } from 'antd';
+import { toast } from 'sonner';
 
 const { Search } = Input;
 
@@ -65,12 +66,12 @@ const HelpPage = () => {
       });
 
       if (!res.ok) throw new Error('Failed to save question');
-      message.success('Your question has been submitted!');
+      toast.success('Your question has been submitted!');
       form.resetFields();
       setIsModalOpen(false);
     } catch (error) {
       console.error(error);
-      message.error('Something went wrong. Please try again.');
+      toast.error('Something went wrong. Please try again.');
     }
   };
 
@@ -108,7 +109,7 @@ const HelpPage = () => {
           className="px-6 py-2 rounded-xl bg-primary text-white cursor-pointer"
         >
           Get in touch
-        </div>  
+        </div>
       </div>
 
       {/* modal */}
