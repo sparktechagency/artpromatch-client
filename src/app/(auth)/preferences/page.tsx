@@ -1,17 +1,9 @@
 import Preferences from '@/components/WithoutNavFooterComponents/Preferences';
 
-type SearchParams = Promise<{ [key: string]: string | undefined }>;
-
-const PreferencesPage = async ({
-  searchParams,
-}: {
-  searchParams: SearchParams;
-}) => {
-  const { role } = await searchParams;
-
+const PreferencesPage = () => {
   return (
     <div>
-      <Preferences role={role as string} />
+      <Preferences />
     </div>
   );
 };

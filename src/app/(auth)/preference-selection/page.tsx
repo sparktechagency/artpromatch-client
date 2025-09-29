@@ -2,10 +2,14 @@ import { AllImages } from '@/assets/images/AllImages';
 import { Form } from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
 
-const PreferenceSelection = () => {
-  // const role = SearchParams.get('role');
+const PreferenceSelection = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ role: string }>;
+}) => {
+  const query = await searchParams;
+  const { role } = query;
 
   return (
     <div className="py-16 md:py-0 h-[100vh] w-full flex items-center justify-center ">
@@ -29,8 +33,8 @@ const PreferenceSelection = () => {
                 </div>
               </div>
               <Link href="/preferences">
-                <button className="w-full bg-primary text-white py-3 rounded-lg mt-5 text-center">
-                  <div className="text-lg">Get Started</div>
+                <button className="w-full bg-primary py-2 rounded-lg mt-5 text-center">
+                  <div className="text-lg text-white">Get Started</div>
                 </button>
               </Link>
             </Form>

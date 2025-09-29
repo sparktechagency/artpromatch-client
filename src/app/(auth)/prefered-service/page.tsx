@@ -16,29 +16,44 @@ const services: string[] = [
 ];
 
 const PreferdService: React.FC = () => {
-  const [current, setCurrent] = useState<number>(0);
+  const [current, setCurrent] = useState<number>(2);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
 
-  // Save selected services to localStorage whenever it changes
+  // Load saved services on mount
   useEffect(() => {
-    localStorage.setItem('lookingFor', JSON.stringify(selectedServices));
-    console.log('selectedServices', selectedServices);
-  }, [selectedServices]);
+    const saved = localStorage.getItem('lookingFor');
+    if (saved) {
+      try {
+        setSelectedServices(JSON.parse(saved));
+      } catch (e) {
+        console.error('Error parsing lookingFor', e);
+      }
+    }
+  }, []);
+
+  // const handleServiceChange = (newService: string) => {
+  //   const updated = selectedServices.includes(newService)
+  //     ? selectedServices.filter(service => service !== newService)
+  //     : [...selectedServices, newService];
+
+  //   setSelectedServices(updated);
+  //   localStorage.setItem('lookingFor', JSON.stringify(updated));
+  // };
 
   const handleServiceChange = (service: string) => {
-    setSelectedServices(prev =>
-      prev.includes(service)
+    setSelectedServices(prev => {
+      const updated = prev.includes(service)
         ? prev.filter(s => s !== service)
-        : [...prev, service]
-    );
-  };
+        : [...prev, service];
 
-  const onChange = (value: number) => {
-    setCurrent(value);
+      // save immediately
+      localStorage.setItem('lookingFor', JSON.stringify(updated));
+      return updated;
+    });
   };
 
   return (
-    <div className="py-16 md:py-0 h-[100vh] w-full flex items-center justify-center ">
+    <div className="py-16 md:py-0 h-[100vh] w-full flex items-center justify-center">
       <div className="pt-32 pb-16">
         <div className="w-[600px]">
           <Form
@@ -51,12 +66,13 @@ const PreferdService: React.FC = () => {
               <h2 className="text-center text-2xl font-bold mt-6 mb-2 text-primary">
                 What services are you looking for?
               </h2>
-              <Typography.Text className=" text-center text-base ">
+              <Typography.Text className="text-center text-base">
                 Select all that apply.
               </Typography.Text>
             </div>
 
-            <div className="flex justify-center items-center gap-20">
+            {/* Services checkboxes */}
+            <div className="flex justify-center items-start gap-20">
               <div className="flex flex-col gap-2">
                 {services.slice(0, 3).map(service => (
                   <Checkbox
@@ -81,17 +97,17 @@ const PreferdService: React.FC = () => {
               </div>
             </div>
 
+            {/* Continue button */}
             <Link href="/stay-updated">
-              <button className="w-full bg-primary text-white py-3 rounded-lg mt-5">
+              <div className="w-full bg-primary text-lg text-white text-center py-2 rounded-lg mt-5 mb-10">
                 Get Started
-              </button>
+              </div>
             </Link>
-            <button className="w-full mt-5">Skip</button>
           </Form>
 
+          {/* Steps */}
           <Steps
             current={current}
-            onChange={onChange}
             direction="horizontal"
             size="small"
             items={[

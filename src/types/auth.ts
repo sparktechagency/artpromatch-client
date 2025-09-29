@@ -6,6 +6,8 @@ export type AuthUser = {
   stringLocation: string;
   image: string;
   role: 'CLIENT' | 'ARTIST' | 'BUSINESS' | 'ADMIN' | 'SUPER_ADMIN';
+  isProfile: boolean;
+  isActive: boolean;
   iat?: number;
   exp?: number;
 };

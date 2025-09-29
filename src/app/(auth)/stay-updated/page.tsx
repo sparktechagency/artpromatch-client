@@ -9,27 +9,30 @@ import React, { useEffect, useState } from 'react';
 
 const StayUpdated = () => {
   const router = useRouter();
-  const [current, setCurrent] = useState(0);
+  const [current, setCurrent] = useState<number>(3);
   const [selectedType, setSelectedType] = useState<string[]>([]);
 
   useEffect(() => {
-    const saved = JSON.parse(
-      localStorage.getItem('notificationPreferences') || '[]'
-    );
-    setSelectedType(saved);
+    const saved = localStorage.getItem('notificationPreferences');
+    if (saved) {
+      try {
+        setSelectedType(JSON.parse(saved));
+      } catch (e) {
+        console.error('Error parsing lookingFor', e);
+      }
+    }
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem(
-      'notificationPreferences',
-      JSON.stringify(selectedType)
-    );
-  }, [selectedType]);
-
   const handleTypeChange = (type: string) => {
-    setSelectedType(prev =>
-      prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]
-    );
+    setSelectedType(prev => {
+      const updated = prev.includes(type)
+        ? prev.filter(t => t !== type)
+        : [...prev, type];
+
+      // save immediately
+      localStorage.setItem('notificationPreferences', JSON.stringify(updated));
+      return updated;
+    });
   };
 
   return (
@@ -78,25 +81,22 @@ const StayUpdated = () => {
             </div>
 
             <Link href="/all-set">
-              <button className="w-full bg-primary text-white py-3 rounded-lg mt-5">
+              <div className="w-full bg-primary text-lg text-white text-center py-2 rounded-lg mt-5 mb-10">
                 Continue
-              </button>
+              </div>
             </Link>
-
-            <button
-              className="w-full mt-5"
-              onClick={() => router.push('/all-set')}
-            >
-              Skip
-            </button>
           </Form>
 
           <Steps
             current={current}
-            onChange={setCurrent}
             direction="horizontal"
             size="small"
-            items={[{ title: '' }, { title: '' }, { title: '' }, { title: '' }]}
+            items={[
+              { title: '', status: 'finish' },
+              { title: '', status: current >= 1 ? 'finish' : 'wait' },
+              { title: '', status: current >= 2 ? 'finish' : 'wait' },
+              { title: '', status: current >= 3 ? 'finish' : 'wait' },
+            ]}
             style={{ width: '100%' }}
           />
         </div>
