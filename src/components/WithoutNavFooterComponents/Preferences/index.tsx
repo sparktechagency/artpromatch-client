@@ -1,7 +1,7 @@
 'use client';
 
 import { AllImages } from '@/assets/images/AllImages';
-import { Form, Radio, Steps, Typography } from 'antd';
+import { Form, Input, Radio, Steps, Typography } from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -73,6 +73,11 @@ const Preferences = () => {
   const [favoriteTattoos, setFavoriteTattoos] = useState<string[]>([]);
   const [artistType, setArtistType] = useState<string>('');
 
+  const [studioName, setStudioName] = useState<string>('');
+  const [contactNumber, setContactNumber] = useState<string>('');
+  const [contactEmail, setContactEmail] = useState<string>('');
+  const [businessType, setBusinessType] = useState<string>('');
+
   useEffect(() => {
     const savedRole = localStorage.getItem('role');
     if (!savedRole) {
@@ -86,9 +91,8 @@ const Preferences = () => {
       setRole(savedRole);
     }
 
+    // client part
     const savedFavoriteTattoos = localStorage.getItem('favoriteTattoos');
-    const savedArtistType = localStorage.getItem('artistType');
-
     if (savedFavoriteTattoos) {
       try {
         setFavoriteTattoos(JSON.parse(savedFavoriteTattoos));
@@ -97,11 +101,47 @@ const Preferences = () => {
       }
     }
 
+    // artist part
+    const savedArtistType = localStorage.getItem('artistType');
     if (savedArtistType) {
       try {
         setArtistType(savedArtistType);
       } catch (error) {
         console.error('Error parsing artistType', error);
+      }
+    }
+
+    // business part
+    const studioName = localStorage.getItem('studioName');
+    const contactNumber = localStorage.getItem('contactNumber');
+    const contactEmail = localStorage.getItem('contactEmail');
+    const businessType = localStorage.getItem('businessType');
+    if (studioName) {
+      try {
+        setStudioName(studioName);
+      } catch (error) {
+        console.error('Error parsing studioName', error);
+      }
+    }
+    if (contactNumber) {
+      try {
+        setContactNumber(contactNumber);
+      } catch (error) {
+        console.error('Error parsing contactNumber', error);
+      }
+    }
+    if (contactEmail) {
+      try {
+        setContactEmail(contactEmail);
+      } catch (error) {
+        console.error('Error parsing contactEmail', error);
+      }
+    }
+    if (businessType) {
+      try {
+        setBusinessType(businessType);
+      } catch (error) {
+        console.error('Error parsing businessType', error);
       }
     }
   }, []);
@@ -120,6 +160,21 @@ const Preferences = () => {
   const handleArtistType = (type: string) => {
     setArtistType(type);
     localStorage.setItem('artistType', type);
+  };
+
+  // handleBusinessType
+  const handleBusinessType = (type: string) => {
+    setBusinessType(type);
+    localStorage.setItem('businessType', type);
+  };
+
+  // handleBusinessDetails
+  const handleBusinessDetails = () => {
+    localStorage.setItem('studioName', studioName);
+    localStorage.setItem('contactNumber', contactNumber);
+    localStorage.setItem('contactEmail', contactEmail);
+
+    router.push('/preferd-location');
   };
 
   return role === 'CLIENT' ? (
@@ -199,7 +254,7 @@ const Preferences = () => {
     <div className="py-16 md:py-0 h-[100vh] w-full flex items-center justify-center">
       <div className="pt-32 pb-16">
         <Form
-          name="select-user-type"
+          name="select-style-type"
           layout="vertical"
           className="pb-10 w-full mx-auto bg-white px-2 rounded-2xl"
         >
@@ -266,7 +321,115 @@ const Preferences = () => {
         />
       </div>
     </div>
-  ) : null;
+  ) : (
+    <div className="py-16 md:py-0 h-[100vh] flex items-center justify-center">
+      <div className="">
+        <Form name="business-details" layout="vertical" className="w-120">
+          <div className="mb-4 flex flex-col justify-center items-center text-center ">
+            <Image src={AllImages.logo} width={50} height={50} alt="logo" />
+            <h2 className="text-center text-2xl font-bold mt-6 mb-2 text-primary">
+              Your Business details
+            </h2>
+            <Typography.Text className="text-center text-base">
+              Fill-up the form carefully.
+            </Typography.Text>
+          </div>
+
+          <Form.Item
+            label={<p>Enter your Studio Name</p>}
+            rules={[
+              { required: true, message: 'Studio name is required' },
+              { min: 3, message: 'Studio name must be at least 3 characters' },
+            ]}
+          >
+            <Input
+              value={studioName}
+              onChange={e => setStudioName(e.target.value)}
+              placeholder="Enter your studio name"
+              className="text-md"
+            />
+          </Form.Item>
+
+          <Form.Item
+            label={<p>Enter your Contact Number</p>}
+            rules={[
+              { required: true, message: 'Contact number is required' },
+              {
+                pattern: /^[0-9]{10,15}$/,
+                message: 'Enter a valid contact number (10–15 digits)',
+              },
+            ]}
+          >
+            <Input
+              value={contactNumber}
+              onChange={e => setContactNumber(e.target.value)}
+              placeholder="Enter your contact number"
+              className="text-md"
+            />
+          </Form.Item>
+
+          <Form.Item
+            label={<p>Enter your Contact Email</p>}
+            rules={[
+              { required: true, message: 'Contact email is required' },
+              { type: 'email', message: 'Enter a valid email address' },
+            ]}
+          >
+            <Input
+              value={contactEmail}
+              onChange={e => setContactEmail(e.target.value)}
+              placeholder="Enter your contact email"
+              className="text-md"
+            />
+          </Form.Item>
+
+          <div className="flex flex-col gap-4 ">
+            <Radio.Group
+              onChange={e => handleBusinessType(e.target.value)}
+              value={businessType}
+            >
+              {['Studio', 'Event Organizer', 'Both']?.map(type => (
+                <Radio key={type} value={type} className="w-full">
+                  <div
+                    className={`border rounded-lg p-3 mb-5 w-50 text-center ${
+                      businessType === type
+                        ? 'border-blue-500 shadow-md'
+                        : 'hover:border-blue-500'
+                    }`}
+                  >
+                    <h1 className="text-xl font-bold">{type}</h1>
+                  </div>
+                </Radio>
+              ))}
+            </Radio.Group>
+          </div>
+
+          {/* Submit buttons */}
+          <button
+            disabled={!studioName || !contactNumber || !contactEmail}
+            onClick={handleBusinessDetails}
+            className="w-full bg-primary text-white py-2 rounded-lg mt-5 mb-10"
+          >
+            <div className="text-lg text-white"> Get Started</div>
+          </button>
+        </Form>
+
+        {/* Steps */}
+        <Steps
+          current={current}
+          direction="horizontal"
+          size="small"
+          items={[
+            { title: '', status: current >= 0 ? 'finish' : 'wait' },
+            { title: '', status: current >= 1 ? 'finish' : 'wait' },
+            { title: '', status: current >= 2 ? 'finish' : 'wait' },
+            { title: '', status: current >= 3 ? 'finish' : 'wait' },
+          ]}
+          style={{ width: '100%' }}
+        />
+      </div>
+    </div>
+  );
 };
 
 export default Preferences;
