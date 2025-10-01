@@ -4,7 +4,7 @@ import { AllImages } from '@/assets/images/AllImages';
 import { Form, Typography, Radio } from 'antd';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const userRoles = [
   {
@@ -28,9 +28,25 @@ const userRoles = [
 ];
 
 const UserTypeSelection = () => {
-  const [label, setLabel] = useState<string>('CLIENT');
+  const [role, setRole] = useState<string>('');
   const router = useRouter();
-  const selectedRole = userRoles.find(role => role.label === label);
+  const selectedRole = userRoles.find(userRole => userRole.label === role);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const savedRole = localStorage.getItem('role') || 'CLIENT';
+    if (!savedRole) {
+      try {
+        router.push('/user-type-selection');
+        return;
+      } catch (error) {
+        console.error('Error parsing role', error);
+      }
+    } else {
+      setRole(savedRole);
+    }
+  }, []);
 
   const handleNext = () => {
     if (selectedRole) {
@@ -60,22 +76,23 @@ const UserTypeSelection = () => {
             </div>
 
             <div className="flex flex-col gap-4">
-              <Radio.Group
-                onChange={e => setLabel(e.target.value)}
-                value={label}
-              >
-                {userRoles.map(role => (
-                  <Radio key={role.label} value={role.label} className="w-full">
+              <Radio.Group onChange={e => setRole(e.target.value)} value={role}>
+                {userRoles.map(userRole => (
+                  <Radio
+                    key={userRole.label}
+                    value={userRole.label}
+                    className="w-full"
+                  >
                     <div
                       className={`border rounded-lg p-6 mb-5 ${
-                        label === role.label
+                        role === userRole.label
                           ? 'border-blue-500 shadow-md'
                           : 'hover:border-blue-500'
                       }`}
                     >
-                      <h1 className="text-xl font-bold">{role.label}</h1>
+                      <h1 className="text-xl font-bold">{userRole.label}</h1>
                       <p className="text-sm text-gray-600">
-                        {role.description}
+                        {userRole.description}
                       </p>
                     </div>
                   </Radio>

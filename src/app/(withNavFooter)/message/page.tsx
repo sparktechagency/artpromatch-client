@@ -18,6 +18,8 @@ const MainChatPage = ({ conversationId }: { conversationId: string }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     if (!user?.id) return;
 
     socket = io(process.env.NEXT_PUBLIC_MAIN_API, {
@@ -34,6 +36,8 @@ const MainChatPage = ({ conversationId }: { conversationId: string }) => {
   }, [user?.id]);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     // scroll to bottom on new message
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);

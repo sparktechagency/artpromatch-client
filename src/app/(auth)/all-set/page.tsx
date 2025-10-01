@@ -18,6 +18,9 @@ interface ProfileData {
   favoriteTattoos: string[];
   lookingFor: string[];
   notificationPreferences: string[];
+
+  // artistType?: string;
+  // expertise?: string[];
 }
 
 const AllSet: React.FC = () => {
@@ -27,44 +30,57 @@ const AllSet: React.FC = () => {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const favoriteTattoos: string[] = JSON.parse(
-      localStorage.getItem('favoriteTattoos') || '[]'
-    );
+    const role = localStorage.getItem('role');
+    if (!role) {
+      try {
+        router.push('/user-type-selection');
+        return;
+      } catch (error) {
+        console.error('Error parsing role', error);
+      }
+    }
 
-    const location = {
-      latitude: parseFloat(localStorage.getItem('latitude') || '0'),
-      longitude: parseFloat(localStorage.getItem('longitude') || '0'),
-    };
-
-    const radius = parseInt(localStorage.getItem('radius') || '0', 10);
-
-    const lookingFor: string[] = JSON.parse(
-      localStorage.getItem('lookingFor') || '[]'
-    );
-
-    const notificationPreferences: string[] = JSON.parse(
-      localStorage.getItem('notificationPreferences') || '[]'
-    );
-
-    const role = localStorage.getItem('role') || 'CLIENT';
+    const savedLocation = localStorage.getItem('location');
+    if (!savedLocation) return;
+    const location = JSON.parse(savedLocation);
 
     const stringLocation = localStorage.getItem('stringLocation') || 'USA';
 
-    setProfileData({
-      role,
-      stringLocation,
-      mainLocation: {
-        coordinates: [location.longitude, location.latitude],
-      },
-      radius,
-      favoriteTattoos,
-      lookingFor,
-      notificationPreferences,
-    });
+    if (role === 'CLIENT') {
+      const radius = parseInt(localStorage.getItem('radius') || '50');
+
+      const lookingFor: string[] = JSON.parse(
+        localStorage.getItem('lookingFor') || '[]'
+      );
+
+      const favoriteTattoos: string[] = JSON.parse(
+        localStorage.getItem('favoriteTattoos') || '[]'
+      );
+
+      const notificationPreferences: string[] = JSON.parse(
+        localStorage.getItem('notificationPreferences') || '[]'
+      );
+
+      const artistProfileData: ProfileData = {
+        role,
+        stringLocation,
+        mainLocation: {
+          coordinates: [location.longitude, location.latitude],
+        },
+        radius,
+        favoriteTattoos,
+        lookingFor,
+        notificationPreferences,
+      };
+
+      setProfileData(artistProfileData);
+    }
   }, []);
 
   const handleAllSet = async () => {
     if (!profileData) return;
+
+    console.log({ profileData });
 
     const formData = new FormData();
     formData.append('data', JSON.stringify(profileData));

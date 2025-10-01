@@ -11,7 +11,7 @@ const PreferecnePage = () => {
 
   interface PreferenceFormValues {
     defaultHomeView: 'grid' | 'map' | 'both';
-    preferredArtistType: 'tattoo' | 'piercers' | 'both';
+    preferredArtistType: 'Tattoo Artist' | 'Piercer' | 'Both';
     language: 'english' | 'spanish';
     dateFormat: 'DD/MM/YYYY' | 'MM/DD/YYYY' | 'YYYY-MM-DD';
   }
@@ -89,9 +89,9 @@ const PreferecnePage = () => {
           label={<h1 className="text-secondary">Preferred Artist Type</h1>}
         >
           <Radio.Group>
-            <Radio value="tattoo">Tattoo Artist</Radio>
-            <Radio value="piercers">Piercers</Radio>
-            <Radio value="both">Both</Radio>
+            <Radio value="Tattoo Artist">Tattoo Artist</Radio>
+            <Radio value="Piercer">Piercer</Radio>
+            <Radio value="Both">Both</Radio>
           </Radio.Group>
         </Form.Item>
 

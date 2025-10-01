@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { FaLocationArrow } from 'react-icons/fa6';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { getLocationName } from '@/services/Service';
 
 export interface LocationType {
   longitude: number;
@@ -15,6 +16,7 @@ export interface LocationType {
 
 const PreferedLocation: React.FC = () => {
   const [form] = Form.useForm();
+  const [role, setRole] = useState<string>('');
   const [stringLocation, setStringLocation] = useState<string>('');
   const [location, setLocation] = useState<LocationType | null>(null);
   const [radius, setRadius] = useState<number>(50);
@@ -23,6 +25,20 @@ const PreferedLocation: React.FC = () => {
 
   // Load from localStorage on mount
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const savedRole = localStorage.getItem('role');
+    if (!savedRole) {
+      try {
+        router.push('/user-type-selection');
+        return;
+      } catch (error) {
+        console.error('Error parsing role', error);
+      }
+    } else {
+      setRole(savedRole);
+    }
+
     const savedStringLocation = localStorage.getItem('stringLocation');
     const savedLocation = localStorage.getItem('location');
     const savedRadius = localStorage.getItem('radius');
@@ -52,17 +68,20 @@ const PreferedLocation: React.FC = () => {
   }, [form]);
 
   // Use current location button
-  const handleUseCurrentLocation = () => {
+  const handleUseCurrentLocation = async () => {
     if (!navigator.geolocation) {
       toast.error('Geolocation is not supported by your browser');
       return;
     }
 
     navigator.geolocation.getCurrentPosition(
-      pos => {
+      async pos => {
         const { latitude, longitude } = pos.coords;
-        const location = { longitude, latitude };
+        const location = { latitude, longitude };
         setLocation(location);
+
+        const locationName = await getLocationName([latitude, longitude]);
+        setStringLocation(locationName);
 
         localStorage.setItem('location', JSON.stringify(location));
       },
@@ -77,8 +96,11 @@ const PreferedLocation: React.FC = () => {
 
   // Continue button
   const handleContinue = () => {
+    if (role === 'CLIENT') {
+      localStorage.setItem('radius', radius.toString());
+    }
+
     localStorage.setItem('stringLocation', stringLocation);
-    localStorage.setItem('radius', radius.toString());
     router.push('/prefered-service');
   };
 
@@ -102,16 +124,6 @@ const PreferedLocation: React.FC = () => {
               </Typography.Text>
             </div>
 
-            {/* Address Input */}
-            <Form.Item name="address">
-              <Input
-                value={stringLocation}
-                onChange={e => setStringLocation(e.target.value)}
-                placeholder="Enter your address"
-                className="text-md"
-              />
-            </Form.Item>
-
             {/* Use Current Location */}
             <Form.Item>
               <button
@@ -130,9 +142,56 @@ const PreferedLocation: React.FC = () => {
               </button>
             </Form.Item>
 
+            {/* Address Input */}
+            <Form.Item>
+              <Input
+                value={stringLocation}
+                onChange={e => setStringLocation(e.target.value)}
+                placeholder="Enter your address"
+                className="text-md"
+              />
+            </Form.Item>
+
+            {/* Radius Slider */}
+
+            {role === 'CLIENT' && (
+              <ConfigProvider
+                theme={{
+                  components: {
+                    Slider: {
+                      handleColor: '#6b4f38',
+                      trackBg: '#6b4f38',
+                      railBg: '#e5e7eb',
+                      handleSize: 14,
+                    },
+                  },
+                }}
+              >
+                <div className="mt-4">
+                  <p className="text-gray-700 font-medium">
+                    Show results within
+                  </p>
+                  <Slider
+                    value={radius}
+                    min={50}
+                    max={1000}
+                    onChange={val => setRadius(val)}
+                    tooltip={{ open: false }}
+                  />
+                  <div className="flex justify-between text-gray-400 text-sm">
+                    <span>50 km</span>
+                    <span>1000 km</span>
+                  </div>
+                  <p className="text-gray-600 text-sm mt-1 text-center mb-5">
+                    Selected radius: {radius} km
+                  </p>
+                </div>
+              </ConfigProvider>
+            )}
             {/* Continue Button */}
             <Form.Item className="text-center">
               <button
+                disabled={!location || !stringLocation}
                 type="button"
                 onClick={handleContinue}
                 className="bg-primary w-full px-6 py-2 rounded-md"
@@ -140,38 +199,6 @@ const PreferedLocation: React.FC = () => {
                 <div className="text-lg text-white">Continue</div>
               </button>
             </Form.Item>
-
-            {/* Radius Slider */}
-            <ConfigProvider
-              theme={{
-                components: {
-                  Slider: {
-                    handleColor: '#6b4f38',
-                    trackBg: '#6b4f38',
-                    railBg: '#e5e7eb',
-                    handleSize: 14,
-                  },
-                },
-              }}
-            >
-              <div className="mt-4">
-                <p className="text-gray-700 font-medium">Show results within</p>
-                <Slider
-                  value={radius}
-                  min={50}
-                  max={1000}
-                  onChange={val => setRadius(val)}
-                  tooltip={{ open: false }}
-                />
-                <div className="flex justify-between text-gray-400 text-sm">
-                  <span>50 km</span>
-                  <span>1000 km</span>
-                </div>
-                <p className="text-gray-600 text-sm mt-1 text-center mb-5">
-                  Selected radius: {radius} km
-                </p>
-              </div>
-            </ConfigProvider>
           </Form>
 
           {/* Steps */}

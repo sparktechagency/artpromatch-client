@@ -120,6 +120,6 @@ type FavoritePiercing =
 
 type HomeView = 'Grid View' | 'Map View' | 'Both';
 
-type ArtistType = 'Tattoo Artist' | 'Both' | 'Piercers';
+type ArtistType = 'Tattoo Artist' | 'Both' | 'Piercer';
 
 type DateFormat = 'DD/MM/YYYY' | 'MM/DD/YYYY' | 'YYYY-MM-DD';

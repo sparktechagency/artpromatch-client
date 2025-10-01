@@ -14,6 +14,8 @@ const AccountVerification: React.FC = () => {
   const [userEmail, setUserEmail] = useState<string | null>(null);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     const email = localStorage.getItem('userEmail');
     if (!email) {
       router.push('/sign-up');
