@@ -2,7 +2,7 @@
 
 import { AllImages } from '@/assets/images/AllImages';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Modal, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import PaymentModal from '../../BookingModals/PaymentModal';
@@ -16,7 +16,7 @@ interface PaymentDataType {
   status: string;
 }
 
-const PaymentHistory: React.FC = () => {
+const PaymentHistory = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const data: PaymentDataType[] = [

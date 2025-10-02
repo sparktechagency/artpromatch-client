@@ -11,11 +11,7 @@ const ClientAfterLogin = ({
   page: string;
   services: IService[];
   meta: IMeta;
-  }) => {
-  
-  console.log({ services });
-
-
+}) => {
   return (
     <div className="container mx-auto px-2 md:px-0">
       <ClientAfterLoginHeader />

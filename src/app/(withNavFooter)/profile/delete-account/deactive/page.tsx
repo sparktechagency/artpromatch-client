@@ -10,11 +10,11 @@ import {
   CheckboxChangeEvent,
 } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { CiCircleInfo } from 'react-icons/ci';
 import { FaMinus } from 'react-icons/fa6';
 
-const DeactiveAccount: React.FC = () => {
+const DeactiveAccount = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedReason, setSelectedReason] = useState<string | null>(null);
   const [form] = Form.useForm();

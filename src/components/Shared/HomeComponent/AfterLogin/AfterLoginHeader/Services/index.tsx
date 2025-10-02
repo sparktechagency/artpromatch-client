@@ -14,8 +14,6 @@ import { updateClientRadius } from '@/services/Service';
 import { SiGoogletasks } from 'react-icons/si';
 
 const Services = ({ services = [] }: { services: IService[] }) => {
-  console.log({ services });
-
   const tattooCategories = [
     ...new Set(services?.flatMap(service => service?.artist?.expertise)),
   ];

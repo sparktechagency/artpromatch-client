@@ -10,7 +10,7 @@ import {
   Radio,
 } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { BsTrash3 } from 'react-icons/bs';
 import { CiCircleInfo } from 'react-icons/ci';
 

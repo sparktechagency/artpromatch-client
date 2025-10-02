@@ -5,7 +5,7 @@ import { Form, Input, Radio, Steps, Typography } from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const artStyles = [
   'American Traditional',
@@ -68,15 +68,16 @@ const artStyles = [
 
 const Preferences = () => {
   const router = useRouter();
-  const [role, setRole] = useState<string>('');
+  const [form] = Form.useForm();
+  const [role, setRole] = useState<string | null>(null);
   const [current, setCurrent] = useState<number>(0);
   const [favoriteTattoos, setFavoriteTattoos] = useState<string[]>([]);
   const [artistType, setArtistType] = useState<string>('');
 
-  const [studioName, setStudioName] = useState<string>('');
-  const [contactNumber, setContactNumber] = useState<string>('');
-  const [contactEmail, setContactEmail] = useState<string>('');
-  const [businessType, setBusinessType] = useState<string>('');
+  // const [studioName, setStudioName] = useState<string>('');
+  // const [contactNumber, setContactNumber] = useState<string>('');
+  // const [contactEmail, setContactEmail] = useState<string>('');
+  // const [businessType, setBusinessType] = useState<string>('');
 
   useEffect(() => {
     const savedRole = localStorage.getItem('role');
@@ -116,35 +117,14 @@ const Preferences = () => {
     const contactNumber = localStorage.getItem('contactNumber');
     const contactEmail = localStorage.getItem('contactEmail');
     const businessType = localStorage.getItem('businessType');
-    if (studioName) {
-      try {
-        setStudioName(studioName);
-      } catch (error) {
-        console.error('Error parsing studioName', error);
-      }
-    }
-    if (contactNumber) {
-      try {
-        setContactNumber(contactNumber);
-      } catch (error) {
-        console.error('Error parsing contactNumber', error);
-      }
-    }
-    if (contactEmail) {
-      try {
-        setContactEmail(contactEmail);
-      } catch (error) {
-        console.error('Error parsing contactEmail', error);
-      }
-    }
-    if (businessType) {
-      try {
-        setBusinessType(businessType);
-      } catch (error) {
-        console.error('Error parsing businessType', error);
-      }
-    }
-  }, []);
+
+    form.setFieldsValue({
+      studioName,
+      contactNumber,
+      contactEmail,
+      businessType,
+    });
+  }, [form]);
 
   // handleSelect
   const handleSelect = (style: string) => {
@@ -162,17 +142,12 @@ const Preferences = () => {
     localStorage.setItem('artistType', type);
   };
 
-  // handleBusinessType
-  const handleBusinessType = (type: string) => {
-    setBusinessType(type);
-    localStorage.setItem('businessType', type);
-  };
-
   // handleBusinessDetails
-  const handleBusinessDetails = () => {
-    localStorage.setItem('studioName', studioName);
-    localStorage.setItem('contactNumber', contactNumber);
-    localStorage.setItem('contactEmail', contactEmail);
+  const handleBusinessDetails = (values: any) => {
+    localStorage.setItem('studioName', values.studioName);
+    localStorage.setItem('contactNumber', values.contactNumber);
+    localStorage.setItem('contactEmail', values.contactEmail);
+    localStorage.setItem('businessType', values.businessType);
 
     router.push('/preferd-location');
   };
@@ -181,6 +156,7 @@ const Preferences = () => {
     <div className="py-16 md:py-0 h-[100vh] w-full flex items-center justify-center">
       <div className="pt-32 pb-16">
         <Form
+          form={form}
           name="select-user-type"
           layout="vertical"
           className="pb-10 w-full mx-auto bg-white px-2 rounded-2xl"
@@ -254,6 +230,7 @@ const Preferences = () => {
     <div className="py-16 md:py-0 h-[100vh] w-full flex items-center justify-center">
       <div className="pt-32 pb-16">
         <Form
+          form={form}
           name="select-style-type"
           layout="vertical"
           className="pb-10 w-full mx-auto bg-white px-2 rounded-2xl"
@@ -321,10 +298,16 @@ const Preferences = () => {
         />
       </div>
     </div>
-  ) : (
+  ) : role === 'BUSINESS' ? (
     <div className="py-16 md:py-0 h-[100vh] flex items-center justify-center">
       <div className="">
-        <Form name="business-details" layout="vertical" className="w-120">
+        <Form
+          form={form}
+          name="business-details"
+          layout="vertical"
+          className="w-120"
+          onFinish={handleBusinessDetails}
+        >
           <div className="mb-4 flex flex-col justify-center items-center text-center ">
             <Image src={AllImages.logo} width={50} height={50} alt="logo" />
             <h2 className="text-center text-2xl font-bold mt-6 mb-2 text-primary">
@@ -336,22 +319,19 @@ const Preferences = () => {
           </div>
 
           <Form.Item
-            label={<p>Enter your Studio Name</p>}
+            name="studioName"
+            label="Enter your Studio Name"
             rules={[
               { required: true, message: 'Studio name is required' },
               { min: 3, message: 'Studio name must be at least 3 characters' },
             ]}
           >
-            <Input
-              value={studioName}
-              onChange={e => setStudioName(e.target.value)}
-              placeholder="Enter your studio name"
-              className="text-md"
-            />
+            <Input placeholder="Enter your studio name" className="text-md" />
           </Form.Item>
 
           <Form.Item
-            label={<p>Enter your Contact Number</p>}
+            name="contactNumber"
+            label="Enter your Contact Number"
             rules={[
               { required: true, message: 'Contact number is required' },
               {
@@ -361,57 +341,50 @@ const Preferences = () => {
             ]}
           >
             <Input
-              value={contactNumber}
-              onChange={e => setContactNumber(e.target.value)}
               placeholder="Enter your contact number"
               className="text-md"
             />
           </Form.Item>
 
           <Form.Item
-            label={<p>Enter your Contact Email</p>}
+            name="contactEmail"
+            label="Enter your Contact Email"
             rules={[
               { required: true, message: 'Contact email is required' },
               { type: 'email', message: 'Enter a valid email address' },
             ]}
           >
-            <Input
-              value={contactEmail}
-              onChange={e => setContactEmail(e.target.value)}
-              placeholder="Enter your contact email"
-              className="text-md"
-            />
+            <Input placeholder="Enter your contact email" className="text-md" />
           </Form.Item>
 
-          <div className="flex flex-col gap-4 ">
-            <Radio.Group
-              onChange={e => handleBusinessType(e.target.value)}
-              value={businessType}
-            >
-              {['Studio', 'Event Organizer', 'Both']?.map(type => (
+          <Form.Item
+            name="businessType"
+            label="Select Business Type"
+            rules={[
+              { required: true, message: 'Please select a business type' },
+            ]}
+          >
+            <Radio.Group>
+              {['Studio', 'Event Organizer', 'Both'].map(type => (
                 <Radio key={type} value={type} className="w-full">
                   <div
-                    className={`border rounded-lg p-3 mb-5 w-50 text-center ${
-                      businessType === type
-                        ? 'border-blue-500 shadow-md'
-                        : 'hover:border-blue-500'
-                    }`}
+                    className={`border rounded-lg p-3 mb-5 w-50 text-center`}
                   >
                     <h1 className="text-xl font-bold">{type}</h1>
                   </div>
                 </Radio>
               ))}
             </Radio.Group>
-          </div>
+          </Form.Item>
 
-          {/* Submit buttons */}
-          <button
-            disabled={!studioName || !contactNumber || !contactEmail}
-            onClick={handleBusinessDetails}
-            className="w-full bg-primary text-white py-2 rounded-lg mt-5 mb-10"
-          >
-            <div className="text-lg text-white"> Get Started</div>
-          </button>
+          <Form.Item>
+            <button
+              type="submit"
+              className="w-full bg-primary text-white py-2 rounded-lg mt-5 mb-10"
+            >
+              <div className="text-lg text-white"> Get Started</div>
+            </button>
+          </Form.Item>
         </Form>
 
         {/* Steps */}
@@ -429,7 +402,7 @@ const Preferences = () => {
         />
       </div>
     </div>
-  );
+  ) : null;
 };
 
 export default Preferences;

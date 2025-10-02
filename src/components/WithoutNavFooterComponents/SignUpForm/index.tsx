@@ -6,7 +6,7 @@ import { Form, Input, Typography } from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 import { useGoogleLogin } from '@react-oauth/google';
 import { getFcmToken } from '@/lib/firebase-messaging';
@@ -168,7 +168,7 @@ const SignUpForm = () => {
                 required
                 style={{ padding: '6px' }}
                 className="text-md"
-                placeholder="oliviareiss91@gmail.com"
+                placeholder="slota812@gmail.com"
               />
             </Form.Item>
             <Form.Item
@@ -179,7 +179,7 @@ const SignUpForm = () => {
                 required
                 style={{ padding: '6px' }}
                 className="text-md"
-                placeholder="oliviareiss91@gmail.com"
+                placeholder="slota812@gmail.com"
               />
             </Form.Item>
             <Form.Item

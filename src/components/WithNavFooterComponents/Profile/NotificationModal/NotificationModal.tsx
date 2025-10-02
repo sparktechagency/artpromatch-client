@@ -1,6 +1,5 @@
 import { AllImages } from '@/assets/images/AllImages';
 import Image from 'next/image';
-import React from 'react';
 
 type Notification = {
   message: string;

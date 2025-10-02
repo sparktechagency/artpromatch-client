@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import React from 'react';
 import { IoIosArrowForward } from 'react-icons/io';
 import { CiCircleMinus } from 'react-icons/ci';
 import { RiDeleteBin6Line } from 'react-icons/ri';

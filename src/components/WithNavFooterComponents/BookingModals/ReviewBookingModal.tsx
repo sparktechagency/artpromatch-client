@@ -3,7 +3,7 @@
 import { AllImages } from '@/assets/images/AllImages';
 import { ConfigProvider, DatePicker, Form, Input, Modal, Tag } from 'antd';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { FaPen } from 'react-icons/fa6';
 import PaymentModal from './PaymentModal';
 

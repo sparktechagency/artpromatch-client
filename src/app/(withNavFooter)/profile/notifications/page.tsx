@@ -1,7 +1,6 @@
 'use client';
 
 import { Radio, Switch } from 'antd';
-import React from 'react';
 
 const NotificationPage = () => {
   const onChange = (checked: boolean) => {

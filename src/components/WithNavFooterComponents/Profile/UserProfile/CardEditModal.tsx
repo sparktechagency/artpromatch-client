@@ -3,7 +3,7 @@
 import { AllImages } from '@/assets/images/AllImages';
 import { ConfigProvider, Form, Input, InputNumber, Modal, Tag } from 'antd';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import ConfirmModal from '../../BookingModals/ConfirmModal';
 // import ConfirmModal from './ConfirmModal';
 

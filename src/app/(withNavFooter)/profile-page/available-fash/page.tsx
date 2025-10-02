@@ -1,7 +1,7 @@
 'use client';
 import { AllImages } from '@/assets/images/AllImages';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ConfigProvider, Modal } from 'antd';
 import BookingModalOne from '@/components/WithNavFooterComponents/BookingModals/BookingModalOne';

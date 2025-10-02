@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ConfigProvider, DatePicker, Form, Modal, Select, Tag } from 'antd';
 import Image from 'next/image';
 import { AllImages } from '@/assets/images/AllImages';

@@ -20,8 +20,6 @@ const BeforeLogin = ({
   services: IService[];
   meta: IMeta;
 }) => {
-  console.log({ services });
-
   const allImages: string[] = services?.flatMap(service => [
     service.thumbnail,
     ...(service.images || []),

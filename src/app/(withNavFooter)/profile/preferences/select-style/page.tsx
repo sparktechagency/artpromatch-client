@@ -2,9 +2,9 @@
 
 import { Form } from 'antd';
 import { useRouter } from 'next/navigation';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
-const SelectStyle: React.FC = () => {
+const SelectStyle = () => {
   const router = useRouter();
   const [updatedSelectedArt, setUpdatedSelectedArt] = useState<string[]>([]);
 

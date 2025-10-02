@@ -9,7 +9,7 @@ import { Checkbox, Form, Input } from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
 type SignInFormValues = {
@@ -155,7 +155,7 @@ const SignInForm: React.FC<SignInWithRedirectPath> = ({ redirectPath }) => {
                 required
                 style={{ padding: '6px' }}
                 className=" text-md"
-                placeholder="oliviareiss91@gmail.com"
+                placeholder="slota812@gmail.com"
               />
             </Form.Item>
             <Form.Item

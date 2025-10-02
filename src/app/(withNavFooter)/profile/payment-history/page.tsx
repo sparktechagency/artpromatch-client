@@ -1,5 +1,4 @@
 import PaymentHistory from '@/components/WithNavFooterComponents/Profile/UserProfile/PaymentHistory';
-import React from 'react';
 
 const PaymentPage = () => {
   return (

@@ -1,8 +1,7 @@
 'use client';
 
-import { Radio, Switch } from 'antd';
+import { Switch } from 'antd';
 import Link from 'next/link';
-import React from 'react';
 
 const PrivacyPage = () => {
   const onChange = (
