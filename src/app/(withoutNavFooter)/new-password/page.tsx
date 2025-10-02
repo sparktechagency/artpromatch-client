@@ -39,7 +39,7 @@ const NewPasswordPage = () => {
 
   const passwordRules = [
     { required: true, message: 'Please enter your new password' },
-    { min: 6, message: 'New password must be at least 6 characters long' },
+    { min: 8, message: 'New password must be at least 8 characters long' },
     { max: 20, message: 'New password cannot exceed 20 characters' },
     {
       validator: (_: any, value: string) => {

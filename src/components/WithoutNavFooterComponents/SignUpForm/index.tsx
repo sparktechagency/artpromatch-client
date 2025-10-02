@@ -22,10 +22,18 @@ const SignUpForm = () => {
     email: string;
     phoneNumber: string;
     password: string;
+    confirmPassword: string;
   };
 
   // handleSignUpUser
   const handleSignUpUser = async (values: SignUpFormValues) => {
+    const { password, confirmPassword } = values;
+
+    if (password !== confirmPassword) {
+      toast.error('Passwords do not match!');
+      return;
+    }
+
     setLoading(true);
 
     let fcmToken: string | null = null;
@@ -127,6 +135,32 @@ const SignUpForm = () => {
     onError: () => toast.error('Google Login Failed'),
   });
 
+  const passwordRules = [
+    { required: true, message: 'Please enter your password' },
+    { min: 8, message: 'Password must be at least 8 characters long' },
+    { max: 20, message: 'Password cannot exceed 20 characters' },
+    {
+      validator: (_: any, value: string) => {
+        if (!value) return Promise.resolve();
+        if (!/[A-Z]/.test(value))
+          return Promise.reject(
+            'Password must contain at least one uppercase letter'
+          );
+        if (!/[a-z]/.test(value))
+          return Promise.reject(
+            'Password must contain at least one lowercase letter'
+          );
+        if (!/[0-9]/.test(value))
+          return Promise.reject('Password must contain at least one number');
+        if (!/[@$!%*?&#]/.test(value))
+          return Promise.reject(
+            'Password must contain at least one special character'
+          );
+        return Promise.resolve();
+      },
+    },
+  ];
+
   return (
     <div className="container mx-auto my-10 md:my-40">
       <div className="flex justify-center items-center">
@@ -153,50 +187,61 @@ const SignUpForm = () => {
               name="fullName"
               label={<p className=" text-md">Enter your Full Name</p>}
             >
-              <Input
-                required
-                style={{ padding: '6px' }}
-                className="text-md"
-                placeholder="Olivia Reiss"
-              />
+              <Input required placeholder="Olivia Reiss" />
             </Form.Item>
             <Form.Item
               name="email"
-              label={<p className=" text-md">Enter your email</p>}
+              label="Enter your Email"
+              rules={[
+                { required: true, message: 'Please input your email!' },
+                { type: 'email', message: 'Please enter a valid email!' },
+              ]}
             >
-              <Input
-                required
-                style={{ padding: '6px' }}
-                className="text-md"
-                placeholder="slota812@gmail.com"
-              />
+              <Input placeholder="slota812@gmail.com" />
             </Form.Item>
             <Form.Item
               name="phoneNumber"
-              label={<p className=" text-md">Enter your Phone Number</p>}
+              label="Enter your Phone Number"
+              rules={[
+                { required: true, message: 'Please input your phone number!' },
+                {
+                  pattern: /^[+]*[0-9]{7,15}$/,
+                  message: 'Please enter a valid phone number!',
+                },
+              ]}
             >
-              <Input
-                required
-                style={{ padding: '6px' }}
-                className="text-md"
-                placeholder="slota812@gmail.com"
-              />
+              <Input placeholder="+14155556666" />
             </Form.Item>
+
             <Form.Item
               name="password"
               label={
-                <p className=" text-md">
+                <p className="text-md">
                   Choose a password with at least 8 characters.
                 </p>
               }
+              rules={passwordRules}
             >
-              <Input.Password
-                required
-                style={{ padding: '6px' }}
-                className="text-md"
-                type="password"
-                placeholder="Password"
-              />
+              <Input.Password placeholder="Password" />
+            </Form.Item>
+
+            <Form.Item
+              name="confirmPassword"
+              label="Confirm Password"
+              dependencies={['password']}
+              rules={[
+                { required: true, message: 'Please confirm your password' },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue('password') === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error('Passwords do not match!'));
+                  },
+                }),
+              ]}
+            >
+              <Input.Password placeholder="Confirm new password" />
             </Form.Item>
 
             <Form.Item className="text-center">
