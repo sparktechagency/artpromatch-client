@@ -2,7 +2,6 @@
 
 import { IMeta } from '@/types';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import React from 'react';
 
 const Pagination = ({ meta }: { meta: IMeta }) => {
   const router = useRouter();

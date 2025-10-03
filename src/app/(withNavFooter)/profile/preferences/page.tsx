@@ -1,21 +1,18 @@
 'use client';
 
-// import { useUpdatePreferenceMutation } from '@/redux/features/profileApi/profileApi';
 import { Form, Radio, Select } from 'antd';
 import Link from 'next/link';
-import React from 'react';
 import { IoIosArrowForward } from 'react-icons/io';
 import { toast } from 'sonner';
+
+interface PreferenceFormValues {
+  defaultHomeView: 'grid' | 'map' | 'both';
+  preferredArtistType: 'Tattoo Artist' | 'Piercer' | 'Both';
+  language: 'english' | 'spanish';
+  dateFormat: 'DD/MM/YYYY' | 'MM/DD/YYYY' | 'YYYY-MM-DD';
+}
+
 const PreferecnePage = () => {
-  // const [updatePreference] = useUpdatePreferenceMutation();
-
-  interface PreferenceFormValues {
-    defaultHomeView: 'grid' | 'map' | 'both';
-    preferredArtistType: 'tattoo' | 'piercers' | 'both';
-    language: 'english' | 'spanish';
-    dateFormat: 'DD/MM/YYYY' | 'MM/DD/YYYY' | 'YYYY-MM-DD';
-  }
-
   const onFinish = async (values: PreferenceFormValues) => {
     const UpdatedSelectedArt = JSON.parse(
       localStorage.getItem('UpdatedSelectedArt') || '[]'
@@ -89,9 +86,9 @@ const PreferecnePage = () => {
           label={<h1 className="text-secondary">Preferred Artist Type</h1>}
         >
           <Radio.Group>
-            <Radio value="tattoo">Tattoo Artist</Radio>
-            <Radio value="piercers">Piercers</Radio>
-            <Radio value="both">Both</Radio>
+            <Radio value="Tattoo Artist">Tattoo Artist</Radio>
+            <Radio value="Piercer">Piercer</Radio>
+            <Radio value="Both">Both</Radio>
           </Radio.Group>
         </Form.Item>
 

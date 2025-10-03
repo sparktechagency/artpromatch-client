@@ -2,9 +2,9 @@
 
 import { Form } from 'antd';
 import Link from 'next/link';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
-const PiercingPage: React.FC = () => {
+const PiercingPage = () => {
   const [selectedPiercing, setSelectedPiercing] = useState<string[]>([]);
 
   // Load from localStorage on mount

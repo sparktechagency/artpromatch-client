@@ -276,6 +276,117 @@ export const changePassword = async (data: {
   }
 };
 
+// forgotPassword
+export const forgotPassword = async (email: string): Promise<any> => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API}/auth/forgot-password`,
+      {
+        method: 'POST',
+        body: JSON.stringify({ email }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    const result = await res.json();
+
+    if (result?.success) {
+      (await cookies()).set('forgotPassToken', result?.data?.token);
+    }
+
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
+// sendForgotPasswordOtpAgain
+export const sendForgotPasswordOtpAgain = async (): Promise<any> => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get('forgotPassToken')?.value;
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API}/auth/send-forgot-password-otp-again`,
+      {
+        method: 'POST',
+        body: JSON.stringify({ token }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    const result = await res.json();
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
+// verifyOtpForForgotPassword
+export const verifyOtpForForgotPassword = async (otp: string): Promise<any> => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get('forgotPassToken')?.value;
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API}/auth/verify-forgot-password-otp`,
+      {
+        method: 'POST',
+        body: JSON.stringify({ token, otp }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    const result = await res.json();
+
+    if (result?.success) {
+      cookieStore.set('resetPasswordToken', result?.data?.resetPasswordToken);
+    }
+
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
+// setNewPassword
+export const setNewPassword = async (newPassword: string): Promise<any> => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get('resetPasswordToken')?.value;
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API}/auth/reset-password`,
+      {
+        method: 'POST',
+        body: JSON.stringify({ newPassword }),
+        headers: {
+          'Content-Type': 'application/json',
+
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const result = await res.json();
+
+    if (result?.success) {
+      cookieStore.delete('forgotPassToken');
+      cookieStore.delete('resetPasswordToken');
+    }
+
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
 // getCurrentUser
 export const getCurrentUser = async (): Promise<any> => {
   const accessToken = (await cookies()).get('accessToken')?.value;

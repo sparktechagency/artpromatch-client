@@ -11,17 +11,7 @@ import SteadyHands from './StaedyHands/SteadyHands';
 import Link from 'next/link';
 import { IMeta, IService } from '@/types';
 
-const BeforeLogin = ({
-  page,
-  services = [],
-  meta,
-}: {
-  page: string;
-  services: IService[];
-  meta: IMeta;
-}) => {
-  console.log({ services });
-
+const BeforeLogin = ({ services = [] }: { services: IService[] }) => {
   const allImages: string[] = services?.flatMap(service => [
     service.thumbnail,
     ...(service.images || []),

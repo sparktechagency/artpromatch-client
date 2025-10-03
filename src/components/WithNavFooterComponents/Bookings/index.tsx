@@ -8,7 +8,7 @@ import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
 import dayjs from 'dayjs';
 
 const Bookings = ({ bookings = [] }: { bookings: IBooking[] }) => {
-  const [selectedBooking, setSelectedBooking] = useState<IBooking | null>(null);
+  // const [selectedBooking, setSelectedBooking] = useState<IBooking | null>(null);
   const [form] = Form.useForm();
 
   const [isReviewModalOpen, setIsReviewModalOpen] = useState<{
@@ -17,20 +17,20 @@ const Bookings = ({ bookings = [] }: { bookings: IBooking[] }) => {
     onSubmit: ((otp: string) => void) | null;
   }>({ open: false, title: '', onSubmit: null });
 
-  const handleOtpSubmit = async () => {
-    try {
-      const values = await form.validateFields(['otp']);
-      isReviewModalOpen.onSubmit?.(values.otp);
-      form.resetFields();
-      setIsReviewModalOpen({
-        ...isReviewModalOpen,
-        open: false,
-        onSubmit: null,
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  // const handleOtpSubmit = async () => {
+  //   try {
+  //     const values = await form.validateFields(['otp']);
+  //     isReviewModalOpen.onSubmit?.(values.otp);
+  //     form.resetFields();
+  //     setIsReviewModalOpen({
+  //       ...isReviewModalOpen,
+  //       open: false,
+  //       onSubmit: null,
+  //     });
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   const baseColumns = [
     {

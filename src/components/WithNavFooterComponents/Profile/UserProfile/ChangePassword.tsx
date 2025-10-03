@@ -30,12 +30,40 @@ const ChangePassword = () => {
         toast.success(res?.message);
         setIsLoading(true);
       } else {
-        toast.error(res.message);
+        toast.error(res?.message);
       }
     } catch (err: any) {
       console.error(err);
     }
   };
+
+  const passwordRules = [
+    { required: true, message: 'Please enter your new password' },
+    { min: 8, message: 'New password must be at least 8 characters long' },
+    { max: 20, message: 'New password cannot exceed 20 characters' },
+    {
+      validator: (_: any, value: string) => {
+        if (!value) return Promise.resolve();
+        if (!/[A-Z]/.test(value))
+          return Promise.reject(
+            'New password must contain at least one uppercase letter'
+          );
+        if (!/[a-z]/.test(value))
+          return Promise.reject(
+            'New password must contain at least one lowercase letter'
+          );
+        if (!/[0-9]/.test(value))
+          return Promise.reject(
+            'New password must contain at least one number'
+          );
+        if (!/[@$!%*?&#]/.test(value))
+          return Promise.reject(
+            'New password must contain at least one special character'
+          );
+        return Promise.resolve();
+      },
+    },
+  ];
 
   return (
     <div className="max-w-md mx-auto p-5">
@@ -85,9 +113,7 @@ const ChangePassword = () => {
           <Form.Item
             name="newPassword"
             label="New Password"
-            rules={[
-              { required: true, message: 'Please input your new password!' },
-            ]}
+            rules={passwordRules}
           >
             <Input.Password
               type="password"

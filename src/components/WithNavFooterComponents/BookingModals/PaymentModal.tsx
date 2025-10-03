@@ -1,9 +1,8 @@
 'use client';
 
 import { AllImages } from '@/assets/images/AllImages';
-import { ConfigProvider, DatePicker, Form, Input, Modal } from 'antd';
+import { ConfigProvider, DatePicker, Form, Input } from 'antd';
 import Image from 'next/image';
-import React from 'react';
 
 interface PaymentModalProps {
   handleOk: () => void;

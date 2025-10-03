@@ -1,5 +1,4 @@
 import { AllImages } from '@/assets/images/AllImages';
-import { Typography } from 'antd';
 import Image from 'next/image';
 import { IoIosArrowDown, IoIosArrowForward } from 'react-icons/io';
 import Link from 'next/link';

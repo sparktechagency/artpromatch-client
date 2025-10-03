@@ -1,6 +1,5 @@
-import ProfileSideBar from '@/components/WithNavFooterComponents/Profile/ProfileSidebar/ProfileSideBar';
-import TattoArtistProfile from '@/components/WithNavFooterComponents/Profile/TattooArtistProfile/TattoArtistProfile';
-import React from 'react';
+import ProfileSideBar from '@/components/WithNavFooterComponents/Profile/ProfileSidebar';
+import TattoArtistProfile from '@/components/WithNavFooterComponents/Profile/TattooArtistProfile';
 
 const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
   return (

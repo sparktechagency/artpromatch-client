@@ -1,5 +1,4 @@
-import React from 'react';
-import AvailableFlash from './available-fash/page';
+import AvailableFlash from '@/components/WithNavFooterComponents/AvailableFlash';
 
 const ProfilePage = () => {
   return (
