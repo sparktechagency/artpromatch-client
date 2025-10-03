@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
+// Dynamically import the map component to avoid SSR issues
 const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), {
   ssr: false,
 });
@@ -11,6 +12,7 @@ const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), {
   ssr: false,
 });
 
+// Custom marker with profile image
 const ProfileMarker = ({ artist }: { artist: IArtist }) => {
   const [icon, setIcon] = useState<any>(null);
 
