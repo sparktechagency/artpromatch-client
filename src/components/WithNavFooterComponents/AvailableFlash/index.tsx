@@ -1,4 +1,5 @@
 'use client';
+
 import { AllImages } from '@/assets/images/AllImages';
 import Image from 'next/image';
 import { useState } from 'react';

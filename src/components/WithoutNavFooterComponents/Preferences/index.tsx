@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 const artStyles = [
   'American Traditional',
@@ -83,6 +84,7 @@ const Preferences = () => {
     const savedRole = localStorage.getItem('role');
     if (!savedRole) {
       try {
+        toast.error('Please select all profile section!');
         router.push('/user-type-selection');
         return;
       } catch (error) {

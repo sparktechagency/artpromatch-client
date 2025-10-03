@@ -1,4 +1,3 @@
-import { AllImages } from '@/assets/images/AllImages';
 import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
 import Image from 'next/image';
 import Marquee from 'react-fast-marquee';

@@ -29,12 +29,9 @@ const PreferedLocation = () => {
 
     const savedRole = localStorage.getItem('role');
     if (!savedRole) {
-      try {
-        router.push('/user-type-selection');
-        return;
-      } catch (error) {
-        console.error('Error parsing role', error);
-      }
+      toast.error('Please select all profile section!');
+      router.push('/user-type-selection');
+      return;
     } else {
       setRole(savedRole);
     }

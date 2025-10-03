@@ -7,6 +7,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 const lookingForServicesList: string[] = [
   'Tattoos',
@@ -140,12 +141,9 @@ const PreferdService = () => {
 
     const savedRole = localStorage.getItem('role');
     if (!savedRole) {
-      try {
-        router.push('/user-type-selection');
-        return;
-      } catch (error) {
-        console.error('Error parsing role', error);
-      }
+      toast.error('Please select all profile section!');
+      router.push('/user-type-selection');
+      return;
     } else {
       setRole(savedRole);
     }

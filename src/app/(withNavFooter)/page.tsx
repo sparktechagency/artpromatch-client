@@ -16,7 +16,7 @@ const Homepage = async ({
 
   return (
     <div>
-      <HomeComponent page={query.page} services={services} meta={meta} />
+      <HomeComponent services={services} meta={meta} />
     </div>
   );
 };

@@ -29,33 +29,61 @@ const AllSetPage = () => {
 
     const role = localStorage.getItem('role');
     if (!role) {
-      try {
-        router.push('/user-type-selection');
-        return;
-      } catch (error) {
-        console.error('Error parsing role', error);
-      }
+      toast.error('Please select all profile section!');
+      router.push('/user-type-selection');
+      return;
     }
 
     const savedLocation = localStorage.getItem('location');
-    if (!savedLocation) return;
+    if (!savedLocation) {
+      toast.error('Please select all profile section!');
+      router.push('/user-type-selection');
+      return;
+    }
     const location = JSON.parse(savedLocation);
 
-    const stringLocation = localStorage.getItem('stringLocation') || 'USA';
+    const stringLocation = localStorage.getItem('stringLocation');
+    if (!stringLocation) {
+      toast.error('Please select all profile section!');
+      router.push('/user-type-selection');
+      return;
+    }
 
     if (role === 'CLIENT') {
-      const radius = parseInt(localStorage.getItem('radius') || '50');
+      const savedRadius = localStorage.getItem('radius');
+      if (!savedRadius) {
+        toast.error('Please select all profile section!');
+        router.push('/user-type-selection');
+        return;
+      }
+      const radius = parseInt(savedRadius);
 
-      const lookingFor: string[] = JSON.parse(
-        localStorage.getItem('lookingFor') || '[]'
+      const savedLookingFor = localStorage.getItem('lookingFor');
+      if (!savedLookingFor) {
+        toast.error('Please select all profile section!');
+        router.push('/user-type-selection');
+        return;
+      }
+      const lookingFor: string[] = JSON.parse(savedLookingFor);
+
+      const savedFavoriteTattoos = localStorage.getItem('favoriteTattoos');
+      if (!savedFavoriteTattoos) {
+        toast.error('Please select all profile section!');
+        router.push('/user-type-selection');
+        return;
+      }
+      const favoriteTattoos: string[] = JSON.parse(savedFavoriteTattoos);
+
+      const savedNotificationPreferences = localStorage.getItem(
+        'notificationPreferences'
       );
-
-      const favoriteTattoos: string[] = JSON.parse(
-        localStorage.getItem('favoriteTattoos') || '[]'
-      );
-
+      if (!savedNotificationPreferences) {
+        toast.error('Please select all profile section!');
+        router.push('/user-type-selection');
+        return;
+      }
       const notificationPreferences: string[] = JSON.parse(
-        localStorage.getItem('notificationPreferences') || '[]'
+        savedNotificationPreferences
       );
 
       const artistProfileData: ProfileData = {
@@ -74,8 +102,12 @@ const AllSetPage = () => {
     }
   }, []);
 
-  const handleAllSet = async () => {
-    if (!profileData) return;
+  const handleAllSetCreateProfile = async () => {
+    if (!profileData) {
+      toast.error('Please select all profile section!');
+      router.push('/user-type-selection');
+      return;
+    }
 
     const formData = new FormData();
     formData.append('data', JSON.stringify(profileData));
@@ -85,6 +117,7 @@ const AllSetPage = () => {
 
       if (res?.success) {
         toast.success(res?.message);
+        localStorage.clear();
         router.push('/');
       } else {
         toast.error(res?.message);
@@ -124,7 +157,7 @@ const AllSetPage = () => {
             </div>
 
             <div
-              onClick={handleAllSet}
+              onClick={handleAllSetCreateProfile}
               className="w-full bg-primary text-lg text-white text-center py-2 rounded-lg mt-5"
             >
               {/* {isLoading ? 'Loading...' : 'Continue'} */} Continue

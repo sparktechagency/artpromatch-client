@@ -4,11 +4,9 @@ import Services from './AfterLoginHeader/Services';
 import { IMeta, IService } from '@/types';
 
 const ClientAfterLogin = ({
-  page,
   services = [],
   meta,
 }: {
-  page: string;
   services: IService[];
   meta: IMeta;
 }) => {

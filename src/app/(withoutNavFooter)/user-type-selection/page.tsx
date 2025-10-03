@@ -37,12 +37,7 @@ const UserTypeSelection = () => {
 
     const savedRole = localStorage.getItem('role') || 'CLIENT';
     if (!savedRole) {
-      try {
-        router.push('/user-type-selection');
-        return;
-      } catch (error) {
-        console.error('Error parsing role', error);
-      }
+      return;
     } else {
       setRole(savedRole);
     }

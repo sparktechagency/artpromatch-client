@@ -96,9 +96,9 @@ const SelectStyle = () => {
     );
   };
 
-  const onChange = (value: number) => {
-    setCurrent(value);
-  };
+  // const onChange = (value: number) => {
+  //   setCurrent(value);
+  // };
 
   return (
     <div>

@@ -12,9 +12,9 @@ const PendingApprovalPage = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  const handleCreateProfile = () => {
-    router.push('/user-type-selection');
-  };
+  // const handleCreateProfile = () => {
+  //   router.push('/user-type-selection');
+  // };
 
   const handleCheckStatus = async () => {
     try {

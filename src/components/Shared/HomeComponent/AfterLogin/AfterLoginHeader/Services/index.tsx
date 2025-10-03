@@ -173,8 +173,9 @@ const Services = ({ services = [] }: { services: IService[] }) => {
                         </div>
 
                         <div className="text-secondary whitespace-nowrap">
-                          {(service?.artist?.distance ?? 0 / 1000).toFixed(2) ||
-                            0}{' '}
+                          {((service?.artist?.distance ?? 0) / 1000).toFixed(
+                            2
+                          ) || 0}{' '}
                           km
                         </div>
                       </div>

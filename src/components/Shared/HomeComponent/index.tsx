@@ -6,23 +6,20 @@ import { useUser } from '@/context/UserContext';
 import { IMeta, IService } from '@/types';
 
 const HomeComponent = ({
-  page,
   services = [],
   meta,
 }: {
-  page: string;
   services: IService[];
   meta: IMeta;
 }) => {
   const { user } = useUser();
 
   const renderContent = () => {
-    if (!user)
-      return <BeforeLogin page={page} services={services} meta={meta} />;
+    if (!user) return <BeforeLogin services={services} />;
 
     switch (user.role) {
       case 'CLIENT':
-        return <ClientAfterLogin page={page} services={services} meta={meta} />;
+        return <ClientAfterLogin services={services} meta={meta} />;
 
       // case 'ARTIST':
       //   return <ArtistAfterLogin />;
@@ -31,7 +28,7 @@ const HomeComponent = ({
       //   return <BusinessAfterLogin />;
 
       default:
-        return <BeforeLogin page={page} services={services} meta={meta} />;
+        return <BeforeLogin services={services} />;
     }
   };
 

@@ -2,8 +2,8 @@
 
 import { AllImages } from '@/assets/images/AllImages';
 import { createProfile } from '@/services/Auth';
-import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Form, Steps, Typography, Upload } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import { Checkbox, Form, Steps, Typography, Upload } from 'antd';
 import type { UploadFile } from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -54,7 +54,7 @@ const StayUpdated = () => {
   const [selectedType, setSelectedType] = useState<string[]>([]);
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
 
-  const [loading, setLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -62,12 +62,9 @@ const StayUpdated = () => {
 
     const savedRole = localStorage.getItem('role');
     if (!savedRole) {
-      try {
-        router.push('/user-type-selection');
-        return;
-      } catch (error) {
-        console.error('Error parsing role', error);
-      }
+      toast.error('Please select all profile section!');
+      router.push('/user-type-selection');
+      return;
     } else {
       setRole(savedRole);
     }
@@ -88,19 +85,35 @@ const StayUpdated = () => {
     } else if (savedRole === 'ARTIST') {
       // for artist
       const savedLocation = localStorage.getItem('location');
-      if (!savedLocation) return;
+      if (!savedLocation) {
+        toast.error('Please select all profile section!');
+        router.push('/user-type-selection');
+        return;
+      }
       const location = JSON.parse(savedLocation);
 
       const stringLocation = localStorage.getItem('stringLocation');
-      if (!stringLocation) return;
+      if (!stringLocation) {
+        toast.error('Please select all profile section!');
+        router.push('/user-type-selection');
+        return;
+      }
 
       const artistType = localStorage.getItem('artistType');
-      if (!artistType) return;
+      if (!artistType) {
+        toast.error('Please select all profile section!');
+        router.push('/user-type-selection');
+        return;
+      }
 
       const expertise: string[] = JSON.parse(
         localStorage.getItem('expertise') || '[]'
       );
-      if (!expertise) return;
+      if (!expertise) {
+        toast.error('Please select all profile section!');
+        router.push('/user-type-selection');
+        return;
+      }
 
       const artistProfileData: ProfileData = {
         role: savedRole,
@@ -116,33 +129,65 @@ const StayUpdated = () => {
     } else if (savedRole === 'BUSINESS') {
       // for business
       const studioName = localStorage.getItem('studioName');
-      if (!studioName) return;
+      if (!studioName) {
+        toast.error('Please select all profile section!');
+        router.push('/user-type-selection');
+        return;
+      }
 
       const contactNumber = localStorage.getItem('contactNumber');
-      if (!contactNumber) return;
+      if (!contactNumber) {
+        toast.error('Please select all profile section!');
+        router.push('/user-type-selection');
+        return;
+      }
 
       const contactEmail = localStorage.getItem('contactEmail');
-      if (!contactEmail) return;
+      if (!contactEmail) {
+        toast.error('Please select all profile section!');
+        router.push('/user-type-selection');
+        return;
+      }
 
       const businessType = localStorage.getItem('businessType');
-      if (!businessType) return;
+      if (!businessType) {
+        toast.error('Please select all profile section!');
+        router.push('/user-type-selection');
+        return;
+      }
 
       const savedLocation = localStorage.getItem('location');
-      if (!savedLocation) return;
+      if (!savedLocation) {
+        toast.error('Please select all profile section!');
+        router.push('/user-type-selection');
+        return;
+      }
       const location = JSON.parse(savedLocation);
 
       const stringLocation = localStorage.getItem('stringLocation');
-      if (!stringLocation) return;
+      if (!stringLocation) {
+        toast.error('Please select all profile section!');
+        router.push('/user-type-selection');
+        return;
+      }
 
       const servicesOffered: string[] = JSON.parse(
         localStorage.getItem('servicesOffered') || '[]'
       );
-      if (!servicesOffered) return;
+      if (!servicesOffered) {
+        toast.error('Please select all profile section!');
+        router.push('/user-type-selection');
+        return;
+      }
 
       const operatingHours = JSON.parse(
         localStorage.getItem('operatingHours') || '{}'
       );
-      if (!operatingHours) return;
+      if (!operatingHours) {
+        toast.error('Please select all profile section!');
+        router.push('/user-type-selection');
+        return;
+      }
 
       const artistProfileData: ProfileData = {
         role: savedRole,
@@ -195,6 +240,7 @@ const StayUpdated = () => {
   const handleCreateArtistProfile = async () => {
     if (!profileData) {
       toast.error('Please select all profile section!');
+      router.push('/user-type-selection');
       return;
     }
 
@@ -213,7 +259,7 @@ const StayUpdated = () => {
       return;
     }
 
-    setLoading(true);
+    setIsLoading(true);
 
     try {
       const formData = new FormData();
@@ -238,6 +284,7 @@ const StayUpdated = () => {
 
       if (res?.success) {
         toast.success(res?.message);
+        localStorage.clear();
         router.push('/');
       } else {
         toast.error(res?.message);
@@ -246,7 +293,7 @@ const StayUpdated = () => {
       console.error(error);
       toast.error('Failed to create profile. Please try again.');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -254,6 +301,7 @@ const StayUpdated = () => {
   const handleCreateBusinessProfile = async () => {
     if (!profileData) {
       toast.error('Please select all profile section!');
+      router.push('/user-type-selection');
       return;
     }
 
@@ -272,7 +320,7 @@ const StayUpdated = () => {
       return;
     }
 
-    setLoading(true);
+    setIsLoading(true);
 
     try {
       const formData = new FormData();
@@ -303,6 +351,7 @@ const StayUpdated = () => {
 
       if (res?.success) {
         toast.success(res?.message);
+        localStorage.clear();
         router.push('/');
       } else {
         toast.error(res?.message);
@@ -311,7 +360,7 @@ const StayUpdated = () => {
       console.error(error);
       toast.error('Failed to create profile. Please try again.');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -439,10 +488,11 @@ const StayUpdated = () => {
 
             <Form.Item>
               <button
+                disabled={isLoading}
                 type="submit"
                 className="w-full bg-primary text-lg font-medium text-white text-center p-2 rounded-xl mt-6 transition hover:bg-primary/90"
               >
-                Create Profile
+                {isLoading ? 'Creating...' : 'Create Profile'}
               </button>
             </Form.Item>
           </Form>
@@ -508,10 +558,11 @@ const StayUpdated = () => {
 
             <Form.Item>
               <button
+                disabled={isLoading}
                 type="submit"
                 className="w-full bg-primary text-lg font-medium text-white text-center p-2 rounded-xl mt-6 transition hover:bg-primary/90"
               >
-                Create Profile
+                {isLoading ? 'Creating...' : 'Create Profile'}
               </button>
             </Form.Item>
           </Form>
