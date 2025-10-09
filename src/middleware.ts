@@ -62,11 +62,23 @@ export const middleware = async (request: NextRequest) => {
     }
   }
 
-  if (!user.isProfile && user.isActive && '/user-type-selection' !== pathname) {
+  if (
+    user.isProfile &&
+    user.isActive &&
+    profileCreationPaths.includes(pathname)
+  ) {
+    return NextResponse.redirect(new URL('/', origin));
+  }
+
+  if (
+    !user.isProfile &&
+    user.isActive &&
+    !profileCreationPaths.includes(pathname)
+  ) {
     return NextResponse.redirect(new URL('/user-type-selection', origin));
   }
 
-  if (user.isProfile && !user.isActive && '/pending-approval' !== pathname) {
+  if (user.isProfile && !user.isActive) {
     return NextResponse.redirect(new URL('/pending-approval', origin));
   }
 
@@ -101,14 +113,15 @@ export const config = {
     '/bookings',
     '/review/:page',
 
-    '/user-type-selection',
-    '/preference-selection',
-    '/preferences',
-    '/preferd-location',
-    '/prefered-service',
-    '/stay-updated',
-    '/all-set',
-    '/pending-approval',
+    // '/user-type-selection',
+    // '/preference-selection',
+    // '/preferences',
+    // '/preferd-location',
+    // '/prefered-service',
+    // '/stay-updated',
+    // '/all-set',
+    // '/pending-approval',
+
     // '/admin/:page',
     // '/user',
     // '/user/:page',

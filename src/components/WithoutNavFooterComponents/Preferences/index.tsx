@@ -2,6 +2,7 @@
 
 import { AllImages } from '@/assets/images/AllImages';
 import { Form, Input, Radio, Steps, Typography } from 'antd';
+import TextArea from 'antd/es/input/TextArea';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -144,6 +145,14 @@ const Preferences = () => {
     localStorage.setItem('artistType', type);
   };
 
+  // handleArtistDetails
+  const handleArtistDetails = (values: any) => {
+    localStorage.setItem('description', values.description);
+    localStorage.setItem('hourlyRate', values.hourlyRate);
+
+    router.push('/preferd-location');
+  };
+
   // handleBusinessDetails
   const handleBusinessDetails = (values: any) => {
     localStorage.setItem('studioName', values.studioName);
@@ -236,6 +245,7 @@ const Preferences = () => {
           name="select-style-type"
           layout="vertical"
           className="pb-10 w-full mx-auto bg-white px-2 rounded-2xl"
+          onFinish={handleArtistDetails}
         >
           <div className="mb-4 flex flex-col justify-center items-center text-center">
             <Image src={AllImages.logo} width={50} height={50} alt="logo" />
@@ -273,16 +283,34 @@ const Preferences = () => {
             </Radio.Group>
           </div>
 
+          <Form.Item
+            name="description"
+            label="About you"
+            rules={[
+              { required: true, message: 'Write about you in brief!' },
+              { min: 20, message: 'About must be at least 20 characters' },
+            ]}
+          >
+            <TextArea placeholder="Write about you!" className="text-md" />
+          </Form.Item>
+
+          <Form.Item
+            name="hourlyRate"
+            label="Hourly Rate"
+            rules={[{ required: true, message: 'Write your hourly rate!' }]}
+          >
+            <Input placeholder="Enter your hourly rate!" className="text-md"  type='number'/>
+          </Form.Item>
+
           {/* Navigation buttons */}
-          <Link href="/preferd-location">
+          <Form.Item>
             <button
-              disabled={!artistType || !role}
-              type="button"
+              type="submit"
               className="w-full bg-primary text-white py-2 rounded-lg mt-5 mb-10"
             >
-              <div className="text-lg text-white"> Get Started</div>
+              <div className="text-lg text-white">Get Started</div>
             </button>
-          </Link>
+          </Form.Item>
         </Form>
 
         {/* Steps */}
@@ -337,8 +365,8 @@ const Preferences = () => {
             rules={[
               { required: true, message: 'Contact number is required' },
               {
-                pattern: /^[0-9]{10,15}$/,
-                message: 'Enter a valid contact number (10–15 digits)',
+                pattern: /^[+]*[0-9]{7,15}$/,
+                message: 'Enter a valid contact number with country code!',
               },
             ]}
           >
@@ -384,7 +412,7 @@ const Preferences = () => {
               type="submit"
               className="w-full bg-primary text-white py-2 rounded-lg mt-5 mb-10"
             >
-              <div className="text-lg text-white"> Get Started</div>
+              <div className="text-lg text-white">Get Started</div>
             </button>
           </Form.Item>
         </Form>

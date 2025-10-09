@@ -33,7 +33,7 @@ const Footer = () => {
           className="flex justify-center items-center space-x-2 mb-10"
         >
           <Image src={AllImages.logo} alt="footer" height={30} width={30} />
-          <div>Staedy Hands </div>
+          <div>Steady Hands </div>
         </Link>
 
         {/* links */}

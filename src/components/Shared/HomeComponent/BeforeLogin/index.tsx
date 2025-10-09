@@ -7,9 +7,9 @@ import NearYou from './NearYou/NearYou';
 import WantATattoo from './WantATattoo';
 import PiercingNow from './PiercingNow/PiercingNow';
 import Testimonials from './Testimonials/Testimonials';
-import SteadyHands from './StaedyHands/SteadyHands';
+import SteadyHands from './SteadyHands';
 import Link from 'next/link';
-import { IMeta, IService } from '@/types';
+import { IService } from '@/types';
 
 const BeforeLogin = ({ services = [] }: { services: IService[] }) => {
   const allImages: string[] = services?.flatMap(service => [
@@ -70,11 +70,17 @@ const BeforeLogin = ({ services = [] }: { services: IService[] }) => {
       )}
 
       <NearYou />
+
       {tattooServices?.length > 0 && (
         <WantATattoo tattooServices={tattooServices} />
       )}
 
-      <PiercingNow />
+      {tattooServices?.length > 0 && (
+        <PiercingNow tattooServices={tattooServices} />
+      )}
+
+
+
       <Testimonials />
       <SteadyHands />
     </div>
