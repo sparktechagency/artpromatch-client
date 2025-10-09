@@ -206,7 +206,8 @@ const SignUpForm = () => {
                 { required: true, message: 'Please input your phone number!' },
                 {
                   pattern: /^[+]*[0-9]{7,15}$/,
-                  message: 'Please enter a valid phone number!',
+                  message:
+                    'Please enter a valid phone number with country code!',
                 },
               ]}
             >

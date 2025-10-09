@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { FaDollarSign, FaStar } from 'react-icons/fa6';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { SiGoogletasks } from 'react-icons/si';
+import Link from 'next/link';
 
 const WantATattoo = ({
   tattooServices = [],
@@ -63,23 +64,26 @@ const WantATattoo = ({
             key={service?._id}
             className="border rounded-xl border-gray-300/50 p-2"
           >
-            <Image
-              src={getCleanImageUrl(service?.thumbnail)}
-              alt="image"
-              height={300}
-              width={500}
-              className="w-90 h-60 object-cover rounded-xl"
-            />
-
+            <Link href="/sign-in">
+              <Image
+                src={getCleanImageUrl(service?.thumbnail)}
+                alt="image"
+                height={300}
+                width={500}
+                className="w-90 h-60 object-cover rounded-xl"
+              />
+            </Link>
             <div className="flex justify-between items-center my-3">
               <div className="flex justify-center items-center gap-2">
-                <Image
-                  src={getCleanImageUrl(service?.artist?.auth?.image)}
-                  alt="image"
-                  height={50}
-                  width={50}
-                  className="rounded-full w-12 h-12"
-                />
+                <Link href="/sign-in">
+                  <Image
+                    src={getCleanImageUrl(service?.artist?.auth?.image)}
+                    alt="image"
+                    height={50}
+                    width={50}
+                    className="rounded-full w-12 h-12"
+                  />
+                </Link>
                 <div>
                   <h1 className="text-xl font-semibold">
                     {service?.artist?.auth?.fullName}
@@ -99,7 +103,7 @@ const WantATattoo = ({
 
             <div className="flex justify-between items-center">
               <div className="flex gap-1">
-                <SiGoogletasks  />
+                <SiGoogletasks />
                 {service?.totalCompletedOrder}
               </div>
               {service?.avgRating > 0 && (

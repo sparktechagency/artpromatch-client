@@ -90,12 +90,12 @@ const AccountVerificationPage = () => {
             </Flex>
           </div>
 
-          <button
+          <div
             onClick={handleSubmit}
-            className="bg-primary text-white py-3 rounded-xl w-full mt-10"
+            className="bg-primary text-white text-center py-3 rounded-xl w-full my-5"
           >
             Send
-          </button>
+          </div>
 
           <p className="text-center mt-5">
             Didn&apos;t get the code?{' '}

@@ -3,8 +3,13 @@ import Image from 'next/image';
 import { SiGoogletasks } from 'react-icons/si';
 import { FaDollarSign } from 'react-icons/fa6';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
+import { IService } from '@/types';
 
-const PiercingNow = () => {
+const PiercingNow = ({
+  tattooServices = [],
+}: {
+  tattooServices: IService[];
+}) => {
   return (
     <div className="container mx-auto md:mt-20">
       <div className="flex justify-between items-center">
@@ -54,7 +59,7 @@ const PiercingNow = () => {
           </div>
           <div className="flex justify-between items-center">
             <div className="flex  gap-1">
-              <SiGoogletasks  />
+              <SiGoogletasks />
               <p className="text-xs">Next Week</p>
             </div>
             <div className="flex justify-center items-center text-primary font-bold">
@@ -101,7 +106,7 @@ const PiercingNow = () => {
           </div>
           <div className="flex justify-between items-center">
             <div className="flex  gap-1">
-              <SiGoogletasks  />
+              <SiGoogletasks />
               <p className="text-xs">Next Week</p>
             </div>
             <div className="flex justify-center items-center text-primary font-bold">
@@ -148,7 +153,7 @@ const PiercingNow = () => {
           </div>
           <div className="flex justify-between items-center">
             <div className="flex  gap-1">
-              <SiGoogletasks  />
+              <SiGoogletasks />
               <p className="text-xs">Next Week</p>
             </div>
             <div className="flex justify-center items-center text-primary font-bold">
@@ -195,7 +200,7 @@ const PiercingNow = () => {
           </div>
           <div className="flex justify-between items-center">
             <div className="flex  gap-1">
-              <SiGoogletasks  />
+              <SiGoogletasks />
               <p className="text-xs">Next Week</p>
             </div>
             <div className="flex justify-center items-center text-primary font-bold">

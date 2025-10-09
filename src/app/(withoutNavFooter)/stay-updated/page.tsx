@@ -24,6 +24,8 @@ interface ProfileData {
 
   artistType?: string;
   expertise?: string[];
+  description?: string;
+  hourlyRate?: string;
 
   studioName?: string;
   contactNumber?: string;
@@ -115,6 +117,20 @@ const StayUpdated = () => {
         return;
       }
 
+      const description = localStorage.getItem('description');
+      if (!description) {
+        toast.error('Please select all profile section!');
+        router.push('/user-type-selection');
+        return;
+      }
+
+      const hourlyRate = localStorage.getItem('hourlyRate');
+      if (!hourlyRate) {
+        toast.error('Please select all profile section!');
+        router.push('/user-type-selection');
+        return;
+      }
+
       const artistProfileData: ProfileData = {
         role: savedRole,
         stringLocation,
@@ -123,6 +139,8 @@ const StayUpdated = () => {
         },
         artistType,
         expertise,
+        description,
+        hourlyRate,
       };
 
       setProfileData(artistProfileData);
@@ -244,20 +262,20 @@ const StayUpdated = () => {
       return;
     }
 
-    if (idCardFrontFile.length === 0) {
-      toast.error('Please upload your ID Card Front image!');
-      return;
-    }
+    // if (idCardFrontFile.length === 0) {
+    //   toast.error('Please upload your ID Card Front image!');
+    //   return;
+    // }
 
-    if (idCardBackFile.length === 0) {
-      toast.error('Please upload your ID Card Back image!');
-      return;
-    }
+    // if (idCardBackFile.length === 0) {
+    //   toast.error('Please upload your ID Card Back image!');
+    //   return;
+    // }
 
-    if (selfieWithIdFile.length === 0) {
-      toast.error('Please upload your selfie with ID image!');
-      return;
-    }
+    // if (selfieWithIdFile.length === 0) {
+    //   toast.error('Please upload your selfie with ID image!');
+    //   return;
+    // }
 
     setIsLoading(true);
 
@@ -305,20 +323,20 @@ const StayUpdated = () => {
       return;
     }
 
-    if (registrationCertificateFile.length === 0) {
-      toast.error('Please upload your Registration Certificate image!');
-      return;
-    }
+    // if (registrationCertificateFile.length === 0) {
+    //   toast.error('Please upload your Registration Certificate image!');
+    //   return;
+    // }
 
-    if (taxIdOrEquivalentFile.length === 0) {
-      toast.error('Please upload your Tax ID or Equivalent image!');
-      return;
-    }
+    // if (taxIdOrEquivalentFile.length === 0) {
+    //   toast.error('Please upload your Tax ID or Equivalent image!');
+    //   return;
+    // }
 
-    if (studioLicenseFile.length === 0) {
-      toast.error('Please upload your Studio License image!');
-      return;
-    }
+    // if (studioLicenseFile.length === 0) {
+    //   toast.error('Please upload your Studio License image!');
+    //   return;
+    // }
 
     setIsLoading(true);
 
@@ -435,17 +453,17 @@ const StayUpdated = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
                 {
-                  label: 'ID Card Front Image',
+                  label: 'ID Card Front Image (optional)',
                   fileList: idCardFrontFile,
                   setFile: setIdCardFrontFile,
                 },
                 {
-                  label: 'ID Card Back Image',
+                  label: 'ID Card Back Image (optional)',
                   fileList: idCardBackFile,
                   setFile: setIdCardBackFile,
                 },
                 {
-                  label: 'Selfie With ID Image',
+                  label: 'Selfie With ID Image (optional)',
                   fileList: selfieWithIdFile,
                   setFile: setSelfieWithIdFile,
                 },
@@ -453,7 +471,7 @@ const StayUpdated = () => {
                 <Form.Item
                   key={idx}
                   label={<span className="font-medium">{field.label}</span>}
-                  required
+                  // required
                   className="border border-dotted rounded-xl p-4 flex flex-col items-center justify-center"
                 >
                   <div className="flex justify-center items-center">
@@ -505,17 +523,17 @@ const StayUpdated = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
                 {
-                  label: 'Registration Certificate Image',
+                  label: 'Registration Certificate Image (optional)',
                   fileList: registrationCertificateFile,
                   setFile: setRegistrationCertificateFile,
                 },
                 {
-                  label: 'Tax ID or Equivalent Image',
+                  label: 'Tax ID or Equivalent Image (optional)',
                   fileList: taxIdOrEquivalentFile,
                   setFile: setTaxIdOrEquivalentFile,
                 },
                 {
-                  label: 'StudioLicense Image',
+                  label: 'StudioLicense Image (optional)',
                   fileList: studioLicenseFile,
                   setFile: setStudioLicenseFile,
                 },
@@ -523,7 +541,7 @@ const StayUpdated = () => {
                 <Form.Item
                   key={idx}
                   label={<span className="font-medium">{field.label}</span>}
-                  required
+                  // required
                   className="border border-dotted rounded-xl p-4 flex flex-col items-center justify-center"
                 >
                   <div className="flex justify-center items-center">
@@ -560,9 +578,11 @@ const StayUpdated = () => {
               <button
                 disabled={isLoading}
                 type="submit"
-                className="w-full bg-primary text-lg font-medium text-white text-center p-2 rounded-xl mt-6 transition hover:bg-primary/90"
+                className="w-full bg-primary text-lg font-medium text-center p-2 rounded-xl mt-6 transition hover:bg-primary/90"
               >
-                {isLoading ? 'Creating...' : 'Create Profile'}
+                <div className="text-white">
+                  {isLoading ? 'Creating...' : 'Create Profile'}
+                </div>
               </button>
             </Form.Item>
           </Form>
