@@ -5,12 +5,15 @@ import { forgotPassword } from '@/services/Auth';
 import { Form, Input, Typography } from 'antd';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 const ForgotPasswordPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isClient, setIsClient] = useState<boolean>(false);
   const router = useRouter();
+
+  useEffect(() => setIsClient(true), []);
 
   const handleForgotPassword = async (value: any) => {
     setIsLoading(true);
@@ -29,6 +32,9 @@ const ForgotPasswordPage = () => {
       setIsLoading(false);
     }
   };
+
+  if (!isClient) return null;
+
   return (
     <div className="py-16 md:py-0 h-[100vh] w-full flex items-center justify-center ">
       <div className="pt-32 pb-16">

@@ -9,7 +9,7 @@ import { Checkbox, Form, Input } from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 type SignInFormValues = {
@@ -24,8 +24,12 @@ type SignInWithRedirectPath = {
 
 const SignInForm: React.FC<SignInWithRedirectPath> = ({ redirectPath }) => {
   const [loading, setLoading] = useState<boolean>(false);
+  const [isClient, setIsClient] = useState<boolean>(false);
+
   const router = useRouter();
   const { setIsLoading } = useUser();
+
+  useEffect(() => setIsClient(true), []);
 
   // handleSignUpUser
   const handleSignInUser = async (values: SignInFormValues) => {
@@ -124,6 +128,8 @@ const SignInForm: React.FC<SignInWithRedirectPath> = ({ redirectPath }) => {
     },
     onError: () => toast.error('Google Login Failed'),
   });
+
+  if (!isClient) return null;
 
   return (
     <div className="container mx-auto my-10 md:my-40">

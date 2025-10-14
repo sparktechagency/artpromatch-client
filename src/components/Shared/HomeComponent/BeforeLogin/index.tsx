@@ -9,9 +9,15 @@ import PiercingNow from './PiercingNow/PiercingNow';
 import Testimonials from './Testimonials/Testimonials';
 import SteadyHands from './SteadyHands';
 import Link from 'next/link';
-import { IService } from '@/types';
+import { IBooking, IService } from '@/types';
 
-const BeforeLogin = ({ services = [] }: { services: IService[] }) => {
+const BeforeLogin = ({
+  services = [],
+  bookings = [],
+}: {
+  services: IService[];
+  bookings: IBooking[];
+}) => {
   const allImages: string[] = services?.flatMap(service => [
     service.thumbnail,
     ...(service.images || []),
@@ -79,9 +85,8 @@ const BeforeLogin = ({ services = [] }: { services: IService[] }) => {
         <PiercingNow tattooServices={tattooServices} />
       )}
 
+      <Testimonials bookings={bookings} />
 
-
-      <Testimonials />
       <SteadyHands />
     </div>
   );

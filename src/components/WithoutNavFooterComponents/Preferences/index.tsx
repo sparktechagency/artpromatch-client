@@ -9,62 +9,80 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-const artStyles = [
+const TATTOO_STYLE_VALUES = [
   'American Traditional',
-  'Neo Traditional',
-  'Traditional',
-  'Pacific Islander/Polynesian',
-  'Tatau',
-  'Maori',
-  'African',
-  'Native American',
-  'Black & Grey',
-  'Portrait',
-  'Realism',
   'Abstract',
-  'Blackwork',
-  'Heavy Blackwork',
-  'Brutal Blackwork',
-  'Ignorant',
+  'African',
   'Anime',
-  'White On Black',
-  'White Tattoos',
-  'Black Trash',
-  'Trash Polka',
+
+  'Black & Grey',
+  'Blackwork',
+  'Brutal Blackwork',
   'Blackout',
-  'Script',
-  'Lettering',
-  'Fine Line',
-  'Calligraphy',
-  'Ornamental',
-  'Watercolor',
-  'Geometric',
-  'Japanese Style',
-  'Irezumi',
-  'Tebori',
-  'Tribal',
-  'Neo Tribal',
-  'New School',
-  'Old School',
-  'Illustrative',
-  'Minimalist',
-  'Lineart',
-  'Botanical',
-  'Realistic Color',
-  'Realistic Black & Grey',
-  'Graphic',
-  'Dotwork',
-  'Stick and Poke',
-  'Microrealism',
+  'Black Trash',
   'Biomech',
+  'Botanical',
+
+  'Calligraphy',
   'Chicano',
-  'Thai',
   'Comic',
   'Coverups',
-  'Scar Coverups',
-  'Microblading',
+
+  'Dotwork',
+
+  'Fine Line',
   'Freckles',
+
+  'Geometric',
+  'Graphic',
+
+  'Heavy Blackwork',
+
+  'Illustrative',
+  'Ignorant',
+  'Irezumi',
+
+  'Japanese Style',
+
+  'Lettering',
+  'Lineart',
+
+  'Maori',
+  'Microblading',
+  'Microrealism',
+  'Minimalist',
+
+  'Native American',
+  'Neo Traditional',
+  'Neo Tribal',
+  'New School',
+
+  'Old School',
+  'Ornamental',
+
+  'Pacific Islander / Polynesian',
+  'Portrait',
+
+  'Realism',
+  'Realistic Color',
+  'Realistic Black & Grey',
+
+  'Scar Coverup',
+  'Script',
+  'Stick and Poke',
+
+  'Tatau',
   'Tattoo Removal',
+  'Tebori',
+  'Thai',
+  'Traditional',
+  'Trash Polka',
+  'Tribal',
+
+  'Watercolor',
+  'White on Black',
+  'White Tattoos',
+
   'Tooth Gems',
 ];
 
@@ -129,8 +147,8 @@ const Preferences = () => {
     });
   }, [form]);
 
-  // handleSelect
-  const handleSelect = (style: string) => {
+  // handleFavoriteTattoosSelect
+  const handleFavoriteTattoosSelect = (style: string) => {
     const updated = favoriteTattoos.includes(style)
       ? favoriteTattoos.filter(item => item !== style)
       : [...favoriteTattoos, style];
@@ -185,17 +203,17 @@ const Preferences = () => {
           {/* Buttons in groups of 10 */}
           <div className="flex flex-col gap-4">
             {Array.from(
-              { length: Math.ceil(artStyles.length / 10) },
+              { length: Math.ceil(TATTOO_STYLE_VALUES.length / 10) },
               (_, i) => (
                 <div
                   key={i}
                   className="flex justify-center items-center gap-4 flex-wrap"
                 >
-                  {artStyles.slice(i * 10, i * 10 + 10).map(style => (
+                  {TATTOO_STYLE_VALUES.slice(i * 10, i * 10 + 10).map(style => (
                     <button
                       key={style}
                       type="button"
-                      onClick={() => handleSelect(style)}
+                      onClick={() => handleFavoriteTattoosSelect(style)}
                       className={`px-4 py-2 rounded-3xl border transition ${
                         favoriteTattoos.includes(style)
                           ? 'border-primary text-blue-500 font-semibold bg-gray-400/30'
@@ -299,7 +317,11 @@ const Preferences = () => {
             label="Hourly Rate"
             rules={[{ required: true, message: 'Write your hourly rate!' }]}
           >
-            <Input placeholder="Enter your hourly rate!" className="text-md"  type='number'/>
+            <Input
+              placeholder="Enter your hourly rate!"
+              className="text-md"
+              type="number"
+            />
           </Form.Item>
 
           {/* Navigation buttons */}

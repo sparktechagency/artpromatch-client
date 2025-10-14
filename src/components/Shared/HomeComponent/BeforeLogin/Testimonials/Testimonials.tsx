@@ -1,184 +1,59 @@
 import { AllImages } from '@/assets/images/AllImages';
+import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
+import { IBooking } from '@/types';
 import Image from 'next/image';
 import { FaStar } from 'react-icons/fa6';
 
-const Testimonials = () => {
+const Testimonials = ({ bookings = [] }: { bookings: IBooking[] }) => {
   return (
-    <div className="container mx-auto md:mt-20">
-      <h1 className="text-3xl font-bold text-center mb-3">
+    <div className="container mx-auto py-20 md:py-32">
+      <h1 className="text-3xl font-bold text-center pb-5 md:pb-8">
         What Clients and Artists Say About Steady Hands
       </h1>
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:mr-20 mb-5">
-        <div className="border border-gray-300/50 p-3 rounded-lg">
-          <div>
-            <div className="flex gap-2 mb-3">
-              <FaStar className=""></FaStar>
-              <FaStar className=""></FaStar>
-              <FaStar className=""></FaStar>
-              <FaStar className=""></FaStar>
-              <FaStar className=""></FaStar>
-            </div>
-            <p>
-              Lorem ipsum dolor sit amet. Et liberotione neque recusandae
-              voluptas. 
-            </p>
-            <div className="flex justify-start items-center gap-2">
-              <Image
-                src={AllImages.image5}
-                alt="image"
-                height={50}
-                width={50}
-                className="rounded-full"
-              />
-              <div>
-                <h1 className="text-xl font-semibold">Lora Craft</h1>
-                <p className="text-xs text-neutral-500">New York,USA</p>
+        {bookings?.map((booking, index) => {
+          const rating = Math.round(Number(booking?.rating) || 0);
+          return (
+            <div
+              key={index}
+              className="border border-gray-300/50 p-5 rounded-lg shadow-sm bg-white"
+            >
+              <div className="mb-4 flex gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <FaStar
+                    key={i}
+                    className={`h-5 w-5 ${
+                      i < rating ? 'text-amber-600' : 'text-gray-300'
+                    }`}
+                  />
+                ))}
+              </div>
+
+              <p className="text-sm text-slate-700 mb-4 line-clamp-4">
+                {booking?.review || 'No review provided.'}
+              </p>
+
+              <div className="flex justify-start items-center gap-3">
+                <Image
+                  src={getCleanImageUrl(booking?.client?.auth?.image)}
+                  alt={booking?.client?.auth?.fullName || 'Client'}
+                  height={50}
+                  width={50}
+                  className="rounded-full object-cover"
+                />
+                <div>
+                  <h2 className="text-base font-semibold text-slate-900">
+                    {booking?.client?.auth?.fullName || 'Anonymous'}
+                  </h2>
+                  <p className="text-xs text-neutral-500">
+                    {booking?.client?.stringLocation || 'Unknown location'}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-        <div className="border border-gray-300/50 p-3 rounded-lg">
-          <div>
-            <div className="flex gap-2 mb-3">
-              <FaStar className=""></FaStar>
-              <FaStar className=""></FaStar>
-              <FaStar className=""></FaStar>
-              <FaStar className=""></FaStar>
-              <FaStar className=""></FaStar>
-            </div>
-            <p>
-              Lorem ipsum dolor sit amet. Et liberotione neque recusandae
-              voluptas. 
-            </p>
-            <div className="flex justify-start items-center gap-2">
-              <Image
-                src={AllImages.image5}
-                alt="image"
-                height={50}
-                width={50}
-                className="rounded-full"
-              />
-              <div>
-                <h1 className="text-xl font-semibold">Lora Craft</h1>
-                <p className="text-xs text-neutral-500">New York,USA</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="border border-gray-300/50 p-3 rounded-lg">
-          <div>
-            <div className="flex gap-2 mb-3">
-              <FaStar className=""></FaStar>
-              <FaStar className=""></FaStar>
-              <FaStar className=""></FaStar>
-              <FaStar className=""></FaStar>
-              <FaStar className=""></FaStar>
-            </div>
-            <p>
-              Lorem ipsum dolor sit amet. Et liberotione neque recusandae
-              voluptas. 
-            </p>
-            <div className="flex justify-start items-center gap-2">
-              <Image
-                src={AllImages.image5}
-                alt="image"
-                height={50}
-                width={50}
-                className="rounded-full"
-              />
-              <div>
-                <h1 className="text-xl font-semibold">Lora Craft</h1>
-                <p className="text-xs text-neutral-500">New York,USA</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:ml-20">
-        <div className="border border-gray-300/50 p-3 rounded-lg">
-          <div>
-            <div className="flex gap-2 mb-3">
-              <FaStar className=""></FaStar>
-              <FaStar className=""></FaStar>
-              <FaStar className=""></FaStar>
-              <FaStar className=""></FaStar>
-              <FaStar className=""></FaStar>
-            </div>
-            <p>
-              Lorem ipsum dolor sit amet. Et liberotione neque recusandae
-              voluptas. 
-            </p>
-            <div className="flex justify-start items-center gap-2">
-              <Image
-                src={AllImages.image5}
-                alt="image"
-                height={50}
-                width={50}
-                className="rounded-full"
-              />
-              <div>
-                <h1 className="text-xl font-semibold">Lora Craft</h1>
-                <p className="text-xs text-neutral-500">New York,USA</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="border border-gray-300/50 p-3 rounded-lg">
-          <div>
-            <div className="flex gap-2 mb-3">
-              <FaStar className=""></FaStar>
-              <FaStar className=""></FaStar>
-              <FaStar className=""></FaStar>
-              <FaStar className=""></FaStar>
-              <FaStar className=""></FaStar>
-            </div>
-            <p>
-              Lorem ipsum dolor sit amet. Et liberotione neque recusandae
-              voluptas. 
-            </p>
-            <div className="flex justify-start items-center gap-2">
-              <Image
-                src={AllImages.image5}
-                alt="image"
-                height={50}
-                width={50}
-                className="rounded-full"
-              />
-              <div>
-                <h1 className="text-xl font-semibold">Lora Craft</h1>
-                <p className="text-xs text-neutral-500">New York,USA</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="border border-gray-300/50 p-3 rounded-lg">
-          <div>
-            <div className="flex gap-2 mb-3">
-              <FaStar className=""></FaStar>
-              <FaStar className=""></FaStar>
-              <FaStar className=""></FaStar>
-              <FaStar className=""></FaStar>
-              <FaStar className=""></FaStar>
-            </div>
-            <p>
-              Lorem ipsum dolor sit amet. Et liberotione neque recusandae
-              voluptas. 
-            </p>
-            <div className="flex justify-start items-center gap-2">
-              <Image
-                src={AllImages.image5}
-                alt="image"
-                height={50}
-                width={50}
-                className="rounded-full"
-              />
-              <div>
-                <h1 className="text-xl font-semibold">Lora Craft</h1>
-                <p className="text-xs text-neutral-500">New York,USA</p>
-              </div>
-            </div>
-          </div>
-        </div>
+          );
+        })}
       </div>
     </div>
   );
