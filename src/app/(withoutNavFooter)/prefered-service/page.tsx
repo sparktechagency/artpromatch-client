@@ -32,10 +32,10 @@ const expertiseServicesList: string[] = [
   'Biomech',
   'Botanical',
 
-  'Chicano',
-  'Coverups',
-  'Comic',
   'Calligraphy',
+  'Chicano',
+  'Comic',
+  'Coverups',
 
   'Dotwork',
 
@@ -48,51 +48,53 @@ const expertiseServicesList: string[] = [
   'Heavy Blackwork',
 
   'Illustrative',
-  'Irezumi',
   'Ignorant',
+  'Irezumi',
 
   'Japanese Style',
 
   'Lettering',
   'Lineart',
 
-  'Minimalist',
+  'Maori',
   'Microblading',
   'Microrealism',
-  'Maori',
+  'Minimalist',
 
-  'Neo Traditional',
-  'New School',
   'Native American',
+  'Neo Traditional',
   'Neo Tribal',
+  'New School',
 
-  'Ornamental',
   'Old School',
+  'Ornamental',
 
-  'Pacific Islander/Polynesian',
+  'Pacific Islander / Polynesian',
   'Portrait',
 
   'Realism',
   'Realistic Color',
-  'Black & Grey',
+  'Realistic Black & Grey',
 
-  'Stick and Poke',
   'Scar Coverup',
   'Script',
+  'Stick and Poke',
 
-  'Tribal',
-  'Traditional',
   'Tatau',
-  'Thai',
   'Tattoo Removal',
-  'Tooth Gems',
   'Tebori',
+  'Thai',
+  'Traditional',
   'Trash Polka',
+  'Tribal',
 
-  'White On Black',
-  'White Tattoos',
   'Watercolor',
+  'White on Black',
+  'White Tattoos',
+
+  'Tooth Gems',
 ];
+
 const offeredServicesList: string[] = [
   'Tattoo Spaces for Guest/Resident artists',
   'Piercing Rooms for Guest/Resident artists',

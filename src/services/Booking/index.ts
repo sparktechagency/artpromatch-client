@@ -122,6 +122,24 @@ export const reviewAfterAServiceIsCompleted = async (
   }
 };
 
+// getBookingsWithReviewThatHaveReviewForClientHomePage
+export const getBookingsWithReviewThatHaveReviewForClientHomePage =
+  async (): Promise<any> => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_API}/bookings/bookings-with-review`,
+        {
+          method: 'GET',
+        }
+      );
+
+      const result = await res.json();
+      return result;
+    } catch (error: any) {
+      return Error(error);
+    }
+  };
+
 // export const getLocationName = async (location: number[]) => {
 //   const [lon, lat] = location;
 //   const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&accept-language=en`;

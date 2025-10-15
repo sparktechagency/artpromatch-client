@@ -3,19 +3,21 @@
 import ClientAfterLogin from '@/components/Shared/HomeComponent/AfterLogin/ClientAfterLogin';
 import BeforeLogin from '@/components/Shared/HomeComponent/BeforeLogin';
 import { useUser } from '@/context/UserContext';
-import { IMeta, IService } from '@/types';
+import { IBooking, IMeta, IService } from '@/types';
 
 const HomeComponent = ({
   services = [],
   meta,
+  bookings = [],
 }: {
   services: IService[];
   meta: IMeta;
+  bookings: IBooking[];
 }) => {
   const { user } = useUser();
 
   const renderContent = () => {
-    if (!user) return <BeforeLogin services={services} />;
+    if (!user) return <BeforeLogin services={services} bookings={bookings} />;
 
     switch (user.role) {
       case 'CLIENT':
@@ -28,7 +30,7 @@ const HomeComponent = ({
       //   return <BusinessAfterLogin />;
 
       default:
-        return <BeforeLogin services={services} />;
+        return <BeforeLogin services={services} bookings={bookings} />;
     }
   };
 

@@ -6,7 +6,7 @@ import { Form, Input, Typography } from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { useGoogleLogin } from '@react-oauth/google';
 import { getFcmToken } from '@/lib/firebase-messaging';
@@ -14,8 +14,11 @@ import { useUser } from '@/context/UserContext';
 
 const SignUpForm = () => {
   const [loading, setLoading] = useState<boolean>(false);
+  const [isClient, setIsClient] = useState<boolean>(false);
   const router = useRouter();
   const { setIsLoading } = useUser();
+
+  useEffect(() => setIsClient(true), []);
 
   type SignUpFormValues = {
     fullName: string;
@@ -160,6 +163,8 @@ const SignUpForm = () => {
       },
     },
   ];
+
+  if (!isClient) return null;
 
   return (
     <div className="container mx-auto my-10 md:my-40">

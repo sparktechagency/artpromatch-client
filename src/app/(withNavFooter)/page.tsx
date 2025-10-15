@@ -1,4 +1,5 @@
 import HomeComponent from '@/components/Shared/HomeComponent';
+import { getBookingsWithReviewThatHaveReviewForClientHomePage } from '@/services/Booking';
 import { getAllServices } from '@/services/Service';
 
 const Homepage = async ({
@@ -14,9 +15,12 @@ const Homepage = async ({
     query
   );
 
+  const { data: bookings } =
+    await getBookingsWithReviewThatHaveReviewForClientHomePage();
+
   return (
     <div>
-      <HomeComponent services={services} meta={meta} />
+      <HomeComponent services={services} meta={meta} bookings={bookings} />
     </div>
   );
 };
