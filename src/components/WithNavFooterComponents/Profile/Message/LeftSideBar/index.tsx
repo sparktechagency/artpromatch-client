@@ -1,261 +1,210 @@
 'use client';
 
 import { BiEdit } from 'react-icons/bi';
-import { useState } from 'react';
-import { Modal } from 'antd';
+import { useEffect, useState } from 'react';
+import { Modal, Spin } from 'antd';
 import Link from 'next/link';
 import Image from 'next/image';
 import { AllImages } from '@/assets/images/AllImages';
+import { useUser } from '@/context/UserContext';
+import { getSocket, initSocket } from '@/utils/socket';
+import { getUserForConversation } from '@/services/Auth';
+import { useRouter } from 'next/navigation';
+import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
 
-const LeftSideBar = () => {
-  const [email, setEmail] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+interface Conversation {
+  conversationId: string;
+  unseenMsg: number;
+  userData: {
+    userId: string;
+    name: string;
+    profileImage?: string;
+    online?: boolean;
+  };
+  lastMsg: string;
+  lastMsgCreatedAt: string;
+}
 
-  const handleSearch = () => {
-    console.log('Searching for:', email);
+interface UserSearch {
+  _id: string;
+  fullName: string;
+  image?: string;
+}
+
+const LeftSideBar = ({
+  conversations = [],
+}: {
+  conversations: Conversation[];
+}) => {
+  const { user } = useUser();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [searchResults, setSearchResults] = useState<UserSearch[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const router = useRouter();
+
+  // 🔹 Ensure socket stays active (useful when sidebar mounts separately)
+  useEffect(() => {
+    if (!user?.id) return;
+    initSocket(user.id);
+  }, [user?.id]);
+
+  // 🔹 Search user by name or email
+  const handleSearchUser = async () => {
+    if (!searchTerm.trim()) return;
+    try {
+      setIsLoading(true);
+
+      const res = await getUserForConversation(searchTerm);
+
+      console.log({ res });
+      setSearchResults(res?.data || []);
+    } catch (err) {
+      console.error('User search failed:', err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
+  // 🔹 Start new chat (sends a first “hello” message)
+  const startConversation = async (receiverId: string) => {
+    try {
+      // const socket = getSocket();
+      // socket.emit('send-message', { receiverId, text: '👋 Hello!' });
+      // setIsModalOpen(false);
+      // setSearchResults([]);
+      // setSearchTerm('');
 
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
+      setIsModalOpen(false);
+      setSearchResults([]);
+      setSearchTerm('');
+      router.push(`/message?user=${receiverId}`);
+    } catch (err) {
+      console.error('Failed to start conversation:', err);
+    }
   };
 
   return (
     <div className="container mx-auto p-6">
+      {/* Header */}
       <div className="flex justify-between items-center gap-2 border-0 border-b mb-5 pb-5">
-        <div>
-          <h1 className="text-2xl font-bold">Messages</h1>
-        </div>
-        <div>
-          <BiEdit onClick={showModal} className="text-3xl" />
-        </div>
+        <h1 className="text-2xl font-bold">Messages</h1>
+        <BiEdit
+          onClick={() => setIsModalOpen(true)}
+          className="text-3xl cursor-pointer"
+        />
       </div>
 
-      <div className=" ">
-        <p className="text-secondary">Unread(1)</p>
-        {isLoading && (
-          <p className=" text-center px-2 py-2 shadow-md shadow-neutral-400 mb-5">
-            Loading users...
-          </p>
-        )}
-        <Link
-          href=""
-          // to={{
-          //     pathname: `/chat/${user?._id}`,
-          //     state: { receiver_id: user?._id, img: user?.img, name: user?.name }
-          // }}
-          // to={`/chat/${user?._id}`}
-          // state={{ receiver_id: user?._id, img: user?.img, name: user?.name }}
+      {/* Unread count */}
+      <p className="text-secondary mb-3">
+        Unread ({conversations.filter(c => c.unseenMsg > 0).length})
+      </p>
 
-          // key={user._id}
-          className={`   flex justify-between items-center text-textColor mb-5 px-5 py-1  `}
-        >
-          <div className="flex justify-start items-center gap-2">
-            <Image
-              className="w-10 h-12 rounded-full"
-              src={AllImages.user}
-              alt=""
-            />
-            <div>
-              <h3 className="text-xl font-semibold text-secondary">
-                Luci Santos
-              </h3>
-              <p className="text-secondary">Goodbye</p>
-              {/* <p className={`${user?.is_read ? "text-textColor" : "text-black font-semibold"}`}>{user.lastMessage}</p> */}
+      {/* Conversations */}
+      {conversations.length === 0 ? (
+        <p className="text-center text-gray-500 mt-10">No conversations yet</p>
+      ) : (
+        conversations.map((conversation, index) => (
+          <Link
+            key={index}
+            // href={`/message/?user=${conv.conversationId}`}
+            href={`/message?user=${conversation?.userData?.userId}`}
+            className="flex justify-between items-center text-textColor mb-5 px-5 py-1 hover:bg-gray-50 transition-colors"
+          >
+            <div className="flex justify-start items-center gap-2">
+              <div className="relative">
+                <Image
+                  className="w-12 h-12 rounded-full object-cover"
+                  src={getCleanImageUrl(conversation?.userData?.profileImage)}
+                  alt={conversation?.userData?.name}
+                  width={40}
+                  height={40}
+                />
+                {conversation?.userData?.online && (
+                  <span className="absolute bottom-0 right-0 block w-3 h-3 bg-green-500 rounded-full border-2 border-white" />
+                )}
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-gray-500">
+                  {conversation?.userData?.name}
+                </h3>
+                <p className="text-secondary text-sm truncate max-w-[160px]">
+                  {conversation.lastMsg || 'No messages yet'}
+                </p>
+              </div>
             </div>
-          </div>
-          <div>
-            <p className="text-secondary">1 day</p>
-            {/* <p>{getTimeDifference(user?.lastMessageTime)}</p> */}
-          </div>
-        </Link>
-        <Link
-          href=""
-          // to={{
-          //     pathname: `/chat/${user?._id}`,
-          //     state: { receiver_id: user?._id, img: user?.img, name: user?.name }
-          // }}
-          // to={`/chat/${user?._id}`}
-          // state={{ receiver_id: user?._id, img: user?.img, name: user?.name }}
-
-          // key={user._id}
-          className={`   flex justify-between items-center text-textColor mb-5 px-5 py-1  `}
-        >
-          <div className="flex justify-start items-center gap-2">
-            <Image
-              className="w-10 h-12 rounded-full"
-              src={AllImages.user}
-              alt=""
-            />
-            <div>
-              <h3 className="text-xl font-semibold text-secondary">
-                Luci Santos
-              </h3>
-              <p className="text-secondary">Goodbye</p>
-              {/* <p className={`${user?.is_read ? "text-textColor" : "text-black font-semibold"}`}>{user.lastMessage}</p> */}
+            <div className="text-right">
+              <p className="text-secondary text-sm">
+                {conversation?.lastMsgCreatedAt
+                  ? new Date(conversation.lastMsgCreatedAt).toLocaleDateString(
+                      [],
+                      {
+                        month: 'short',
+                        day: 'numeric',
+                      }
+                    )
+                  : ''}
+              </p>
+              {conversation?.unseenMsg > 0 && (
+                <span className="bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
+                  {conversation?.unseenMsg}
+                </span>
+              )}
             </div>
-          </div>
-          <div>
-            <p className="text-secondary">1 day</p>
-            {/* <p>{getTimeDifference(user?.lastMessageTime)}</p> */}
-          </div>
-        </Link>
-        <Link
-          href=""
-          // to={{
-          //     pathname: `/chat/${user?._id}`,
-          //     state: { receiver_id: user?._id, img: user?.img, name: user?.name }
-          // }}
-          // to={`/chat/${user?._id}`}
-          // state={{ receiver_id: user?._id, img: user?.img, name: user?.name }}
+          </Link>
+        ))
+      )}
 
-          // key={user._id}
-          className={`   flex justify-between items-center text-textColor mb-5 px-5 py-1  `}
-        >
-          <div className="flex justify-start items-center gap-2">
-            <Image
-              className="w-10 h-12 rounded-full"
-              src={AllImages.user}
-              alt=""
-            />
-            <div>
-              <h3 className="text-xl font-semibold text-secondary">
-                Luci Santos
-              </h3>
-              <p className="text-secondary">Goodbye</p>
-              {/* <p className={`${user?.is_read ? "text-textColor" : "text-black font-semibold"}`}>{user.lastMessage}</p> */}
-            </div>
-          </div>
-          <div>
-            <p className="text-secondary">1 day</p>
-            {/* <p>{getTimeDifference(user?.lastMessageTime)}</p> */}
-          </div>
-        </Link>
-        <Link
-          href=""
-          // to={{
-          //     pathname: `/chat/${user?._id}`,
-          //     state: { receiver_id: user?._id, img: user?.img, name: user?.name }
-          // }}
-          // to={`/chat/${user?._id}`}
-          // state={{ receiver_id: user?._id, img: user?.img, name: user?.name }}
-
-          // key={user._id}
-          className={`   flex justify-between items-center text-textColor mb-5 px-5 py-1  `}
-        >
-          <div className="flex justify-start items-center gap-2">
-            <Image
-              className="w-10 h-12 rounded-full"
-              src={AllImages.user}
-              alt=""
-            />
-            <div>
-              <h3 className="text-xl font-semibold text-secondary">
-                Luci Santos
-              </h3>
-              <p className="text-secondary">Goodbye</p>
-              {/* <p className={`${user?.is_read ? "text-textColor" : "text-black font-semibold"}`}>{user.lastMessage}</p> */}
-            </div>
-          </div>
-          <div>
-            <p className="text-secondary">1 day</p>
-            {/* <p>{getTimeDifference(user?.lastMessageTime)}</p> */}
-          </div>
-        </Link>
-      </div>
-
+      {/* Modal for new chat */}
       <Modal
         open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
+        onCancel={() => setIsModalOpen(false)}
         footer={null}
         title="New Message"
       >
-        <div className="flex flex-col gap-2 mt-10">
+        <div className="flex flex-col gap-2 mt-4">
           <input
             type="text"
             placeholder="Search users"
             className="w-full p-2 border border-gray-300 rounded-md"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            onKeyDown={e => {
-              if (e.key === 'Enter') {
-                handleSearch(); // ✅ enter চাপলে search হবে
-              }
-            }}
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && handleSearchUser()}
           />
         </div>
-        <Link
-          href=""
-          className={`   flex justify-between items-center text-textColor mb-5 px-5 py-1  `}
-        >
-          <div className="flex justify-start items-center gap-2">
-            <Image
-              className="w-10 h-12 rounded-full"
-              src={AllImages.user}
-              alt=""
-            />
-            <div>
-              <h3 className="text-xl font-semibold text-secondary">
-                Luci Santos
-              </h3>
-              <p className="text-secondary">Goodbye</p>
+
+        {isLoading ? (
+          <div className="text-center mt-5">
+            <Spin /> <p>Loading users...</p>
+          </div>
+        ) : searchResults.length === 0 && searchTerm ? (
+          <p className="text-center text-gray-500 mt-5">No users found</p>
+        ) : (
+          searchResults.map(user => (
+            <div
+              key={user._id}
+              onClick={() => startConversation(user._id)}
+              className="flex justify-between items-center text-textColor my-5 px-5 py-1 cursor-pointer bg-gray-200 hover:bg-blue-200 transition-colors rounded-lg"
+            >
+              <div className="flex justify-start items-center gap-2">
+                <Image
+                  className="w-12 h-12 rounded-full object-cover"
+                  src={user.image || AllImages.user}
+                  alt={user.fullName}
+                  width={40}
+                  height={40}
+                />
+                <div>
+                  <h3 className="text-xl font-semibold text-black">
+                    {user.fullName}
+                  </h3>
+                  <p className="text-secondary text-sm">Start a new chat</p>
+                </div>
+              </div>
             </div>
-          </div>
-          <div>
-            <p className="text-secondary">1 day</p>
-          </div>
-        </Link>
-        <Link
-          href=""
-          className={`   flex justify-between items-center text-textColor mb-5 px-5 py-1  `}
-        >
-          <div className="flex justify-start items-center gap-2">
-            <Image
-              className="w-10 h-12 rounded-full"
-              src={AllImages.user}
-              alt=""
-            />
-            <div>
-              <h3 className="text-xl font-semibold text-secondary">
-                Luci Santos
-              </h3>
-              <p className="text-secondary">Goodbye</p>
-            </div>
-          </div>
-          <div>
-            <p className="text-secondary">1 day</p>
-          </div>
-        </Link>
-        <Link
-          href=""
-          className={`   flex justify-between items-center text-textColor mb-5 px-5 py-1  `}
-        >
-          <div className="flex justify-start items-center gap-2">
-            <Image
-              className="w-10 h-12 rounded-full"
-              src={AllImages.user}
-              alt=""
-            />
-            <div>
-              <h3 className="text-xl font-semibold text-secondary">
-                Luci Santos
-              </h3>
-              <p className="text-secondary">Goodbye</p>
-            </div>
-          </div>
-          <div>
-            <p className="text-secondary">1 day</p>
-          </div>
-        </Link>
+          ))
+        )}
       </Modal>
     </div>
   );

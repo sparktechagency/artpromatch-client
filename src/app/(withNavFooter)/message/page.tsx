@@ -1,106 +1,152 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { io, Socket } from 'socket.io-client';
-import { AudioOutlined } from '@ant-design/icons';
-import { IoIosAttach } from 'react-icons/io';
-import { BsEmojiSmile } from 'react-icons/bs';
-import { useUser } from '@/context/UserContext';
-import { AllImages } from '@/assets/images/AllImages';
 import Image from 'next/image';
+import { BsEmojiSmile } from 'react-icons/bs';
+import { IoIosAttach } from 'react-icons/io';
+import { AudioOutlined } from '@ant-design/icons';
+import { useUser } from '@/context/UserContext';
+import { getSocket, initSocket } from '@/utils/socket';
+import { AllImages } from '@/assets/images/AllImages';
+import { useSearchParams } from 'next/navigation';
 
-let socket: Socket;
+interface Message {
+  _id: string;
+  text: string;
+  msgByUser: string;
+  seen: boolean;
+  createdAt: string;
+  conversationId?: string;
+}
 
-const MainChatPage = ({ conversationId }: { conversationId: string }) => {
-  const [messages, setMessages] = useState<any[]>([]);
+const MainChatPage = () => {
+  const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
+  const [conversationId, setConversationId] = useState<string | null>(null);
+
   const { user } = useUser();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const searchParams = useSearchParams();
+  const receiverId = searchParams.get('user') || '';
+
+  // ✅ Initialize socket
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-
     if (!user?.id) return;
+    initSocket(user.id);
+  }, [user?.id]);
 
-    socket = io(process.env.NEXT_PUBLIC_MAIN_API, {
-      query: { id: user?.id },
+  // ✅ Load messages for existing conversation (if available)
+  useEffect(() => {
+    if (!user?.id || !conversationId) return;
+    const socket = getSocket();
+
+    socket.emit('message-page', { conversationId, page: 1, limit: 20 });
+
+    socket.on('messages', data => {
+      setMessages(data.messages || []);
     });
 
-    socket.on('receive_message', (msg: any) => {
-      setMessages(prev => [...prev, msg]);
+    socket.on('new-message', msg => {
+      if (msg.conversationId === conversationId) {
+        setMessages(prev => [...prev, msg]);
+      }
+    });
+
+    socket.on('messages-seen', data => {
+      if (data.conversationId === conversationId) {
+        setMessages(prev =>
+          prev.map(m =>
+            data.messageIds.includes(m._id) ? { ...m, seen: true } : m
+          )
+        );
+      }
     });
 
     return () => {
-      socket.disconnect();
+      socket.off('messages');
+      socket.off('new-message');
+      socket.off('messages-seen');
     };
-  }, [user?.id]);
+  }, [user?.id, conversationId]);
 
+  // ✅ Auto scroll on new message
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    // scroll to bottom on new message
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  // ✅ Handle sending message
   const sendMessage = () => {
-    if (!newMessage.trim()) return;
+    if (!newMessage.trim() || !user?.id || !receiverId) return;
+    const socket = getSocket();
 
-    const msgData = {
-      conversationId,
-      text: newMessage,
-      sender: user?.id,
-    };
 
-    socket.emit('send_message', msgData);
+    console.log({ conversationId });
+
+    if (!conversationId) {
+      // New chat: backend will create the conversation automatically
+      socket.emit(
+        'send-message',
+        { receiverId, text: newMessage },
+        (response: any) => {
+          console.log({ response });
+
+          if (response?.conversationId) {
+            setConversationId(response.conversationId);
+          }
+        }
+      );
+    } else {
+      // Existing chat
+      socket.emit('send-message', { conversationId, text: newMessage },);
+    }
+
     setNewMessage('');
-    setMessages(prev => [...prev, msgData]); // add locally
   };
 
   return (
-    <div>
-      <div className="flex flex-col w-full px-4 py-2">
-        <p className="text-center text-xs text-gray-500 my-2">
-          Mon 9 Dec 12:12 PM
-        </p>
+    <div className="flex flex-col w-full px-4 py-2">
+      {/* Chat messages area */}
+      <div className="flex flex-col gap-3 flex-grow overflow-y-auto">
+        {!conversationId && messages.length === 0 && (
+          <p className="text-center text-gray-500 mt-10">
+            Starting a new chat...
+          </p>
+        )}
 
-        <div className="flex flex-col gap-3">
-          <div className="flex flex-col gap-3">
-            <div className="flex gap-2">
+        {messages.map(msg => (
+          <div
+            key={msg._id}
+            className={`flex gap-2 ${
+              msg.msgByUser === user?.id ? 'justify-end' : ''
+            }`}
+          >
+            {msg.msgByUser !== user?.id && (
               <Image
-                className="w-8 h-8 rounded-full"
                 src={AllImages.user}
                 alt="User"
-              />
-              <div className="text-sm px-4 py-2 rounded-lg max-w-xs bg-gray-100 text-gray-900">
-                Hey, this is a demo message text. I&apos;m writing to check the
-                responsiveness of this message box
-              </div>
-            </div>
-            <div className="flex gap-1 text-xs text-gray-400 pl-10">
-              {/* <span>✔✔</span> */}
-              <p>1:15 PM</p>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-3 items-end">
-            <div className="flex gap-2">
-              <div className="text-sm px-4 py-2 rounded-lg max-w-xs bg-black text-white">
-                Hey, This is a demo message text.
-              </div>
-              <Image
                 className="w-8 h-8 rounded-full"
-                src={AllImages.user}
-                alt="User"
+                width={32}
+                height={32}
               />
-            </div>
-            <div className="flex gap-1 text-xs text-gray-400">
-              <span>✔✔</span>
-              <p>1:15 PM</p>
+            )}
+            <div
+              className={`text-sm px-4 py-2 rounded-lg max-w-xs ${
+                msg.msgByUser === user?.id
+                  ? 'bg-black text-white'
+                  : 'bg-gray-100 text-gray-900'
+              }`}
+            >
+              {msg.text}
             </div>
           </div>
-        </div>
+        ))}
+        <div ref={messagesEndRef} />
+      </div>
 
-        <div className="flex justify-between items-center border rounded-3xl mt-20 md:mt-80 pt-2 px-4">
+      {/* Message input area */}
+      {receiverId && (
+        <div className="flex justify-between items-center border rounded-3xl mt-4 pt-2 px-4">
           <div className="flex items-center gap-2 w-[80%]">
             <BsEmojiSmile />
             <input
@@ -117,13 +163,13 @@ const MainChatPage = ({ conversationId }: { conversationId: string }) => {
             <IoIosAttach />
             <div
               onClick={sendMessage}
-              className="bg-primary text-white px-4 py-1.5 rounded-lg"
+              className="bg-primary text-white px-4 py-1.5 rounded-lg cursor-pointer"
             >
               Send
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

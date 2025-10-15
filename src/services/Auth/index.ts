@@ -449,3 +449,27 @@ export const updateFcmTokenToServer = async (data: FieldValues) => {
     return Error(error);
   }
 };
+
+// getUserForConversation
+export const getUserForConversation = async (searchTerm: string) => {
+  const accessToken = await getValidAccessTokenForServerActions();
+
+  try {
+    const res = await fetch(
+      `${
+        process.env.NEXT_PUBLIC_BASE_API
+      }/auth/message-user/search?term=${encodeURIComponent(searchTerm)}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    const result = await res.json();
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
