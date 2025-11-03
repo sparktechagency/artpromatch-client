@@ -5,9 +5,8 @@ import { useEffect, useState } from 'react';
 import { Modal, Spin } from 'antd';
 import Link from 'next/link';
 import Image from 'next/image';
-import avatarImage from '@/assets/avatar.png';
 import { useUser } from '@/context/UserContext';
-import { getSocket, initSocket } from '@/utils/socket';
+import { initSocket } from '@/utils/socket';
 import { getUserForConversation } from '@/services/Auth';
 import { useRouter } from 'next/navigation';
 import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
@@ -69,12 +68,6 @@ const LeftSideBar = ({
   // 🔹 Start new chat (sends a first “hello” message)
   const startConversation = async (receiverId: string) => {
     try {
-      // const socket = getSocket();
-      // socket.emit('send-message', { receiverId, text: '👋 Hello!' });
-      // setIsModalOpen(false);
-      // setSearchResults([]);
-      // setSearchTerm('');
-
       setIsModalOpen(false);
       setSearchResults([]);
       setSearchTerm('');

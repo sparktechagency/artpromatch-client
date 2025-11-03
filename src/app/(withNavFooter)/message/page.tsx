@@ -9,7 +9,7 @@ import { FaX } from 'react-icons/fa6';
 import { BsEmojiSmile } from 'react-icons/bs';
 import { IoIosAttach } from 'react-icons/io';
 import { AudioOutlined } from '@ant-design/icons';
-import LeftSideBar from '@/components/WithNavFooterComponents/Profile/Message/LeftSideBar';
+import LeftSideBar from '@/components/WithNavFooterComponents/LeftSideBar';
 import { useUser } from '@/context/UserContext';
 import { getSocket, initSocket } from '@/utils/socket';
 import avatarImage from '@/assets/avatar.png';
