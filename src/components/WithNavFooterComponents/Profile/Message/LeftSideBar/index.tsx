@@ -58,7 +58,6 @@ const LeftSideBar = ({
 
       const res = await getUserForConversation(searchTerm);
 
-      console.log({ res });
       setSearchResults(res?.data || []);
     } catch (err) {
       console.error('User search failed:', err);
@@ -79,7 +78,7 @@ const LeftSideBar = ({
       setIsModalOpen(false);
       setSearchResults([]);
       setSearchTerm('');
-      router.push(`/message?user=${receiverId}`);
+      router.push(`/message?receiverId=${receiverId}`);
     } catch (err) {
       console.error('Failed to start conversation:', err);
     }
@@ -108,8 +107,8 @@ const LeftSideBar = ({
         conversations.map((conversation, index) => (
           <Link
             key={index}
-            // href={`/message/?user=${conv.conversationId}`}
-            href={`/message?user=${conversation?.userData?.userId}`}
+            // href={`/message/?receiverId=${conv.conversationId}`}
+            href={`/message?conversationId=${conversation?.conversationId}&receiverId=${conversation?.userData?.userId}`}
             className="flex justify-between items-center text-textColor mb-5 px-5 py-1 hover:bg-gray-50 transition-colors"
           >
             <div className="flex justify-start items-center gap-2">

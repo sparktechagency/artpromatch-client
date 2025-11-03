@@ -37,34 +37,33 @@ const MessageLayout = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   // ✅ Initialize socket and listen for conversation events
-useEffect(() => {
-  if (!user?.id) return;
+  useEffect(() => {
+    if (!user?.id) return;
 
-  const socket = initSocket(user.id);
+    const socket = initSocket(user.id);
 
-  socket.on('connect', () => {
-    socket.emit('get-conversations');
-  });
+    socket.on('connect', () => {
+      socket.emit('get-conversations');
+    });
 
-  socket.on('conversation-list', data => {
-    console.log({ data });
-    setConversations(data?.conversations || []);
-  });
+    socket.on('conversation-list', data => {
+      setConversations(data?.conversations || []);
+    });
 
-  socket.on('new-message', fetchConversations);
-  socket.on('conversation-created', fetchConversations);
-  socket.on('socket-error', err =>
-    console.error('Socket error:', err.message || err)
-  );
+    socket.on('new-message', fetchConversations);
+    socket.on('conversation-created', fetchConversations);
+    socket.on('socket-error', err =>
+      console.error('Socket error:', err.message || err)
+    );
 
-  return () => {
-    socket.off('connect');
-    socket.off('conversation-list');
-    socket.off('new-message');
-    socket.off('conversation-created');
-    socket.off('socket-error');
-  };
-}, [user?.id, fetchConversations]);
+    return () => {
+      socket.off('connect');
+      socket.off('conversation-list');
+      socket.off('new-message');
+      socket.off('conversation-created');
+      socket.off('socket-error');
+    };
+  }, [user?.id, fetchConversations]);
 
   const showDrawer = () => setIsDrawerVisible(true);
   const closeDrawer = () => setIsDrawerVisible(false);

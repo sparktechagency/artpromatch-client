@@ -22,13 +22,14 @@ interface Message {
 const MainChatPage = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
-  const [conversationId, setConversationId] = useState<string | null>(null);
 
   const { user } = useUser();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const searchParams = useSearchParams();
-  const receiverId = searchParams.get('user') || '';
+
+  const conversationId = searchParams.get('conversationId') || '';
+  const receiverId = searchParams.get('receiverId') || '';
 
   // ✅ Initialize socket
   useEffect(() => {
@@ -40,10 +41,10 @@ const MainChatPage = () => {
   useEffect(() => {
     if (!user?.id || !conversationId) return;
     const socket = getSocket();
-
     socket.emit('message-page', { conversationId, page: 1, limit: 20 });
 
     socket.on('messages', data => {
+      console.log({ data });
       setMessages(data.messages || []);
     });
 
@@ -77,29 +78,18 @@ const MainChatPage = () => {
 
   // ✅ Handle sending message
   const sendMessage = () => {
-    if (!newMessage.trim() || !user?.id || !receiverId) return;
+    if (!newMessage.trim() || !user?.id || !conversationId) return;
     const socket = getSocket();
 
-
-    console.log({ conversationId });
-
-    if (!conversationId) {
+    if (conversationId) {
       // New chat: backend will create the conversation automatically
-      socket.emit(
-        'send-message',
-        { receiverId, text: newMessage },
-        (response: any) => {
-          console.log({ response });
-
-          if (response?.conversationId) {
-            setConversationId(response.conversationId);
-          }
-        }
-      );
-    } else {
-      // Existing chat
-      socket.emit('send-message', { conversationId, text: newMessage },);
+      socket.emit('send-message', { receiverId, text: newMessage });
     }
+
+    // else {
+    //   // Existing chat
+    //   socket.emit('send-message', { conversationId, text: newMessage });
+    // }
 
     setNewMessage('');
   };
@@ -108,7 +98,7 @@ const MainChatPage = () => {
     <div className="flex flex-col w-full px-4 py-2">
       {/* Chat messages area */}
       <div className="flex flex-col gap-3 flex-grow overflow-y-auto">
-        {!conversationId && messages.length === 0 && (
+        {messages.length === 0 && (
           <p className="text-center text-gray-500 mt-10">
             Starting a new chat...
           </p>

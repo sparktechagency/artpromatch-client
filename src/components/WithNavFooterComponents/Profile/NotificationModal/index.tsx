@@ -8,16 +8,10 @@ type Notification = {
 };
 
 interface Props {
-  handleOk?: () => void;
-  handleCancel?: () => void;
   notifications?: Notification[];
 }
 
-const NotificationModal: React.FC<Props> = ({
-  handleOk,
-  handleCancel,
-  notifications = [],
-}) => {
+const NotificationModal: React.FC<Props> = ({ notifications = [] }) => {
   return (
     <div>
       <h1 className="text-xl font-bold border-0 border-b pb-2">

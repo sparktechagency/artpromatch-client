@@ -6,7 +6,7 @@ import FeaturedArtists from './FeaturedArtists';
 import NearYou from './NearYou/NearYou';
 import WantATattoo from './WantATattoo';
 import PiercingNow from './PiercingNow/PiercingNow';
-import Testimonials from './Testimonials/Testimonials';
+import Testimonials from './Testimonials';
 import SteadyHands from './SteadyHands';
 import Link from 'next/link';
 import { IBooking, IService } from '@/types';
