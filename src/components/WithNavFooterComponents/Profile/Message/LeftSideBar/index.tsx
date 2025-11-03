@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { Modal, Spin } from 'antd';
 import Link from 'next/link';
 import Image from 'next/image';
-import { AllImages } from '@/assets/images/AllImages';
+import avatarImage from '@/assets/avatar.png';
 import { useUser } from '@/context/UserContext';
 import { getSocket, initSocket } from '@/utils/socket';
 import { getUserForConversation } from '@/services/Auth';
@@ -189,7 +189,7 @@ const LeftSideBar = ({
               <div className="flex justify-start items-center gap-2">
                 <Image
                   className="w-12 h-12 rounded-full object-cover"
-                  src={user.image || AllImages.user}
+                  src={getCleanImageUrl(user.image)}
                   alt={user.fullName}
                   width={40}
                   height={40}

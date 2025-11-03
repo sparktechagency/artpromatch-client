@@ -19,7 +19,7 @@ const LinkedAccounts = () => {
           </p>
         </div>
       </div>
-      <div className="border rounded-xl p-5 flex justify-between items-center mb-4">
+      {/* <div className="border rounded-xl p-5 flex justify-between items-center mb-4">
         <div className="flex justify-start items-center gap-2">
           <Image src={AllImages.google} width={50} height={50} alt="logo" />
           <div>
@@ -33,7 +33,7 @@ const LinkedAccounts = () => {
         >
           <FaTrash /> Remove
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };
