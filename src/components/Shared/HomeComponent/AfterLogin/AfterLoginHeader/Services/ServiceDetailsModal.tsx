@@ -39,7 +39,7 @@ const ServiceDetailsModal: React.FC<ServiceDetailsModalProps> = ({
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-center pb-3 border-b">
         <div className="flex items-center gap-3">
-          <Link href="/profile-page">
+          <Link href={`/artist/${selectedService?.artist?._id}`}>
             <Image
               src={getCleanImageUrl(
                 selectedService?.artist?.auth?.image ||

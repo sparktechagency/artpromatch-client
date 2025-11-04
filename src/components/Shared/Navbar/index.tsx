@@ -11,7 +11,7 @@ import { RiArrowDropDownLine } from 'react-icons/ri';
 // import { CiHeart } from 'react-icons/ci';
 import { IoIosNotificationsOutline } from 'react-icons/io';
 import { AiOutlineMessage } from 'react-icons/ai';
-import NotificationModal from '@/components/WithNavFooterComponents/Profile/NotificationModal/NotificationModal';
+import NotificationModal from '@/components/WithNavFooterComponents/Profile/NotificationModal';
 import { usePathname, useRouter } from 'next/navigation';
 import { useUser } from '@/context/UserContext';
 import { logOut } from '@/services/Auth';
@@ -149,41 +149,39 @@ const NavBar = () => {
       isDropdown: false,
       dropdownItems: [],
     },
-    ...(user
-      ? [
-          {
-            name: 'Join As',
-            isDropdown: true,
-            dropdownItems: [
-              {
-                key: '1',
-                label: (
-                  <Link href="https://client-artpromatch-4cq2vqx1n-rabeyaakter78s-projects.vercel.app/">
-                    Client
-                  </Link>
-                ),
-              },
-              {
-                key: '2',
-                label: (
-                  <Link href="https://artist-artpromatch-ckakmcc6u-rabeyaakter78s-projects.vercel.app/">
-                    Artist
-                  </Link>
-                ),
-              },
-              {
-                key: '3',
-                label: (
-                  <Link href="https://artpromatch-business-nh3gxj7po-rabeyaakter78s-projects.vercel.app/">
-                    Business Owner
-                  </Link>
-                ),
-              },
-            ],
-            icon: <RiArrowDropDownLine className="text-black text-4xl" />,
-          },
-        ]
-      : []),
+
+    {
+      name: 'Join As',
+      isDropdown: true,
+      dropdownItems: [
+        {
+          key: '1',
+          label: (
+            <Link href="https://client-artpromatch-4cq2vqx1n-rabeyaakter78s-projects.vercel.app/">
+              Client
+            </Link>
+          ),
+        },
+        {
+          key: '2',
+          label: (
+            <Link href="https://artist-artpromatch-ckakmcc6u-rabeyaakter78s-projects.vercel.app/">
+              Artist
+            </Link>
+          ),
+        },
+        {
+          key: '3',
+          label: (
+            <Link href="https://artpromatch-business-nh3gxj7po-rabeyaakter78s-projects.vercel.app/">
+              Business Owner
+            </Link>
+          ),
+        },
+      ],
+      icon: <RiArrowDropDownLine className="text-black text-4xl" />,
+    },
+
     {
       name: 'Help',
       link: '/help',
@@ -225,9 +223,13 @@ const NavBar = () => {
                 <Link
                   href={item.link || '/'}
                   key={index}
-                  className="text-lg font-medium hover:text-blue-600 transition flex items-center"
+                  className={`text-lg font-medium hover:text-blue-600 transition flex items-center ${
+                    pathname === item.link
+                      ? 'border-b-2 border-primary p-1 text-blue-600'
+                      : ''
+                  }`}
                 >
-                  {item.name} {item.icon && item.icon}
+                  {item.name} {item?.icon && item?.icon}
                 </Link>
               )
             )}
@@ -327,7 +329,7 @@ const NavBar = () => {
         onOk={handleOkForNotification}
         onCancel={handleCancelForNotification}
       >
-        <NotificationModal></NotificationModal>
+        <NotificationModal />
       </Modal>
     </div>
   );

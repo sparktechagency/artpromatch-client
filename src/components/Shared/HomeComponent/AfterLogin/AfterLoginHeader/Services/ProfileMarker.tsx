@@ -2,6 +2,7 @@ import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
 import { IArtist } from '@/types';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 // Dynamically import the map component to avoid SSR issues
@@ -54,15 +55,17 @@ const ProfileMarker = ({ artist }: { artist: IArtist }) => {
       <Popup>
         <div className="p-2 max-w-xs">
           <div className="flex items-center mb-2">
-            {artist?.auth?.image && (
-              <Image
-                src={getCleanImageUrl(artist?.auth?.image)}
-                alt={artist?.auth?.fullName}
-                width={40}
-                height={40}
-                className="rounded-full h-10 w-10 mr-3"
-              />
-            )}
+            <Link href={`/artist/${artist?._id}`}>
+              {artist?.auth?.image && (
+                <Image
+                  src={getCleanImageUrl(artist?.auth?.image)}
+                  alt={artist?.auth?.fullName}
+                  width={40}
+                  height={40}
+                  className="rounded-full h-10 w-10 mr-3"
+                />
+              )}
+            </Link>
             <div>
               <div className="font-bold text-lg">{artist?.auth?.fullName}</div>
               <div className="text-sm text-gray-600">
