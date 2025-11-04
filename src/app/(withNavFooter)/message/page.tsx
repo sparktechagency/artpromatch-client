@@ -37,6 +37,28 @@ interface Message {
   conversationId?: string;
 }
 
+type MessageLike = Omit<Message, '_id' | 'conversationId'> & {
+  _id: string | { toString(): string };
+  conversationId?: string | { toString(): string };
+};
+
+const normalizeId = (value?: string | { toString(): string }) => {
+  if (!value) return undefined;
+  return typeof value === 'string' ? value : value.toString();
+};
+
+const normalizeMessage = (message: Message | MessageLike): Message => {
+  const source = message as MessageLike;
+  const normalizedId = normalizeId(source._id) ?? '';
+  const normalizedConversationId = normalizeId(source.conversationId);
+
+  return {
+    ...message,
+    _id: normalizedId,
+    conversationId: normalizedConversationId,
+  };
+};
+
 interface ChatUser {
   userId: string;
   name: string;
@@ -51,8 +73,12 @@ const MessagePage = () => {
   const [newMessage, setNewMessage] = useState('');
   const [chatUser, setChatUser] = useState<ChatUser | null>(null);
   const [loadingMessages, setLoadingMessages] = useState(false);
+  const [isChatUserTyping, setIsChatUserTyping] = useState(false);
 
   const messageEndRef = useRef<HTMLDivElement | null>(null);
+  const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isTypingRef = useRef(false);
+  const activeConversationRef = useRef<string | null>(null);
 
   const { user } = useUser();
   const router = useRouter();
@@ -113,6 +139,8 @@ const MessagePage = () => {
     socket.on('new-message', handleGlobalNewMessage);
     socket.on('socket-error', handleSocketError);
 
+    fetchConversations();
+
     return () => {
       socket.off('connect', fetchConversations);
       socket.off('conversation-list', handleConversationList);
@@ -123,20 +151,35 @@ const MessagePage = () => {
   }, [user?.id, fetchConversations, conversationId, receiverId, router]);
 
   useEffect(() => {
-    if (!conversationId) {
-      setMessages([]);
-      setLoadingMessages(false);
-      return;
-    }
-
     if (!user?.id) {
       return;
     }
 
+    const socket = getSocket();
+
+    if (!conversationId) {
+      if (activeConversationRef.current) {
+        socket.emit('leave-conversation', activeConversationRef.current);
+        activeConversationRef.current = null;
+      }
+      setMessages([]);
+      setLoadingMessages(false);
+      setIsChatUserTyping(false);
+      return;
+    }
+
+    if (
+      activeConversationRef.current &&
+      activeConversationRef.current !== conversationId
+    ) {
+      socket.emit('leave-conversation', activeConversationRef.current);
+    }
+
+    activeConversationRef.current = conversationId;
+
     let isMounted = true;
 
     try {
-      const socket = getSocket();
       setLoadingMessages(true);
       socket.emit('message-page', { conversationId, page: 1, limit: 30 });
 
@@ -146,7 +189,10 @@ const MessagePage = () => {
         userData?: ChatUser;
       }) => {
         if (!isMounted || data.conversationId !== conversationId) return;
-        setMessages(data.messages || []);
+        const normalizedMessages = (data.messages || []).map(item =>
+          normalizeMessage(item)
+        );
+        setMessages(normalizedMessages);
         if (data.userData) {
           setChatUser(data.userData);
         }
@@ -159,10 +205,17 @@ const MessagePage = () => {
       };
 
       const handleIncomingMessage = (msg: Message) => {
-        if (!isMounted || msg.conversationId !== conversationId) return;
+        const normalized = normalizeMessage(msg);
+        if (!isMounted || normalized.conversationId !== conversationId) return;
         setMessages(prev => {
-          const exists = prev.some(existing => existing._id === msg._id);
-          return exists ? prev : [...prev, msg];
+          const exists = prev.some(existing => existing._id === normalized._id);
+          return exists
+            ? prev.map(existing =>
+                existing._id === normalized._id
+                  ? { ...existing, ...normalized }
+                  : existing
+              )
+            : [...prev, normalized];
         });
       };
 
@@ -171,31 +224,62 @@ const MessagePage = () => {
         messageIds: string[];
       }) => {
         if (!isMounted || data.conversationId !== conversationId) return;
+        const ids = new Set(data.messageIds.map(id => id.toString()));
         setMessages(prev =>
           prev.map(message =>
-            data.messageIds.includes(message._id)
-              ? { ...message, seen: true }
-              : message
+            ids.has(message._id) ? { ...message, seen: true } : message
           )
         );
+        fetchConversations();
+      };
+
+      const handleUserTyping = (payload: {
+        conversationId: string;
+        userId: string;
+      }) => {
+        if (!isMounted || payload.conversationId !== conversationId) return;
+        if (payload.userId === user?.id) return;
+        setIsChatUserTyping(true);
+      };
+
+      const handleUserStopTyping = (payload: {
+        conversationId: string;
+        userId: string;
+      }) => {
+        if (!isMounted || payload.conversationId !== conversationId) return;
+        if (payload.userId === user?.id) return;
+        setIsChatUserTyping(false);
       };
 
       socket.on('messages', handleMessages);
       socket.on('message-user', handleMessageUser);
       socket.on('new-message', handleIncomingMessage);
       socket.on('messages-seen', handleMessagesSeen);
+      socket.on('user-typing', handleUserTyping);
+      socket.on('user-stop-typing', handleUserStopTyping);
 
       return () => {
         isMounted = false;
+        if (typingTimeoutRef.current) {
+          clearTimeout(typingTimeoutRef.current);
+          typingTimeoutRef.current = null;
+        }
+        isTypingRef.current = false;
         socket.off('messages', handleMessages);
         socket.off('message-user', handleMessageUser);
         socket.off('new-message', handleIncomingMessage);
         socket.off('messages-seen', handleMessagesSeen);
+        socket.off('user-typing', handleUserTyping);
+        socket.off('user-stop-typing', handleUserStopTyping);
+        socket.emit('leave-conversation', conversationId);
+        if (activeConversationRef.current === conversationId) {
+          activeConversationRef.current = null;
+        }
       };
     } catch (error) {
       console.warn('Socket not ready yet.', error);
     }
-  }, [user?.id, conversationId]);
+  }, [user?.id, conversationId, fetchConversations]);
 
   useEffect(() => {
     if (conversationId || receiverId || conversations.length === 0) {
@@ -249,6 +333,11 @@ const MessagePage = () => {
       const socket = getSocket();
       socket.emit('send-message', { receiverId, text: newMessage.trim() });
       setNewMessage('');
+      emitStopTyping();
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+        typingTimeoutRef.current = null;
+      }
     } catch (error) {
       console.warn('Socket not ready yet.', error);
     }
@@ -261,6 +350,10 @@ const MessagePage = () => {
   }, [chatUser?.name, receiverId]);
 
   const chatStatus = useMemo(() => {
+    if (isChatUserTyping) {
+      return 'Typing...';
+    }
+
     if (!chatUser) {
       return receiverId
         ? 'Send a message to begin the conversation'
@@ -268,7 +361,50 @@ const MessagePage = () => {
     }
 
     return chatUser.online ? 'Online' : 'Offline';
-  }, [chatUser, receiverId]);
+  }, [chatUser, receiverId, isChatUserTyping]);
+
+  const emitStopTyping = useCallback(() => {
+    if (!conversationId || !user?.id || !isTypingRef.current) return;
+
+    try {
+      const socket = getSocket();
+      socket.emit('stop-typing', {
+        conversationId,
+        userId: user.id,
+      });
+    } catch (error) {
+      console.warn('Socket not ready yet.', error);
+    }
+
+    isTypingRef.current = false;
+  }, [conversationId, user?.id]);
+
+  const handleTyping = useCallback(() => {
+    if (!conversationId || !user?.id) return;
+
+    try {
+      const socket = getSocket();
+
+      if (!isTypingRef.current) {
+        socket.emit('typing', {
+          conversationId,
+          userId: user.id,
+        });
+        isTypingRef.current = true;
+      }
+
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+
+      typingTimeoutRef.current = setTimeout(() => {
+        emitStopTyping();
+        typingTimeoutRef.current = null;
+      }, 1500);
+    } catch (error) {
+      console.warn('Socket not ready yet.', error);
+    }
+  }, [conversationId, user?.id, emitStopTyping]);
 
   const chatUserImage = chatUser?.profileImage
     ? getCleanImageUrl(chatUser.profileImage)
@@ -432,10 +568,20 @@ const MessagePage = () => {
                     placeholder="Type your message here..."
                     className="grow border-none bg-transparent text-sm outline-none"
                     value={newMessage}
-                    onChange={event => setNewMessage(event.target.value)}
+                    onChange={event => {
+                      setNewMessage(event.target.value);
+                      handleTyping();
+                    }}
                     onKeyDown={event =>
                       event.key === 'Enter' ? sendMessage() : undefined
                     }
+                    onBlur={() => {
+                      if (typingTimeoutRef.current) {
+                        clearTimeout(typingTimeoutRef.current);
+                        typingTimeoutRef.current = null;
+                      }
+                      emitStopTyping();
+                    }}
                   />
                   <IoIosAttach className="cursor-pointer text-lg text-gray-500" />
                   <AudioOutlined className="cursor-pointer text-lg text-gray-500" />
