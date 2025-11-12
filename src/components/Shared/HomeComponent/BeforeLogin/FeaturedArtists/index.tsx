@@ -94,7 +94,7 @@ const FeaturedArtists = ({
               {service?.avgRating > 0 && (
                 <div className="flex gap-1 text-amber-600">
                   <FaStar />
-                  {service?.avgRating} ({service?.totalReviewCount})
+                  {service?.avgRating.toFixed(1)} ({service?.totalReviewCount})
                 </div>
               )}
 

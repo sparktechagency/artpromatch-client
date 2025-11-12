@@ -109,7 +109,7 @@ const WantATattoo = ({
               {service?.avgRating > 0 && (
                 <div className="flex gap-1 text-amber-600">
                   <FaStar />
-                  {service?.avgRating}
+                  {service?.avgRating.toFixed(1)}
                 </div>
               )}
               <div className="flex items-center text-primary font-bold">

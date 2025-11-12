@@ -458,7 +458,10 @@ const MessagePage = () => {
         </div>
 
         <div className="hidden lg:flex w-full max-w-sm border-r border-neutral-200 flex-col overflow-y-auto">
-          <LeftSideBar conversations={conversations} />
+          <LeftSideBar
+            conversations={conversations}
+            activeConversationId={conversationId}
+          />
         </div>
 
         <ConfigProvider theme={{ components: { Drawer: { paddingXS: 24 } } }}>
@@ -471,7 +474,10 @@ const MessagePage = () => {
             closeIcon={<FaX className="text-black" />}
             className="lg:hidden"
           >
-            <LeftSideBar conversations={conversations} />
+            <LeftSideBar
+              conversations={conversations}
+              activeConversationId={conversationId}
+            />
           </Drawer>
         </ConfigProvider>
 

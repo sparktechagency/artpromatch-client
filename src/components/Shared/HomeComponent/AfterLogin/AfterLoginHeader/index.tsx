@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { IoLocationOutline } from 'react-icons/io5';
 import { CiSearch } from 'react-icons/ci';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useUser } from '@/context/UserContext';
 import { RxCross2 } from 'react-icons/rx';
 
@@ -14,19 +14,26 @@ const ClientAfterLoginHeader = () => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-
   const { user } = useUser();
+
   const [searchTerm, setSearchTerm] = useState<string>('');
+
+  // ✅ Initialize searchTerm from URL on load or URL change
+  useEffect(() => {
+    const term = searchParams.get('searchTerm') || '';
+    setSearchTerm(term);
+  }, [searchParams]);
 
   const handleSearch = () => {
     // router.push(`/discover?searchTerm=${encodeURIComponent(searchTerm)}`);
-
     const params = new URLSearchParams(searchParams.toString());
-    if (searchTerm) {
-      params.set('searchTerm', searchTerm);
+
+    if (searchTerm.trim()) {
+      params.set('searchTerm', searchTerm.trim());
     } else {
       params.delete('searchTerm');
     }
+
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
@@ -36,7 +43,6 @@ const ClientAfterLoginHeader = () => {
     params.delete('searchTerm');
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
-
   // const items = [
   //   {
   //     key: '1',
@@ -58,22 +64,26 @@ const ClientAfterLoginHeader = () => {
 
   return (
     <div>
-      <div className="mb-4 flex flex-col justify-center items-center text-center pt-16 ">
+      <div className="mb-4 flex flex-col justify-center items-center text-center pt-16">
         <Image src={AllImages.logo} width={50} height={50} alt="logo" />
-        <h2 className="text-center md:text-6xl font-bold mt-6 mb-2 ">
+        <h2 className="text-center md:text-6xl font-bold mt-6 mb-2">
           Discover Artists and Studios <br /> Near You
         </h2>
-        <Typography.Text className="md:text-xl text-center text-primary mt-3 mb-10 ">
+        <Typography.Text className="md:text-xl text-center text-primary mt-3 mb-10">
           Discover tattoo artists, piercers, and studios tailored to <br /> your
           preferences.
         </Typography.Text>
+
         <div className="bg-slate-100 rounded-3xl p-2 flex justify-center items-center gap-3">
           <IoLocationOutline className="h-5 w-5 text-primary" />
-          <div className="text-sm">{user?.stringLocation}</div>
+          <div className="text-sm">
+            {user?.stringLocation || 'Your location'}
+          </div>
           {/* <Dropdown menu={{ items }} placement="bottom">
             <IoIosArrowDown className="h-5 w-5 text-primary cursor-pointer" />
           </Dropdown> */}
         </div>
+
         {/* Search field */}
         <div className="mt-2 md:mt-5 md:w-[650px] border rounded-lg p-2 flex justify-between items-center">
           <input

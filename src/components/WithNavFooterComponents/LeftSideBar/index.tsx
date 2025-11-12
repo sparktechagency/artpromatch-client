@@ -32,8 +32,10 @@ interface UserSearch {
 
 const LeftSideBar = ({
   conversations = [],
+  activeConversationId = '',
 }: {
   conversations: Conversation[];
+  activeConversationId?: string;
 }) => {
   const { user } = useUser();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -102,7 +104,10 @@ const LeftSideBar = ({
             key={index}
             // href={`/message/?receiverId=${conv.conversationId}`}
             href={`/message?conversationId=${conversation?.conversationId}&receiverId=${conversation?.userData?.userId}`}
-            className="flex justify-between items-center text-textColor mb-5 px-5 py-1 hover:bg-gray-50 transition-colors"
+            className={`flex justify-between items-center text-textColor mb-5 px-5 py-2 transition-colors rounded-xl border
+              ${conversation.conversationId === activeConversationId
+                ? 'bg-neutral-100 border-primary/30 shadow-sm'
+                : 'border-transparent hover:bg-gray-50'}`}
           >
             <div className="flex justify-start items-center gap-2">
               <div className="relative">
@@ -118,10 +123,22 @@ const LeftSideBar = ({
                 )}
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-gray-500">
+                <h3
+                  className={`text-xl font-semibold ${
+                    conversation.conversationId === activeConversationId
+                      ? 'text-gray-900'
+                      : 'text-gray-500'
+                  }`}
+                >
                   {conversation?.userData?.name}
                 </h3>
-                <p className="text-secondary text-sm truncate max-w-[160px]">
+                <p
+                  className={`text-sm truncate max-w-[160px] ${
+                    conversation.conversationId === activeConversationId
+                      ? 'text-gray-600'
+                      : 'text-secondary'
+                  }`}
+                >
                   {conversation.lastMsg || 'No messages yet'}
                 </p>
               </div>
@@ -153,12 +170,12 @@ const LeftSideBar = ({
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
         footer={null}
-        title="New Message"
+        title="Search User for New Message"
       >
         <div className="flex flex-col gap-2 mt-4">
           <input
             type="text"
-            placeholder="Search users"
+            placeholder="Search users by name or email"
             className="w-full p-2 border border-gray-300 rounded-md"
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}

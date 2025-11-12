@@ -1,6 +1,12 @@
 'use client';
 
 import { AllImages } from '@/assets/images/AllImages';
+import {
+  daysOfWeek,
+  expertiseServicesList,
+  lookingForServicesList,
+  offeredServicesList,
+} from '@/constants';
 import { Checkbox, Form, Steps, TimePicker, Typography } from 'antd';
 import dayjs from 'dayjs';
 import Image from 'next/image';
@@ -8,109 +14,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-
-const lookingForServicesList: string[] = [
-  'Tattoos',
-  'Custom Designs',
-  'Touch-ups',
-  'Piercings',
-  'Cover-ups',
-  'Guest Spots',
-];
-
-const expertiseServicesList: string[] = [
-  'American Traditional',
-  'Abstract',
-  'African',
-  'Anime',
-
-  'Black & Grey',
-  'Blackwork',
-  'Brutal Blackwork',
-  'Blackout',
-  'Black Trash',
-  'Biomech',
-  'Botanical',
-
-  'Calligraphy',
-  'Chicano',
-  'Comic',
-  'Coverups',
-
-  'Dotwork',
-
-  'Fine Line',
-  'Freckles',
-
-  'Geometric',
-  'Graphic',
-
-  'Heavy Blackwork',
-
-  'Illustrative',
-  'Ignorant',
-  'Irezumi',
-
-  'Japanese Style',
-
-  'Lettering',
-  'Lineart',
-
-  'Maori',
-  'Microblading',
-  'Microrealism',
-  'Minimalist',
-
-  'Native American',
-  'Neo Traditional',
-  'Neo Tribal',
-  'New School',
-
-  'Old School',
-  'Ornamental',
-
-  'Pacific Islander / Polynesian',
-  'Portrait',
-
-  'Realism',
-  'Realistic Color',
-  'Realistic Black & Grey',
-
-  'Scar Coverup',
-  'Script',
-  'Stick and Poke',
-
-  'Tatau',
-  'Tattoo Removal',
-  'Tebori',
-  'Thai',
-  'Traditional',
-  'Trash Polka',
-  'Tribal',
-
-  'Watercolor',
-  'White on Black',
-  'White Tattoos',
-
-  'Tooth Gems',
-];
-
-const offeredServicesList: string[] = [
-  'Tattoo Spaces for Guest/Resident artists',
-  'Piercing Rooms for Guest/Resident artists',
-  'Events',
-  'Other',
-];
-
-const daysOfWeek: string[] = [
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-  'Sunday',
-];
 
 interface OperatingHour {
   start: string | null;
