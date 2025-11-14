@@ -85,6 +85,8 @@ const MessagePage = () => {
   const searchParams = useSearchParams();
   const conversationId = searchParams.get('conversationId') ?? '';
   const receiverId = searchParams.get('receiverId') ?? '';
+  const receiverName = searchParams.get('receiverName') ?? '';
+  const receiverImage = searchParams.get('receiverImage') ?? '';
 
   const showDrawer = () => setIsDrawerVisible(true);
   const closeDrawer = () => setIsDrawerVisible(false);
@@ -165,6 +167,7 @@ const MessagePage = () => {
       setMessages([]);
       setLoadingMessages(false);
       setIsChatUserTyping(false);
+      setChatUser(null);
       return;
     }
 
@@ -302,6 +305,7 @@ const MessagePage = () => {
 
   useEffect(() => {
     if (!receiverId) {
+      setChatUser(null);
       return;
     }
 
@@ -317,8 +321,16 @@ const MessagePage = () => {
         profileImage: fromList.userData.profileImage,
         online: fromList.userData.online,
       }));
+      return;
     }
-  }, [receiverId, conversations]);
+
+    setChatUser(prev => ({
+      userId: receiverId,
+      name: receiverName || prev?.name || '',
+      profileImage: receiverImage || prev?.profileImage,
+      online: prev?.online ?? false,
+    }));
+  }, [receiverId, receiverName, receiverImage, conversations]);
 
   useEffect(() => {
     if (conversationId) {

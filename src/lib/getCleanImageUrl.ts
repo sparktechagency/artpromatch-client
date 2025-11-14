@@ -1,5 +1,7 @@
+import avatarImage from '@/assets/avatar.png';
+
 export const getCleanImageUrl = (path?: string) => {
-  if (!path) return '/404.png';
+  if (!path) return avatarImage;
 
   if (path.startsWith('http')) {
     return path;

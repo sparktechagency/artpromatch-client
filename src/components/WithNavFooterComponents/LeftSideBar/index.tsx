@@ -56,9 +56,7 @@ const LeftSideBar = ({
     if (!searchTerm.trim()) return;
     try {
       setIsLoading(true);
-
       const res = await getUserForConversation(searchTerm);
-
       setSearchResults(res?.data || []);
     } catch (err) {
       console.error('User search failed:', err);
@@ -68,12 +66,16 @@ const LeftSideBar = ({
   };
 
   // 🔹 Start new chat (sends a first “hello” message)
-  const startConversation = async (receiverId: string) => {
+  const startConversation = async (userData: UserSearch) => {
     try {
       setIsModalOpen(false);
       setSearchResults([]);
       setSearchTerm('');
-      router.push(`/message?receiverId=${receiverId}`);
+      router.push(
+        `/message?receiverId=${userData._id}&receiverName=${encodeURIComponent(
+          userData.fullName
+        )}&receiverImage=${encodeURIComponent(userData.image || '')}`
+      );
     } catch (err) {
       console.error('Failed to start conversation:', err);
     }
@@ -105,9 +107,11 @@ const LeftSideBar = ({
             // href={`/message/?receiverId=${conv.conversationId}`}
             href={`/message?conversationId=${conversation?.conversationId}&receiverId=${conversation?.userData?.userId}`}
             className={`flex justify-between items-center text-textColor mb-5 px-5 py-2 transition-colors rounded-xl border
-              ${conversation.conversationId === activeConversationId
-                ? 'bg-neutral-100 border-primary/30 shadow-sm'
-                : 'border-transparent hover:bg-gray-50'}`}
+              ${
+                conversation.conversationId === activeConversationId
+                  ? 'bg-blue-100 border-primary/30 shadow-sm'
+                  : 'border-transparent hover:bg-blue-100'
+              }`}
           >
             <div className="flex justify-start items-center gap-2">
               <div className="relative">
@@ -193,7 +197,7 @@ const LeftSideBar = ({
           searchResults.map(user => (
             <div
               key={user._id}
-              onClick={() => startConversation(user._id)}
+              onClick={() => startConversation(user)}
               className="flex justify-between items-center text-textColor my-5 px-5 py-1 cursor-pointer bg-gray-200 hover:bg-blue-200 transition-colors rounded-lg"
             >
               <div className="flex justify-start items-center gap-2">
