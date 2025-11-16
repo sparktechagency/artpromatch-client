@@ -29,8 +29,6 @@ const Mapview = ({ artists }: { artists: IArtist[] }) => {
         ]
       : [40.7128, -74.006]; // Default to New York
 
-  console.log({ artists });
-
   if (!mounted) {
     return (
       <div className="w-full h-96 bg-gray-200 flex items-center justify-center rounded-lg">

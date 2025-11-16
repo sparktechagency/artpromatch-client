@@ -1,7 +1,7 @@
 'use client';
 
 import { AllImages } from '@/assets/images/AllImages';
-import { expertiseServicesList } from '@/constants';
+import { expertiseTattooServicesList } from '@/constants';
 import { Form, Input, Radio, Steps, Typography } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import Image from 'next/image';
@@ -127,13 +127,13 @@ const Preferences = () => {
           {/* Buttons in groups of 10 */}
           <div className="flex flex-col gap-4">
             {Array.from(
-              { length: Math.ceil(expertiseServicesList.length / 10) },
+              { length: Math.ceil(expertiseTattooServicesList.length / 10) },
               (_, i) => (
                 <div
                   key={i}
                   className="flex justify-center items-center gap-4 flex-wrap"
                 >
-                  {expertiseServicesList
+                  {expertiseTattooServicesList
                     .slice(i * 10, i * 10 + 10)
                     .map(style => (
                       <button

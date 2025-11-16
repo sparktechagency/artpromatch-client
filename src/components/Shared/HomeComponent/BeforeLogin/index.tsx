@@ -5,7 +5,6 @@ import MarqueeComponent from './MarqueeComponent/MarqueeComponent';
 import FeaturedArtists from './FeaturedArtists';
 import NearYou from './NearYou/NearYou';
 import WantATattoo from './WantATattoo';
-import PiercingNow from './PiercingNow/PiercingNow';
 import Testimonials from './Testimonials';
 import SteadyHands from './SteadyHands';
 import Link from 'next/link';
@@ -78,11 +77,11 @@ const BeforeLogin = ({
       <NearYou />
 
       {tattooServices?.length > 0 && (
-        <WantATattoo tattooServices={tattooServices} />
+        <WantATattoo title="Want a Tattoo Now?" services={tattooServices} />
       )}
 
-      {tattooServices?.length > 0 && (
-        <PiercingNow tattooServices={tattooServices} />
+      {pierceServices?.length > 0 && (
+        <WantATattoo title="Want a Piercing Now?" services={pierceServices} />
       )}
 
       <Testimonials bookings={bookings} />

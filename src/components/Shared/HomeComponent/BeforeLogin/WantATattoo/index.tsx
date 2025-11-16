@@ -4,21 +4,24 @@ import { useState } from 'react';
 import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
 import { IService } from '@/types';
 import Image from 'next/image';
-import { FaDollarSign, FaStar } from 'react-icons/fa6';
+import { FaStar } from 'react-icons/fa6';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { SiGoogletasks } from 'react-icons/si';
 import Link from 'next/link';
+import { formatCount } from '@/lib/formatCount';
 
 const WantATattoo = ({
-  tattooServices = [],
+  services = [],
+  title,
 }: {
-  tattooServices: IService[];
+  services: IService[];
+  title?: string;
 }) => {
   const itemsPerPage = 4;
   const [startIndex, setStartIndex] = useState(0);
 
   const handleNext = () => {
-    if (startIndex + itemsPerPage < tattooServices.length) {
+    if (startIndex + itemsPerPage < services.length) {
       setStartIndex(prev => prev + itemsPerPage);
     }
   };
@@ -29,16 +32,13 @@ const WantATattoo = ({
     }
   };
 
-  const currentServices = tattooServices.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
+  const currentServices = services.slice(startIndex, startIndex + itemsPerPage);
 
   return (
     <div className="container mx-auto md:my-20">
       <div className="flex justify-between items-center mb-5">
         <h1>
-          <div className="text-2xl font-bold">Want a Tattoo Now?</div>
+          <div className="text-2xl font-bold">{title}</div>
         </h1>
         <div className="flex justify-center items-center gap-5">
           <button
@@ -50,7 +50,7 @@ const WantATattoo = ({
           </button>
           <button
             onClick={handleNext}
-            disabled={startIndex + itemsPerPage >= tattooServices.length}
+            disabled={startIndex + itemsPerPage >= services.length}
             className="h-8 w-8 border rounded-full flex items-center justify-center disabled:opacity-40"
           >
             <IoIosArrowForward />
@@ -104,17 +104,18 @@ const WantATattoo = ({
             <div className="flex justify-between items-center">
               <div className="flex gap-1">
                 <SiGoogletasks />
-                {service?.totalCompletedOrder}
+                <span>{formatCount(service?.totalCompletedOrder)} Done</span>
               </div>
               {service?.avgRating > 0 && (
                 <div className="flex gap-1 text-amber-600">
                   <FaStar />
-                  {service?.avgRating.toFixed(1)}
+                  {service?.avgRating.toFixed(1)} ({service?.totalReviewCount})
                 </div>
               )}
-              <div className="flex items-center text-primary font-bold">
-                <FaDollarSign />
-                {service?.price}
+
+              <div className="text-primary font-bold">
+                {/* <FaDollarSign /> */}${service?.price ?? 0}/hr
+                {/* <IoIosArrowForward /> */}
               </div>
             </div>
           </div>

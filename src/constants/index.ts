@@ -4,6 +4,12 @@ export const protectedRoutes = [
   // '/admin/:page',
 ];
 
+export const artistTypesList: string[] = [
+  'Tattoo Artist',
+  'Piercer',
+  'Both',
+] as const;
+
 export const lookingForServicesList: string[] = [
   'Tattoos',
   'Custom Designs',
@@ -11,9 +17,9 @@ export const lookingForServicesList: string[] = [
   'Piercings',
   'Cover-ups',
   'Guest Spots',
-];
+] as const;
 
-export const expertiseServicesList: string[] = [
+export const expertiseTattooServicesList: string[] = [
   'American Traditional',
   'Abstract',
   'African',
@@ -79,6 +85,7 @@ export const expertiseServicesList: string[] = [
   'Tattoo Removal',
   'Tebori',
   'Thai',
+  'Tooth Gems',
   'Traditional',
   'Trash Polka',
   'Tribal',
@@ -86,9 +93,21 @@ export const expertiseServicesList: string[] = [
   'Watercolor',
   'White on Black',
   'White Tattoos',
+] as const;
 
-  'Tooth Gems',
-];
+export const expertisePiercingsServicesList: string[] = [
+  'Ear Lobe',
+  'Lip (Labret, Monroe)',
+  'Triple Helix',
+  'Industrial',
+  'Septum',
+  'Nose Nostril',
+  'Tongue',
+  'Nasallang',
+  'Blackwork',
+  'Traguss',
+  'Conch',
+] as const;
 
 export const offeredServicesList: string[] = [
   'Tattoo Spaces for Guest/Resident artists',

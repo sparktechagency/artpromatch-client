@@ -1,5 +1,5 @@
+import { artistTypesList, expertiseTattooServicesList } from '@/constants';
 import { TAuth } from './auth';
-import { favoriteTattoos } from './client';
 
 // IArtist
 export interface IArtist {
@@ -37,17 +37,9 @@ export interface IArtist {
   avgRating: number;
 }
 
-// ARTIST_TYPE
-export const ARTIST_TYPE = {
-  TATTOO_ARTIST: 'Tattoo Artist',
-  PIERCER: 'Piercer',
-} as const;
+export type TArtistType = (typeof artistTypesList)[number];
 
-export type ValueOf<T> = T[keyof T];
-export type TArtistType = ValueOf<typeof ARTIST_TYPE>;
-
-// expertiseTypes
-export type ExpertiseType = (typeof favoriteTattoos)[keyof typeof favoriteTattoos];
+export type ExpertiseType = (typeof expertiseTattooServicesList)[number];
 
 // TBoost
 export type TBoost = {

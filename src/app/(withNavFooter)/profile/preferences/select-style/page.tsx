@@ -1,6 +1,6 @@
 'use client';
 
-import { expertiseServicesList } from '@/constants';
+import { expertiseTattooServicesList } from '@/constants';
 import { Form } from 'antd';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
@@ -62,26 +62,28 @@ const SelectStyle = () => {
           {/* Buttons in groups of 4 */}
           <div className="flex flex-col gap-4">
             {Array.from(
-              { length: Math.ceil(expertiseServicesList.length / 8) },
+              { length: Math.ceil(expertiseTattooServicesList.length / 8) },
               (_, i) => (
                 <div
                   key={i}
                   className="flex justify-start items-center gap-4 flex-wrap"
                 >
-                  {expertiseServicesList.slice(i * 8, i * 8 + 8).map(style => (
-                    <button
-                      key={style}
-                      type="button"
-                      onClick={() => handleSelect(style)}
-                      className={`px-4 py-2 rounded-3xl border ${
-                        updatedSelectedArt.includes(style)
-                          ? 'border-primary text-primary font-semibold'
-                          : 'hover:border-primary'
-                      }`}
-                    >
-                      {style}
-                    </button>
-                  ))}
+                  {expertiseTattooServicesList
+                    .slice(i * 8, i * 8 + 8)
+                    .map(style => (
+                      <button
+                        key={style}
+                        type="button"
+                        onClick={() => handleSelect(style)}
+                        className={`px-4 py-2 rounded-3xl border ${
+                          updatedSelectedArt.includes(style)
+                            ? 'border-primary text-primary font-semibold'
+                            : 'hover:border-primary'
+                        }`}
+                      >
+                        {style}
+                      </button>
+                    ))}
                 </div>
               )
             )}

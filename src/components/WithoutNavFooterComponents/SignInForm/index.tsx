@@ -155,7 +155,6 @@ const SignInForm: React.FC<SignInWithRedirectPath> = ({ redirectPath }) => {
             <Form.Item
               name="email"
               label={<p className=" text-md">Enter your email</p>}
-              style={{}}
             >
               <Input
                 required

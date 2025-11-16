@@ -3,7 +3,7 @@
 import { AllImages } from '@/assets/images/AllImages';
 import {
   daysOfWeek,
-  expertiseServicesList,
+  expertiseTattooServicesList,
   lookingForServicesList,
   offeredServicesList,
 } from '@/constants';
@@ -215,7 +215,7 @@ const PreferdService = () => {
             ) : role === 'ARTIST' ? (
               <div className="flex justify-center items-start gap-20">
                 <div className="flex flex-col gap-2">
-                  {expertiseServicesList?.slice(0, 14)?.map(service => (
+                  {expertiseTattooServicesList?.slice(0, 14)?.map(service => (
                     <Checkbox
                       className="truncate"
                       key={service}
@@ -227,7 +227,7 @@ const PreferdService = () => {
                   ))}
                 </div>
                 <div className="flex flex-col gap-2">
-                  {expertiseServicesList?.slice(14, 28)?.map(service => (
+                  {expertiseTattooServicesList?.slice(14, 28)?.map(service => (
                     <Checkbox
                       className="truncate"
                       key={service}
@@ -239,7 +239,7 @@ const PreferdService = () => {
                   ))}
                 </div>
                 <div className="flex flex-col gap-2">
-                  {expertiseServicesList?.slice(28, 42)?.map(service => (
+                  {expertiseTattooServicesList?.slice(28, 42)?.map(service => (
                     <Checkbox
                       className="truncate"
                       key={service}
@@ -251,7 +251,7 @@ const PreferdService = () => {
                   ))}
                 </div>
                 <div className="flex flex-col gap-2">
-                  {expertiseServicesList?.slice(42)?.map(service => (
+                  {expertiseTattooServicesList?.slice(42)?.map(service => (
                     <Checkbox
                       className="truncate"
                       key={service}

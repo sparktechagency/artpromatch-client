@@ -19,10 +19,10 @@ const UserDashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const menuItems = [
     { name: 'Update Profile', path: '/profile/update' },
     { name: 'Password Management', path: '/profile/change-password' },
-    { name: 'Preferences', path: '/profile/preferences' },
-    { name: 'Notifications', path: '/profile/notifications' },
+    // { name: 'Preferences', path: '/profile/preferences' },
+    // { name: 'Notifications', path: '/profile/notifications' },
     { name: 'Payment History', path: '/profile/payment-history' },
-    { name: 'Privacy & Security', path: '/profile/privacy-security' },
+    // { name: 'Privacy & Security', path: '/profile/privacy-security' },
     { name: 'Linked Accounts', path: '/profile/linked-accounts' },
   ];
 

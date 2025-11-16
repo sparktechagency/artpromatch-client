@@ -13,6 +13,7 @@ import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
 import { toast } from 'sonner';
 import { updateClientRadius } from '@/services/Service';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { formatCount } from '@/lib/formatCount';
 
 type ViewMode = 'list' | 'map';
 
@@ -274,21 +275,23 @@ const Services = ({ services = [] }: { services: IService[] }) => {
                       <div className="flex justify-between items-center">
                         <div className="flex items-center gap-1">
                           <SiGoogletasks />
-                          <span>{service?.totalCompletedOrder ?? 0}</span>
+                          <span>
+                            {formatCount(service?.totalCompletedOrder)} Done
+                          </span>
                         </div>
 
                         {rating && (
                           <div className="flex items-center gap-1 text-amber-600">
                             <FaStar />
                             <span>
-                              {rating} ({service?.totalReviewCount ?? 0})
+                              {Number(rating)?.toFixed(1)} (
+                              {service?.totalReviewCount ?? 0})
                             </span>
                           </div>
                         )}
 
-                        <div className="flex items-center text-primary font-bold">
-                          <FaDollarSign />
-                          <span>{service?.price ?? 0}</span>
+                        <div className="text-primary font-bold">
+                          {/* <FaDollarSign /> */}${service?.price ?? 0}/hr
                           {/* <IoIosArrowForward /> */}
                         </div>
                       </div>

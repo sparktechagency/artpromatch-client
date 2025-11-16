@@ -2,8 +2,9 @@ import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
 import { IService } from '@/types';
 import Image from 'next/image';
 import { SiGoogletasks } from 'react-icons/si';
-import { FaDollarSign, FaStar } from 'react-icons/fa6';
+import { FaStar } from 'react-icons/fa6';
 import Link from 'next/link';
+import { formatCount } from '@/lib/formatCount';
 
 const FeaturedArtists = ({
   services = [],
@@ -87,10 +88,11 @@ const FeaturedArtists = ({
               {/* <button className="text-secondary">+5</button> */}
             </div>
             <div className="flex justify-between items-center">
-              <div className="flex gap-1">
+              <div className="flex items-center gap-1">
                 <SiGoogletasks />
-                {service?.totalCompletedOrder}
+                <span>{formatCount(service?.totalCompletedOrder)} Done</span>
               </div>
+
               {service?.avgRating > 0 && (
                 <div className="flex gap-1 text-amber-600">
                   <FaStar />
@@ -98,9 +100,8 @@ const FeaturedArtists = ({
                 </div>
               )}
 
-              <div className="flex items-center text-primary font-bold">
-                <FaDollarSign />
-                {service?.price}
+              <div className="text-primary font-bold">
+                {/* <FaDollarSign /> */}${service?.price ?? 0}/hr
                 {/* <IoIosArrowForward /> */}
               </div>
             </div>

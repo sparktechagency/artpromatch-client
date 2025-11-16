@@ -6,5 +6,8 @@ export * from './content';
 export * from './faq';
 export * from './meta';
 export * from './service';
+export * from './payments';
+export * from './guestSpot';
+
 
 export type FieldValues = Record<string, unknown>;

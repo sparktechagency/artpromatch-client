@@ -1,7 +1,6 @@
-import avatarImage from '@/assets/avatar.png';
-
 export const getCleanImageUrl = (path?: string) => {
-  if (!path) return avatarImage;
+  if (!path)
+    return 'https://res.cloudinary.com/dweesppci/image/upload/v1746204369/wtmpcphfvexcq2ubcss0.png';
 
   if (path.startsWith('http')) {
     return path;
