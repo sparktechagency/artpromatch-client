@@ -1,5 +1,6 @@
 'use client';
 
+import { expertiseTattooServicesList } from '@/constants';
 import { Form } from 'antd';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
@@ -23,70 +24,9 @@ const SelectStyle = () => {
     );
   }, [updatedSelectedArt]);
 
-  const [current, setCurrent] = useState<number>(0);
-
   const handleSubmit = () => {
     router.back();
   };
-
-  const artStyles: string[] = [
-    'American Traditional',
-    'Neo Traditional',
-    'Traditional',
-    'Pacific Islander/Polynesian',
-    'Tatau',
-    'Maori',
-    'African',
-    'Native American',
-    'Black & Grey',
-    'Portrait',
-    'Realism',
-    'Abstract',
-    'Blackwork',
-    'Heavy Blackwork',
-    'Brutal Blackwork',
-    'Ignorant',
-    'Anime',
-    'White on Black',
-    'White tattoos',
-    'Black trash',
-    'Trash Polka',
-    'Blackout',
-    'Script',
-    'Lettering',
-    'Fine Line',
-    'Calligraphy',
-    'Ornamental',
-    'Watercolor',
-    'Geometric',
-    'Japanese style',
-    'Irezumi',
-    'Tebori',
-    'Tribal',
-    'Neo Tribal',
-    'New School',
-    'Old School',
-    'Illustrative',
-    'Minimalist',
-    'Lineart',
-    'Botanical',
-    'Realistic Color',
-    'Realistic Black & Grey',
-    'Graphic',
-    'Dotwork',
-    'Stick and poke',
-    'Microrealism',
-    'Biomech',
-    'Chicano',
-    'Thai',
-    'Comic',
-    'Coverups',
-    'Scar Coverups',
-    'Microblading',
-    'Freckles',
-    'Tattoo Removal',
-    'Tooth Gems',
-  ];
 
   const handleSelect = (value: string) => {
     setUpdatedSelectedArt(prev =>
@@ -121,27 +61,32 @@ const SelectStyle = () => {
         >
           {/* Buttons in groups of 4 */}
           <div className="flex flex-col gap-4">
-            {Array.from({ length: Math.ceil(artStyles.length / 8) }, (_, i) => (
-              <div
-                key={i}
-                className="flex justify-start items-center gap-4 flex-wrap"
-              >
-                {artStyles.slice(i * 8, i * 8 + 8).map(style => (
-                  <button
-                    key={style}
-                    type="button"
-                    onClick={() => handleSelect(style)}
-                    className={`px-4 py-2 rounded-3xl border ${
-                      updatedSelectedArt.includes(style)
-                        ? 'border-primary text-primary font-semibold'
-                        : 'hover:border-primary'
-                    }`}
-                  >
-                    {style}
-                  </button>
-                ))}
-              </div>
-            ))}
+            {Array.from(
+              { length: Math.ceil(expertiseTattooServicesList.length / 8) },
+              (_, i) => (
+                <div
+                  key={i}
+                  className="flex justify-start items-center gap-4 flex-wrap"
+                >
+                  {expertiseTattooServicesList
+                    .slice(i * 8, i * 8 + 8)
+                    .map(style => (
+                      <button
+                        key={style}
+                        type="button"
+                        onClick={() => handleSelect(style)}
+                        className={`px-4 py-2 rounded-3xl border ${
+                          updatedSelectedArt.includes(style)
+                            ? 'border-primary text-primary font-semibold'
+                            : 'hover:border-primary'
+                        }`}
+                      >
+                        {style}
+                      </button>
+                    ))}
+                </div>
+              )
+            )}
           </div>
 
           <div className=" flex justify-end items-end">

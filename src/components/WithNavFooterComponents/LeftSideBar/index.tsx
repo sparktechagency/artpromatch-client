@@ -32,8 +32,10 @@ interface UserSearch {
 
 const LeftSideBar = ({
   conversations = [],
+  activeConversationId = '',
 }: {
   conversations: Conversation[];
+  activeConversationId?: string;
 }) => {
   const { user } = useUser();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -54,9 +56,7 @@ const LeftSideBar = ({
     if (!searchTerm.trim()) return;
     try {
       setIsLoading(true);
-
       const res = await getUserForConversation(searchTerm);
-
       setSearchResults(res?.data || []);
     } catch (err) {
       console.error('User search failed:', err);
@@ -66,12 +66,16 @@ const LeftSideBar = ({
   };
 
   // 🔹 Start new chat (sends a first “hello” message)
-  const startConversation = async (receiverId: string) => {
+  const startConversation = async (userData: UserSearch) => {
     try {
       setIsModalOpen(false);
       setSearchResults([]);
       setSearchTerm('');
-      router.push(`/message?receiverId=${receiverId}`);
+      router.push(
+        `/message?receiverId=${userData._id}&receiverName=${encodeURIComponent(
+          userData.fullName
+        )}&receiverImage=${encodeURIComponent(userData.image || '')}`
+      );
     } catch (err) {
       console.error('Failed to start conversation:', err);
     }
@@ -102,7 +106,12 @@ const LeftSideBar = ({
             key={index}
             // href={`/message/?receiverId=${conv.conversationId}`}
             href={`/message?conversationId=${conversation?.conversationId}&receiverId=${conversation?.userData?.userId}`}
-            className="flex justify-between items-center text-textColor mb-5 px-5 py-1 hover:bg-gray-50 transition-colors"
+            className={`flex justify-between items-center text-textColor mb-5 px-5 py-2 transition-colors rounded-xl border
+              ${
+                conversation.conversationId === activeConversationId
+                  ? 'bg-blue-100 border-primary/30 shadow-sm'
+                  : 'border-transparent hover:bg-blue-100'
+              }`}
           >
             <div className="flex justify-start items-center gap-2">
               <div className="relative">
@@ -118,10 +127,22 @@ const LeftSideBar = ({
                 )}
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-gray-500">
+                <h3
+                  className={`text-xl font-semibold ${
+                    conversation.conversationId === activeConversationId
+                      ? 'text-gray-900'
+                      : 'text-gray-500'
+                  }`}
+                >
                   {conversation?.userData?.name}
                 </h3>
-                <p className="text-secondary text-sm truncate max-w-[160px]">
+                <p
+                  className={`text-sm truncate max-w-[160px] ${
+                    conversation.conversationId === activeConversationId
+                      ? 'text-gray-600'
+                      : 'text-secondary'
+                  }`}
+                >
                   {conversation.lastMsg || 'No messages yet'}
                 </p>
               </div>
@@ -138,11 +159,12 @@ const LeftSideBar = ({
                     )
                   : ''}
               </p>
-              {conversation?.unseenMsg > 0 && (
-                <span className="bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
-                  {conversation?.unseenMsg}
-                </span>
-              )}
+              {conversation?.conversationId !== activeConversationId &&
+                conversation?.unseenMsg > 0 && (
+                  <span className="bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
+                    {conversation?.unseenMsg}
+                  </span>
+                )}
             </div>
           </Link>
         ))
@@ -153,12 +175,12 @@ const LeftSideBar = ({
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
         footer={null}
-        title="New Message"
+        title="Search User for New Message"
       >
         <div className="flex flex-col gap-2 mt-4">
           <input
             type="text"
-            placeholder="Search users"
+            placeholder="Search users by name or email"
             className="w-full p-2 border border-gray-300 rounded-md"
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
@@ -176,7 +198,7 @@ const LeftSideBar = ({
           searchResults.map(user => (
             <div
               key={user._id}
-              onClick={() => startConversation(user._id)}
+              onClick={() => startConversation(user)}
               className="flex justify-between items-center text-textColor my-5 px-5 py-1 cursor-pointer bg-gray-200 hover:bg-blue-200 transition-colors rounded-lg"
             >
               <div className="flex justify-start items-center gap-2">

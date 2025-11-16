@@ -7,23 +7,100 @@ import {
 import { FieldValues } from '@/types';
 import { revalidateTag } from 'next/cache';
 
-// getAllServices
-export const getAllServices = async (
-  page = '1',
-  limit?: string,
-  query?: { [key: string]: string | string[] | undefined }
+// getAllNormalServices
+export const getAllNormalServices = async (
+  page: string = '1',
+  limit: string = '12',
+  query: { [key: string]: string | string[] | undefined } = {}
 ): Promise<any> => {
   const accessToken = await getValidAccessTokenForServerHandlerGet();
 
-  const params = new URLSearchParams();
+  const normalize = (v?: string | string[]) => (Array.isArray(v) ? v[0] : v);
 
-  if (query?.searchTerm) {
-    params.append('searchTerm', query?.searchTerm.toString());
+  // Extract values safely
+  const artistType = normalize(query.artistType);
+  const tattooCategory = normalize(query.tattooCategory);
+  const searchTerm = normalize(query.searchTerm);
+
+  // Build query string
+  const params = new URLSearchParams();
+  params.set('page', page);
+  params.set('limit', limit);
+
+  // Apply filters
+  if (artistType && artistType !== 'All') {
+    params.set('artistType', artistType);
+  }
+
+  if (tattooCategory && tattooCategory !== 'All') {
+    params.set('tattooCategory', tattooCategory);
+  }
+
+  if (searchTerm && searchTerm !== 'All') {
+    params.set('searchTerm', searchTerm);
   }
 
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_API}/clients?limit=${limit}&page=${page}&${params}`,
+      `${
+        process.env.NEXT_PUBLIC_BASE_API
+      }/clients/normal-services?${params.toString()}`,
+      {
+        method: 'GET',
+        headers: {
+          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        },
+        next: {
+          tags: ['SERVICES'],
+        },
+      }
+    );
+
+    const result = await res.json();
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
+
+// getAllGuestServicesFromDB
+export const getAllGuestServicesFromDB = async (
+  page: string = '1',
+  limit: string = '12',
+  query: { [key: string]: string | string[] | undefined } = {}
+): Promise<any> => {
+  const accessToken = await getValidAccessTokenForServerHandlerGet();
+
+  const normalize = (v?: string | string[]) => (Array.isArray(v) ? v[0] : v);
+
+  // Extract values safely
+  const artistType = normalize(query.artistType);
+  const tattooCategory = normalize(query.tattooCategory);
+  const searchTerm = normalize(query.searchTerm);
+
+  // Build query string
+  const params = new URLSearchParams();
+  params.set('page', page);
+  params.set('limit', limit);
+
+  // Apply filters
+  if (artistType && artistType !== 'All') {
+    params.set('artistType', artistType);
+  }
+
+  if (tattooCategory && tattooCategory !== 'All') {
+    params.set('tattooCategory', tattooCategory);
+  }
+
+  if (searchTerm && searchTerm !== 'All') {
+    params.set('searchTerm', searchTerm);
+  }
+
+  try {
+    const res = await fetch(
+      `${
+        process.env.NEXT_PUBLIC_BASE_API
+      }/clients/guest-services?${params.toString()}`,
       {
         method: 'GET',
         headers: {
@@ -69,7 +146,7 @@ export const requestAServiceBooking = async (
 };
 
 // updateUserRadius
-export const updateClientRadius = async (radius: string): Promise<any> => {
+export const updateClientRadius = async (radius: number): Promise<any> => {
   const accessToken = await getValidAccessTokenForServerActions();
 
   try {
@@ -94,6 +171,28 @@ export const updateClientRadius = async (radius: string): Promise<any> => {
   }
 };
 
+// updateUserRadius
+export const getArtistProfileByHisId = async (id: string): Promise<any> => {
+  const accessToken = await getValidAccessTokenForServerActions();
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API}/artists/profile/${id}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        cache: 'no-store',
+      }
+    );
+
+    const result = await res.json();
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
 
 // getLocationName
 export const getLocationName = async (location: number[]) => {

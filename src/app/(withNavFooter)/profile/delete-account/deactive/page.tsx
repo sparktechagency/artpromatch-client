@@ -1,107 +1,165 @@
 'use client';
 
 import {
+  // Checkbox,
+  // CheckboxChangeEvent,
   ConfigProvider,
   Form,
   Input,
   Modal,
   Radio,
-  Checkbox,
-  CheckboxChangeEvent,
 } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { useState } from 'react';
 import { CiCircleInfo } from 'react-icons/ci';
 import { FaMinus } from 'react-icons/fa6';
+import { deactivateAccount } from '@/services/Auth';
+import { toast } from 'sonner';
 
 const DeactiveAccount = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedReason, setSelectedReason] = useState<string | null>(null);
+  // const [understandChecked, setUnderstandChecked] = useState(false);
   const [form] = Form.useForm();
+  const [formValues, setFormValues] = useState<any | null>(null);
+  const [selectedReason, setSelectedReason] = useState<string | null>(null);
 
-  const showModal = () => setIsModalOpen(true);
-  const handleOk = () => setIsModalOpen(false);
+  const handleOpenConfirm = () => {
+    form.submit();
+  };
+
+  const handleFormFinish = (values: any) => {
+    const finalReason =
+      values.reason === 'Other' ? values.deactivationReason : values.reason;
+
+    setFormValues({
+      ...values,
+      deactivationReason: finalReason,
+    });
+    setIsModalOpen(true);
+  };
+
+  const handleOk = async () => {
+    if (!formValues) return;
+
+    try {
+      const payload = {
+        email: formValues.email,
+        password: formValues.password,
+        deactivationReason: formValues.deactivationReason,
+      };
+
+      const res = await deactivateAccount(payload);
+
+      if (res?.success) {
+        toast.success(res?.message || 'Account deactivated successfully');
+        setIsModalOpen(false);
+      } else {
+        toast.error(res?.message || 'Failed to deactivate account');
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error('Something went wrong while deactivating account');
+    }
+  };
+
   const handleCancel = () => setIsModalOpen(false);
 
-  const onCheckboxChange = (e: CheckboxChangeEvent) => {
-    console.log(`checked = ${e.target.checked}`);
-  };
-
-  const onFinish = (values: any) => {
-    console.log('Form values:', values);
-    showModal();
-  };
-
-  const reasons = [
-    "Taking a break, I'll be back",
-    'Tired',
-    'Not finding the right artists',
-    'Prefer a different platform',
-    'Other',
-  ];
+  // const onCheckboxChange = (e: CheckboxChangeEvent) => {
+  //   setUnderstandChecked(e.target.checked);
+  // };
 
   return (
     <div className="p-5">
-      <h1 className="text-xl font-bold mb-4">Deactivate Account</h1>
+      <h1 className="text-xl font-bold">Deactivate Account</h1>
 
-      <div className="border rounded-xl p-5 flex justify-between items-start mb-4">
-        <div>
-          <h1 className="flex items-center gap-2 text-xl font-bold mb-2">
-            <CiCircleInfo className="h-8 w-8 text-red-500" />
-            What Happens When You Deactivate?
-          </h1>
-          <ul className="md:px-16 text-secondary list-disc space-y-1">
-            <li>You won&apos;t receive notifications or messages.</li>
-            <li>
-              Your bookings remain intact but won&apos;t be visible to artists.
-            </li>
-            <li>You can log in anytime to restore your account. Learn more</li>
-          </ul>
+      <div className="border rounded-xl p-5 flex justify-between items-center mb-4">
+        <div className="flex justify-start items-center gap-5">
+          <div>
+            <h1 className="flex justify-start items-center gap-2 text-xl font-bold">
+              <CiCircleInfo className="h-8 w-8 text-red-500" />
+              What Happens When You Deactivate?
+            </h1>
+            <ul className="md:px-16 text-secondary">
+              <li className="list-disc">
+                You won&apos;t receive notifications or messages.
+              </li>
+              <li className="list-disc">
+                Your bookings remain intact but won&apos;t be visible to others.
+              </li>
+              <li className="list-disc">
+                You can log in anytime to restore your account. Learn more.
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
 
-      <Form form={form} layout="vertical" onFinish={onFinish}>
-        <Form.Item label="Choose a Reason (Optional)">
-          <Radio.Group
-            onChange={e => setSelectedReason(e.target.value)}
-            value={selectedReason}
+      <Form
+        name="deactivate-account"
+        layout="vertical"
+        className="mb-10"
+        form={form}
+        onFinish={handleFormFinish}
+      >
+        <div className="flex flex-col gap-2">
+          <h1 className="text-xl font-bold">Choose a Reason</h1>
+          <Form.Item
+            name="reason"
+            rules={[{ required: true, message: 'Please select a reason' }]}
           >
-            {reasons.map(reason => (
-              <Radio key={reason} value={reason}>
-                {reason}
-              </Radio>
-            ))}
-          </Radio.Group>
+            <Radio.Group
+              onChange={e => setSelectedReason(e.target.value)}
+              value={selectedReason}
+            >
+              <div className="flex flex-col gap-1">
+                <Radio value="Taking a break, I'll be back">
+                  Taking a break, I'll be back
+                </Radio>
+                <Radio value="Tired">Tired</Radio>
+                <Radio value="Not finding the right artists">
+                  Not finding the right artists
+                </Radio>
+                <Radio value="Prefer a different platform">
+                  Prefer a different platform
+                </Radio>
+                <Radio value="Other">Other</Radio>
+              </div>
+            </Radio.Group>
+          </Form.Item>
+        </div>
+
+        <h1 className="my-5">
+          Tell us more why are you deactivating this Account?
+        </h1>
+        {selectedReason === 'Other' && (
+          <Form.Item name="deactivationReason">
+            <TextArea rows={4} />
+          </Form.Item>
+        )}
+
+        <Form.Item name="email" label={<p>Enter your Email</p>}>
+          <Input name="email" placeholder="Email" />
         </Form.Item>
 
-        <Form.Item label="Tell us more (Optional)" name="details">
-          <TextArea
-            rows={4}
-            placeholder="Explain why you are deactivating..."
-          />
+        <Form.Item name="password" label={<p>Enter your Password</p>}>
+          <Input name="password" placeholder="******" />
         </Form.Item>
 
-        <Form.Item label="Email" name="email">
-          <Input placeholder="Email" />
-        </Form.Item>
-
-        <Form.Item label="Password" name="password">
-          <Input.Password placeholder="******" />
-        </Form.Item>
-
-        <Form.Item>
-          <Checkbox onChange={onCheckboxChange}>
+        {/* <Form.Item>
+          <Checkbox checked={understandChecked} onChange={onCheckboxChange}>
             I understand that deleted account is not recoverable
           </Checkbox>
-        </Form.Item>
+        </Form.Item> */}
 
-        <div className="flex justify-end mt-5">
-          <button
-            type="submit"
-            className="bg-red-100 text-red-500 border border-red-500 rounded-xl px-4 py-2"
-          >
-            Deactivate Account
-          </button>
+        <div className="my-5 flex justify-end items-end">
+          <Form.Item>
+            <button
+              onClick={handleOpenConfirm}
+              className="bg-red-100 text-red-500 border border-red-500 rounded-xl px-4 py-2"
+            >
+              Deactivate Account
+            </button>
+          </Form.Item>
         </div>
       </Form>
 
@@ -112,7 +170,7 @@ const DeactiveAccount = () => {
           onCancel={handleCancel}
           footer={null}
         >
-          <div className="flex flex-col justify-center items-center gap-4 p-4">
+          <div className="flex flex-col justify-center items-center gap-2">
             <FaMinus className="h-8 w-8 text-red-500 border border-red-500 rounded-full p-2" />
             <h1 className="text-xl font-bold">Deactivate Your Account?</h1>
             <p className="text-secondary text-center">
@@ -120,7 +178,7 @@ const DeactiveAccount = () => {
               will be hidden, and you won&apos;t receive notifications or
               messages.
             </p>
-            <div className="flex justify-center items-center gap-2 mt-3">
+            <div className="flex justify-center items-center gap-2">
               <button
                 onClick={handleCancel}
                 className="bg-slate-50 text-slate-900 border border-slate-900 rounded-xl px-4 py-2"

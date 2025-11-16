@@ -1,18 +1,31 @@
-import { AllImages } from '@/assets/images/AllImages';
-import Image from 'next/image';
+import { getAllGuestServicesFromDB } from '@/services/Service';
+import Pagination from '@/components/Shared/Pagination';
+import Services from '@/components/Shared/HomeComponent/AfterLogin/AfterLoginHeader/Services';
 
-const GuestSpots = () => {
+const GuestSpotsPage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    page?: string;
+    artistType?: string;
+    tattooCategory?: string;
+    searchTerm?: string;
+  }>;
+}) => {
+  const query = await searchParams;
+
+  const { data: services, meta } = await getAllGuestServicesFromDB(
+    query.page,
+    '12',
+    query
+  );
+
   return (
-    <div className="px-2 md:px-0">
-      <Image
-        src={AllImages.map}
-        alt="map"
-        height={800}
-        width={1280}
-        className="h-full w-full object-cover"
-      />
+    <div className="container mx-auto px-2 md:px-0">
+      <Services services={services} />
+      <Pagination meta={meta} />
     </div>
   );
 };
 
-export default GuestSpots;
+export default GuestSpotsPage;
