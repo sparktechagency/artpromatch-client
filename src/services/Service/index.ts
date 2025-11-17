@@ -171,7 +171,7 @@ export const updateClientRadius = async (radius: number): Promise<any> => {
   }
 };
 
-// updateUserRadius
+// getArtistProfileByHisId
 export const getArtistProfileByHisId = async (id: string): Promise<any> => {
   const accessToken = await getValidAccessTokenForServerActions();
 

@@ -601,8 +601,8 @@ const MessagePage = () => {
                       emitStopTyping();
                     }}
                   />
-                  <IoIosAttach className="cursor-pointer text-lg text-gray-500" />
-                  <AudioOutlined className="cursor-pointer text-lg text-gray-500" />
+                  {/* <IoIosAttach className="cursor-pointer text-lg text-gray-500" />
+                  <AudioOutlined className="cursor-pointer text-lg text-gray-500" /> */}
                   <button
                     type="button"
                     onClick={sendMessage}

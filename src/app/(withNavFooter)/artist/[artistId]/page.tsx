@@ -1,4 +1,4 @@
-import AvailableFlash from '@/components/WithNavFooterComponents/AvailableFlash';
+import AvailableFlash from '@/components/WithNavFooterComponents/Profile/AvailableFlash';
 import ProfileSideBar from '@/components/WithNavFooterComponents/Profile/ProfileSidebar';
 import TattoArtistProfile from '@/components/WithNavFooterComponents/Profile/TattooArtistProfile';
 import { getArtistProfileByHisId } from '@/services/Service';

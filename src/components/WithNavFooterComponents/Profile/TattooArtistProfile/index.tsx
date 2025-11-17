@@ -1,3 +1,8 @@
+'use client';
+
+import { initSocket } from '@/utils/socket';
+import { useUser } from '@/context/UserContext';
+import { useEffect, useState } from 'react';
 import { AllImages } from '@/assets/images/AllImages';
 import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
 import Image from 'next/image';
@@ -13,12 +18,66 @@ type TattooArtistProfileProps = {
   artistAuthId: string;
 };
 
+const useArtistOnlineStatus = (artistId?: string) => {
+  const { user } = useUser();
+  const [isOnline, setIsOnline] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (!artistId || !user?.id) {
+      setIsOnline(null);
+      return;
+    }
+
+    const socket = initSocket(user.id);
+    let isMounted = true;
+    const fallbackTimeout = setTimeout(() => {
+      if (!isMounted) return;
+      setIsOnline(prev => (prev === null ? false : prev));
+    }, 2000);
+
+    const handleUserStatus = (payload: {
+      userId?: string;
+      online?: boolean;
+    }) => {
+      if (!isMounted || payload.userId !== artistId) return;
+      if (typeof payload.online === 'boolean') {
+        setIsOnline(payload.online);
+      }
+    };
+
+    socket.on('user-status', handleUserStatus);
+    socket.emit('get-user-status', artistId);
+
+    return () => {
+      isMounted = false;
+      socket.off('user-status', handleUserStatus);
+      clearTimeout(fallbackTimeout);
+    };
+  }, [artistId, user?.id]);
+
+  return isOnline;
+};
+
 const TattoArtistProfile = ({
   name,
   location,
   image,
   artistAuthId,
 }: TattooArtistProfileProps) => {
+  const isOnline = useArtistOnlineStatus(artistAuthId);
+  const availabilityLabel =
+    isOnline === null
+      ? 'Checking availability...'
+      : isOnline
+      ? 'Available now'
+      : 'Currently offline';
+  const badgeColor =
+    isOnline === null
+      ? 'bg-gray-100 text-gray-600'
+      : isOnline
+      ? 'bg-green-50 text-green-900'
+      : 'bg-zinc-50 text-zinc-400';
+  const dotColor = isOnline === true ? 'bg-green-600' : 'bg-zinc-400';
   return (
     <div>
       <div className="bg-[#f3f1f1]">
@@ -44,10 +103,14 @@ const TattoArtistProfile = ({
               <h1 className="text-xl font-bold">{name}</h1>
               <h4 className="text-sm text-neutral-500">{location}</h4>
             </div>
-            {/* <div className="flex justify-center items-center gap-2 bg-green-50 text-black px-4 py-2 rounded-3xl ">
-              <h1 className="h-2 w-2 bg-green-600 rounded-full"></h1>
-              <h1> Available Now</h1>
-            </div> */}
+            <div
+              className={`flex justify-center items-center gap-2 px-4 py-2 rounded-3xl ${badgeColor}`}
+            >
+              <span
+                className={`h-2 w-2 ${dotColor} rounded-full inline-block`}
+              />
+              <span className="text-sm font-semibold">{availabilityLabel}</span>
+            </div>
           </div>
           <div className="flex flex-col lg:flex-row justify-center items-center gap-2">
             {/* <Link href="/favourites">

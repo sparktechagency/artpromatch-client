@@ -25,8 +25,6 @@ const ProfileSideBar = ({
   activeGuestSpots = [],
   activeServices = [],
 }: ProfileSideBarProps) => {
-  console.log({ activeServices });
-
   // endDate : "2025-11-27T18:00:00.000Z"
   // endTime : "10:00 pm"
   // location : {coordinates: Array(2), until: '2025-11-27T18:00:00.000Z'}
