@@ -4,7 +4,7 @@ import { Input, Modal, Select } from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { FaDollarSign, FaStar } from 'react-icons/fa6';
+import { FaStar } from 'react-icons/fa6';
 import { SiGoogletasks } from 'react-icons/si';
 import ServiceDetailsModal from './ServiceDetailsModal';
 import Mapview from './Mapview';
@@ -263,7 +263,7 @@ const Services = ({ services = [] }: { services: IService[] }) => {
                       </div>
 
                       <div className="text-xs text-neutral-500">
-                        {service?.artist?.stringLocation || '—'}
+                        {service?.artist?.stringLocation || 'N/A'}
                       </div>
 
                       {service?.bodyLocation ? (

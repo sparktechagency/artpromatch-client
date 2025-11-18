@@ -1,21 +1,61 @@
 'use client';
 
 import { useState } from 'react';
-import { Table, Avatar, ConfigProvider, Form, Button } from 'antd';
+import { Table, Avatar, ConfigProvider, Form, Button, Modal } from 'antd';
 import Link from 'next/link';
 import { IBooking } from '@/types';
 import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
 import dayjs from 'dayjs';
+import { cancelBookingByClient } from '@/services/Booking';
+import { toast } from 'sonner';
 
 const Bookings = ({ bookings = [] }: { bookings: IBooking[] }) => {
-  // const [selectedBooking, setSelectedBooking] = useState<IBooking | null>(null);
-  const [form] = Form.useForm();
-
-  const [isReviewModalOpen, setIsReviewModalOpen] = useState<{
+  // State for confirmation modal
+  const [confirmModal, setConfirmModal] = useState<{
     open: boolean;
     title: string;
-    onSubmit: ((otp: string) => void) | null;
-  }>({ open: false, title: '', onSubmit: null });
+    onConfirm: (() => void) | null;
+  }>({ open: false, title: '', onConfirm: null });
+
+  // const [selectedBooking, setSelectedBooking] = useState<IBooking | null>(null);
+  // const [form] = Form.useForm();
+
+  // const [isReviewModalOpen, setIsReviewModalOpen] = useState<{
+  //   open: boolean;
+  //   title: string;
+  //   onSubmit: ((otp: string) => void) | null;
+  // }>({ open: false, title: '', onSubmit: null });
+
+  // Function to show modal
+  const showConfirmationModal = (title: string, onConfirm: () => void) => {
+    setConfirmModal({ open: true, title, onConfirm });
+  };
+
+  // Function to handle OK
+  const handleConfirmOk = () => {
+    confirmModal.onConfirm?.();
+    setConfirmModal({ ...confirmModal, open: false, onConfirm: null });
+  };
+
+  // Function to handle Cancel
+  const handleConfirmCancel = () => {
+    setConfirmModal({ ...confirmModal, open: false, onConfirm: null });
+  };
+
+  // handleCancelBookingByArtist
+  const handleCancelBookingByArtist = async (bookingId: string) => {
+    try {
+      const res = await cancelBookingByClient(bookingId);
+
+      if (res?.success) {
+        toast.success(res?.message);
+      } else {
+        toast.error(res?.message);
+      }
+    } catch (error: any) {
+      console.error(error);
+    }
+  };
 
   // const handleOtpSubmit = async () => {
   //   try {
@@ -149,6 +189,25 @@ const Bookings = ({ bookings = [] }: { bookings: IBooking[] }) => {
         </div>
       ),
     },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (_: any, booking: IBooking) => (
+        <div>
+          <div
+            className="py-2 px-6 rounded-2xl bg-red-500 text-white w-fit"
+            onClick={() =>
+              showConfirmationModal(
+                'Are you sure you want to cancel this booking?',
+                () => handleCancelBookingByArtist(booking._id)
+              )
+            }
+          >
+            Cancel
+          </div>
+        </div>
+      ),
+    },
   ];
 
   return (
@@ -178,6 +237,18 @@ const Bookings = ({ bookings = [] }: { bookings: IBooking[] }) => {
           />
         </ConfigProvider>
       </div>
+
+      {/* Confirmation Modal */}
+      <Modal
+        open={confirmModal.open}
+        onOk={handleConfirmOk}
+        onCancel={handleConfirmCancel}
+        okText="Yes"
+        cancelText="No"
+        title={confirmModal.title}
+      >
+        <p>Please confirm your action.</p>
+      </Modal>
     </div>
   );
 };

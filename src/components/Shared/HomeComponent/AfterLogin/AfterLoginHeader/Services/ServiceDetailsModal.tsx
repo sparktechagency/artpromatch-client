@@ -37,7 +37,7 @@ const ServiceDetailsModal: React.FC<ServiceDetailsModalProps> = ({
   return (
     <div className="relative p-4">
       {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-center pb-3 border-b">
+      <div className="flex flex-col justify-between items-start pb-3 border-b">
         <div className="flex items-center gap-3">
           <Link href={`/artist/${selectedService?.artist?._id}`}>
             <Image
@@ -58,20 +58,24 @@ const ServiceDetailsModal: React.FC<ServiceDetailsModalProps> = ({
             </p>
           </div>
         </div>
-        <div className="flex gap-2">
-          <Link href="/favourites">
+        <div className="w-full flex justify-end">
+          <div className="flex gap-2">
+            {/* <Link href="/favourites">
             <CiHeart className="h-8 w-8 border border-primary p-1 rounded-lg " />
-          </Link>
-          <Link href="/message">
-            <div className="flex justify-center items-center gap-2 text-primary px-3 py-1 border rounded-lg font-bold">
-              <AiOutlineMessage /> Message
-            </div>
-          </Link>
-          <Link href={`/booking-availablity/${selectedService?._id}`}>
-            <div className="px-3 py-1 bg-primary text-white rounded-lg">
-              Book Now
-            </div>
-          </Link>
+          </Link> */}
+            <Link
+              href={`/message?receiverId=${selectedService?.artist?.auth?._id}`}
+            >
+              <div className="flex justify-center items-center gap-2 text-primary px-3 py-1 border rounded-lg font-bold">
+                <AiOutlineMessage /> Message
+              </div>
+            </Link>
+            <Link href={`/booking-availablity/${selectedService?._id}`}>
+              <div className="px-3 py-1 bg-primary text-white rounded-lg">
+                Book Now
+              </div>
+            </Link>
+          </div>
         </div>
       </div>
 

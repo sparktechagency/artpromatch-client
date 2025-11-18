@@ -121,7 +121,7 @@ const ArtistProfilePage = async ({
           </div>
 
           <div className="pt-4 border-t">
-            <AvailableFlash />
+            <AvailableFlash activeFolders={artistData?.activeFolders ?? []}/>
           </div>
         </div>
       </div>

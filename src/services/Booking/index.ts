@@ -68,32 +68,6 @@ export const validatePaymentStatusForClient = async (
   }
 };
 
-// updateUserRadius
-export const updateClientRadius = async (radius: string): Promise<any> => {
-  const accessToken = await getValidAccessTokenForServerActions();
-
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_API}/clients/radius`,
-      {
-        method: 'PATCH',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ radius }),
-      }
-    );
-
-    revalidateTag('SERVICES');
-
-    const result = await res.json();
-    return result;
-  } catch (error: any) {
-    return Error(error);
-  }
-};
-
 // reviewAfterAServiceIsCompleted
 export const reviewAfterAServiceIsCompleted = async (
   data: FieldValues
@@ -139,6 +113,32 @@ export const getBookingsWithReviewThatHaveReviewForClientHomePage =
       return Error(error);
     }
   };
+
+// cancelBookingByClient
+export const cancelBookingByClient = async (
+  bookingId: string
+): Promise<any> => {
+  const accessToken = await getValidAccessTokenForServerActions();
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API}/bookings/cancel/${bookingId}`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    revalidateTag('BOOKINGS');
+
+    const result = await res.json();
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
 
 // export const getLocationName = async (location: number[]) => {
 //   const [lon, lat] = location;

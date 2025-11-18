@@ -8,6 +8,7 @@ export * from './meta';
 export * from './service';
 export * from './payments';
 export * from './guestSpot';
+export * from './folder';
 
 
 export type FieldValues = Record<string, unknown>;

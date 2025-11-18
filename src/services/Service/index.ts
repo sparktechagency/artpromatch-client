@@ -119,6 +119,28 @@ export const getAllGuestServicesFromDB = async (
   }
 };
 
+// export const getReverseGeocode = async (coordinates: [number, number]) => {
+//   const [latitude, longitude] = coordinates;
+
+//   const GOOGLE_API_KEY = 'AIzaSyAszXC1be8aJ37eHuNcBm_-O1clWkPUwV4';
+
+//   const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${GOOGLE_API_KEY}`;
+
+//   try {
+//     const response = await fetch(geocodeUrl);
+//     const data = await response.json();
+
+//     if (data.results && data.results.length > 0) {
+//       const address = data.results[0].formatted_address;
+//       return address;
+//     } else {
+//       return null;
+//     }
+//   } catch (error: any) {
+//     return Error(error);
+//   }
+// };
+
 // requestAServiceBooking
 export const requestAServiceBooking = async (
   bookingData: FieldValues
