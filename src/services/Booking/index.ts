@@ -5,7 +5,6 @@ import {
   getValidAccessTokenForServerHandlerGet,
 } from '@/lib/getValidAccessToken';
 import { FieldValues } from '@/types';
-import { colgroup } from 'framer-motion/client';
 import { revalidateTag } from 'next/cache';
 
 // getSingleClientBookings
