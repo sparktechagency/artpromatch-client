@@ -5,6 +5,7 @@ import {
   getValidAccessTokenForServerHandlerGet,
 } from '@/lib/getValidAccessToken';
 import { FieldValues } from '@/types';
+import { colgroup } from 'framer-motion/client';
 import { revalidateTag } from 'next/cache';
 
 // getSingleClientBookings
@@ -59,7 +60,7 @@ export const validatePaymentStatusForClient = async (
       }
     );
 
-    revalidateTag('BOOKINGS');
+    // revalidateTag('BOOKINGS');
 
     const result = await res.json();
     return result;
