@@ -74,13 +74,13 @@ const Bookings = ({ bookings = [] }: { bookings: IBooking[] }) => {
 
   const baseColumns = [
     {
-      title: 'Client',
-      dataIndex: 'clients',
-      key: 'client',
+      title: 'Artist',
+      dataIndex: 'artists',
+      key: 'artist',
       render: (text: string, booking: IBooking) => (
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Avatar
-            src={getCleanImageUrl(booking?.client?.image)}
+            src={getCleanImageUrl(booking?.artistImage)}
             style={{ marginRight: 8 }}
           />
           {text}
