@@ -1,9 +1,11 @@
 import { getContentPagesData } from '@/services/Content';
 import { IContent } from '@/types';
+import { sanitizeHtml } from '@/lib/sanitize-html';
 
 const AboutUsPage = async () => {
   const { data: aboutUsData } = await getContentPagesData('about-us');
   const pageContent: IContent = aboutUsData;
+  const safeHtml = sanitizeHtml(pageContent?.content || '');
 
   return (
     <div className="min-h-screen bg-gray-50 py-16 px-6 md:px-12 lg:px-24">
@@ -20,8 +22,8 @@ const AboutUsPage = async () => {
       {/* Content Section */}
       <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-2xl p-8 md:p-12">
         <div
-          className="text-lg leading-relaxed text-gray-700 space-y-4"
-          dangerouslySetInnerHTML={{ __html: pageContent?.content || '' }}
+          className="rich-content text-gray-700"
+          dangerouslySetInnerHTML={{ __html: safeHtml }}
         />
       </div>
     </div>
