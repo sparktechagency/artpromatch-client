@@ -23,7 +23,7 @@ export const getSingleClientBookings = async (
 
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_API}/bookings/list?limit=${limit}&page=${page}&${params}`,
+      `${process.env.NEXT_PUBLIC_BASE_API}/bookings/client?limit=${limit}&page=${page}&${params}`,
       {
         method: 'GET',
         headers: {

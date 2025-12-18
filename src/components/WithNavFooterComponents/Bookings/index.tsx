@@ -75,22 +75,49 @@ const Bookings = ({ bookings = [] }: { bookings: IBooking[] }) => {
   const baseColumns = [
     {
       title: 'Artist',
-      dataIndex: 'artists',
-      key: 'artist',
+      dataIndex: 'artistName',
+      key: 'artistName',
       render: (text: string, booking: IBooking) => (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <Avatar
             src={getCleanImageUrl(booking?.artistImage)}
             style={{ marginRight: 8 }}
           />
-          {text}
+          <div className="flex flex-col">
+            <span className="font-medium">{text || 'N/A'}</span>
+            {(booking?.artistEmail || booking?.artistPhone) && (
+              <div className="text-xs text-gray-500 leading-4">
+                {booking?.artistEmail && <div>{booking.artistEmail}</div>}
+                {booking?.artistPhone && <div>{booking.artistPhone}</div>}
+                {!booking?.artistEmail && !booking?.artistPhone && (
+                  <div>N/A</div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       ),
     },
     {
       title: 'Service',
       key: 'service',
-      render: (_: any, booking: IBooking) => booking.service?.title || 'N/A',
+      render: (_: any, booking: IBooking) => booking?.serviceName || 'N/A',
+    },
+    {
+      title: 'Preferred Date',
+      key: 'preferredDate',
+      render: (_: any, booking: IBooking) => {
+        const start = booking?.preferredDate?.startDate;
+        const end = booking?.preferredDate?.endDate;
+        if (!start || !end) return 'N/A';
+
+        const startText = dayjs(start).format('YYYY-MM-DD');
+        const endText = dayjs(end).format('YYYY-MM-DD');
+
+        return startText === endText
+          ? startText
+          : `'${startText}' - '${endText}'`;
+      },
     },
     {
       title: 'Session Length',
@@ -194,17 +221,19 @@ const Bookings = ({ bookings = [] }: { bookings: IBooking[] }) => {
       key: 'action',
       render: (_: any, booking: IBooking) => (
         <div>
-          <div
-            className="py-2 px-6 rounded-2xl bg-red-500 text-white w-fit"
-            onClick={() =>
-              showConfirmationModal(
-                'Are you sure you want to cancel this booking?',
-                () => handleCancelBookingByArtist(booking._id)
-              )
-            }
-          >
-            Cancel
-          </div>
+          {booking.status === 'pending' && (
+            <div
+              className="py-2 px-6 rounded-2xl bg-red-500 text-white w-fit"
+              onClick={() =>
+                showConfirmationModal(
+                  'Are you sure you want to cancel this booking?',
+                  () => handleCancelBookingByArtist(booking._id)
+                )
+              }
+            >
+              Cancel
+            </div>
+          )}
         </div>
       ),
     },

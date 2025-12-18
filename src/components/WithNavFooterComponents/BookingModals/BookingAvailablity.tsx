@@ -58,12 +58,14 @@ const CheckoutForm = ({
   return (
     <div className="bg-white p-6 rounded-xl shadow">
       <PaymentElement />
-      <button
-        onClick={handleConfirmPayment}
-        className="mt-4 w-full bg-primary py-3 rounded-lg"
-      >
-        <span className="text-white">Pay Now</span>
-      </button>
+      <div className="mt-4">
+        <button
+          onClick={handleConfirmPayment}
+          className="w-full bg-primary py-3 rounded-lg"
+        >
+          <span className="text-white">Pay Now</span>
+        </button>
+      </div>
     </div>
   );
 };
@@ -345,18 +347,20 @@ const BookingAvailability = ({ serviceId }: { serviceId: string }) => {
 
   if (showPaymentForm && clientSecret) {
     return (
-      <Elements stripe={stripePromise} options={{ clientSecret }}>
-        <CheckoutForm
-          onSuccess={() => {
-            toast.success('Payment successful!');
-            router.push('/booking/success');
-          }}
-          onError={error => {
-            console.log({ error });
-            toast.error(error.message || 'Payment failed');
-          }}
-        />
-      </Elements>
+      <div className="flex justify-center items-center gap-10 h-screen">
+        <Elements stripe={stripePromise} options={{ clientSecret }}>
+          <CheckoutForm
+            onSuccess={() => {
+              toast.success('Payment successful!');
+              router.push('/booking/success');
+            }}
+            onError={error => {
+              console.log({ error });
+              toast.error(error.message || 'Payment failed');
+            }}
+          />
+        </Elements>
+      </div>
     );
   }
 
