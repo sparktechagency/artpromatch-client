@@ -23,7 +23,7 @@ export const getSingleClientBookings = async (
 
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_API}/bookings/list?limit=${limit}&page=${page}&${params}`,
+      `${process.env.NEXT_PUBLIC_BASE_API}/bookings/client?limit=${limit}&page=${page}&${params}`,
       {
         method: 'GET',
         headers: {
@@ -34,58 +34,6 @@ export const getSingleClientBookings = async (
         },
       }
     );
-
-    const result = await res.json();
-    return result;
-  } catch (error: any) {
-    return Error(error);
-  }
-};
-
-// confirmPaymentForClient
-export const validatePaymentStatusForClient = async (
-  session_id: string
-): Promise<any> => {
-  const accessToken = await getValidAccessTokenForServerHandlerGet();
-
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_API}/bookings/confirm-payment?sessionId=${session_id}`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-
-    revalidateTag('BOOKINGS');
-
-    const result = await res.json();
-    return result;
-  } catch (error: any) {
-    return Error(error);
-  }
-};
-
-// updateUserRadius
-export const updateClientRadius = async (radius: string): Promise<any> => {
-  const accessToken = await getValidAccessTokenForServerActions();
-
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_API}/clients/radius`,
-      {
-        method: 'PATCH',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ radius }),
-      }
-    );
-
-    revalidateTag('SERVICES');
 
     const result = await res.json();
     return result;
@@ -139,6 +87,32 @@ export const getBookingsWithReviewThatHaveReviewForClientHomePage =
       return Error(error);
     }
   };
+
+// cancelBookingByClient
+export const cancelBookingByClient = async (
+  bookingId: string
+): Promise<any> => {
+  const accessToken = await getValidAccessTokenForServerActions();
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API}/bookings/cancel/${bookingId}`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    revalidateTag('BOOKINGS');
+
+    const result = await res.json();
+    return result;
+  } catch (error: any) {
+    return Error(error);
+  }
+};
 
 // export const getLocationName = async (location: number[]) => {
 //   const [lon, lat] = location;

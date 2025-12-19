@@ -1,14 +1,21 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ConfigProvider, Drawer, Spin } from 'antd';
 import { FaUsers } from 'react-icons/fa';
 import { FaX } from 'react-icons/fa6';
 import { BsEmojiSmile } from 'react-icons/bs';
-import { IoIosAttach } from 'react-icons/io';
-import { AudioOutlined } from '@ant-design/icons';
+// import { IoIosAttach } from 'react-icons/io';
+// import { AudioOutlined } from '@ant-design/icons';
 import LeftSideBar from '@/components/WithNavFooterComponents/LeftSideBar';
 import { useUser } from '@/context/UserContext';
 import { getSocket, initSocket } from '@/utils/socket';
@@ -59,6 +66,42 @@ const normalizeMessage = (message: Message | MessageLike): Message => {
   };
 };
 
+const formatMessageTimestamp = (value: string) => {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+
+  const time = date.toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
+  const today = new Date();
+  const dayStart = (input: Date) =>
+    new Date(input.getFullYear(), input.getMonth(), input.getDate());
+  const diffMs = dayStart(today).getTime() - dayStart(date).getTime();
+  const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+
+  if (diffDays === 0) {
+    return time;
+  }
+
+  if (diffDays === 1) {
+    return `Yesterday ${time}`;
+  }
+
+  if (diffDays > 1 && diffDays < 7) {
+    const weekday = date.toLocaleDateString([], { weekday: 'long' });
+    return `${weekday} ${time}`;
+  }
+
+  const fullDate = date.toLocaleDateString([], {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+  return `${fullDate} ${time}`;
+};
+
 interface ChatUser {
   userId: string;
   name: string;
@@ -66,7 +109,7 @@ interface ChatUser {
   online?: boolean;
 }
 
-const MessagePage = () => {
+const MessageContent = () => {
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -534,12 +577,7 @@ const MessagePage = () => {
             ) : (
               orderedMessages.map(message => {
                 const isOwnMessage = message.msgByUser === user?.id;
-                const formattedTime = new Date(
-                  message.createdAt
-                ).toLocaleTimeString([], {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                });
+                const formattedTime = formatMessageTimestamp(message.createdAt);
 
                 return (
                   <div
@@ -601,8 +639,8 @@ const MessagePage = () => {
                       emitStopTyping();
                     }}
                   />
-                  <IoIosAttach className="cursor-pointer text-lg text-gray-500" />
-                  <AudioOutlined className="cursor-pointer text-lg text-gray-500" />
+                  {/* <IoIosAttach className="cursor-pointer text-lg text-gray-500" />
+                  <AudioOutlined className="cursor-pointer text-lg text-gray-500" /> */}
                   <button
                     type="button"
                     onClick={sendMessage}
@@ -621,6 +659,20 @@ const MessagePage = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+const MessagePage = () => {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex h-screen items-center justify-center">
+          <Spin />
+        </div>
+      }
+    >
+      <MessageContent />
+    </Suspense>
   );
 };
 

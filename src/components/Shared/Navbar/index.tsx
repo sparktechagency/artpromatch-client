@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import 'antd/dist/reset.css';
 import { Button, Drawer, Dropdown, Modal } from 'antd';
 import { RxHamburgerMenu } from 'react-icons/rx';
@@ -12,6 +12,7 @@ import { RiArrowDropDownLine } from 'react-icons/ri';
 import { IoIosNotificationsOutline } from 'react-icons/io';
 import { AiOutlineMessage } from 'react-icons/ai';
 import NotificationModal from '@/components/WithNavFooterComponents/Profile/NotificationModal';
+import { initSocket } from '@/utils/socket';
 import { usePathname, useRouter } from 'next/navigation';
 import { useUser } from '@/context/UserContext';
 import { logOut } from '@/services/Auth';
@@ -51,6 +52,7 @@ const NavBar = () => {
 
   const [isModalOpenForNotification, setIsModalOpenForNotification] =
     useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   const showModalForNotification = () => {
     setIsModalOpenForNotification(true);
@@ -63,6 +65,25 @@ const NavBar = () => {
   const handleCancelForNotification = () => {
     setIsModalOpenForNotification(false);
   };
+
+  useEffect(() => {
+    if (!user?.id) {
+      setUnreadCount(0);
+      return;
+    }
+
+    const socket = initSocket(user.id);
+
+    const handleUnread = (payload: { unreadCount?: number }) => {
+      setUnreadCount(payload?.unreadCount ?? 0);
+    };
+
+    socket.on('unread-message-count', handleUnread);
+
+    return () => {
+      socket.off('unread-message-count', handleUnread);
+    };
+  }, [user?.id]);
 
   // const items = [
   //   {
@@ -244,8 +265,13 @@ const NavBar = () => {
                 onClick={showModalForNotification}
                 className="cursor-pointer h-5 w-5"
               />
-              <Link href="/message">
+              <Link href="/message" className="relative">
                 <AiOutlineMessage className="h-5 w-5" />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-semibold text-white shadow-lg">
+                    {unreadCount > 99 ? '99+' : unreadCount}
+                  </span>
+                )}
               </Link>
               <Link href="/profile">
                 <Image

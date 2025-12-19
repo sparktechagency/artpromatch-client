@@ -37,6 +37,67 @@ body {
   font-family: var(--font-plus-jakarta), sans-serif;
 }
 
+.rich-content {
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.rich-content > * + * {
+  margin-top: 1rem;
+}
+
+.rich-content h1 {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.rich-content h2 {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.rich-content h3 {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.rich-content p {
+  margin: 0;
+}
+
+.rich-content ul,
+.rich-content ol {
+  padding-left: 1.25rem;
+}
+
+.rich-content li {
+  margin-top: 0.5rem;
+}
+
+.rich-content a {
+  color: #2563eb;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.rich-content blockquote {
+  padding-left: 1rem;
+  border-left: 4px solid #e5e7eb;
+  color: #374151;
+}
+
+.rich-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+}
+
 /* @layer utilities {
   .text-white {
     color: #fff !important;

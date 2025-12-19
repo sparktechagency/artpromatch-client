@@ -4,6 +4,13 @@ import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useState } from 'react';
+import { loadStripe } from '@stripe/stripe-js';
+import {
+  Elements,
+  useStripe,
+  useElements,
+  PaymentElement,
+} from '@stripe/react-stripe-js';
 import {
   FaCalendarCheck,
   FaTimes,
@@ -16,8 +23,61 @@ import { useRouter } from 'next/navigation';
 
 const localizer = momentLocalizer(moment);
 
+// Create a payment form component that uses useStripe and useElements
+const CheckoutForm = ({
+  onSuccess,
+  onError,
+}: {
+  onSuccess: () => void;
+  onError: (error: any) => void;
+}) => {
+  const stripe = useStripe();
+  const elements = useElements();
+
+  const handleConfirmPayment = async () => {
+    if (!stripe || !elements) return;
+
+    const { error, paymentIntent } = await stripe.confirmPayment({
+      elements,
+      confirmParams: {
+        return_url: `${window.location.origin}/booking/success`,
+      },
+      redirect: 'if_required',
+    });
+
+    if (error) {
+      onError(error);
+    } else if (
+      paymentIntent?.status === 'requires_capture' ||
+      paymentIntent?.status === 'succeeded'
+    ) {
+      onSuccess();
+    }
+  };
+
+  return (
+    <div className="bg-white p-6 rounded-xl shadow">
+      <PaymentElement />
+      <div className="mt-4">
+        <button
+          onClick={handleConfirmPayment}
+          className="w-full bg-primary py-3 rounded-lg"
+        >
+          <span className="text-white">Pay Now</span>
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ''
+);
+
 const BookingAvailability = ({ serviceId }: { serviceId: string }) => {
   const router = useRouter();
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
+  const [clientSecret, setClientSecret] = useState('');
   const [radius, setRadius] = useState<{
     start: Date | null;
     end: Date | null;
@@ -113,10 +173,15 @@ const BookingAvailability = ({ serviceId }: { serviceId: string }) => {
       const res = await requestAServiceBooking(bookingData);
 
       if (res?.success) {
-        toast.success(res?.message);
         // setBookingSuccess(true);
         // setTimeout(() => setBookingSuccess(false), 3000);
-        router.push(res?.data?.checkoutUrl);
+        // router.push(res?.data?.checkoutUrl);
+
+        toast.success(res?.message);
+        if (res?.data?.clientSecret) {
+          setClientSecret(res?.data?.clientSecret);
+          setShowPaymentForm(true);
+        }
       } else {
         toast.error(res?.message);
       }
@@ -167,7 +232,8 @@ const BookingAvailability = ({ serviceId }: { serviceId: string }) => {
     };
   };
 
-  return (
+  // Wrap the component with Stripe Elements provider if showing payment form
+  const content = (
     <div className="bg-white rounded-xl shadow-lg p-6 max-w-4xl mx-auto">
       <div className="text-center mb-8">
         <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
@@ -278,6 +344,27 @@ const BookingAvailability = ({ serviceId }: { serviceId: string }) => {
       )}
     </div>
   );
+
+  if (showPaymentForm && clientSecret) {
+    return (
+      <div className="flex justify-center items-center gap-10 h-screen">
+        <Elements stripe={stripePromise} options={{ clientSecret }}>
+          <CheckoutForm
+            onSuccess={() => {
+              toast.success('Payment successful!');
+              router.push('/booking/success');
+            }}
+            onError={error => {
+              console.log({ error });
+              toast.error(error.message || 'Payment failed');
+            }}
+          />
+        </Elements>
+      </div>
+    );
+  }
+
+  return content;
 };
 
 export default BookingAvailability;

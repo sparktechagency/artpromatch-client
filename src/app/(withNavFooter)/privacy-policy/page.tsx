@@ -1,5 +1,6 @@
 import { getContentPagesData } from '@/services/Content';
 import { IContent } from '@/types';
+import { sanitizeHtml } from '@/lib/sanitize-html';
 
 // export const metadata = {
 //   title: 'Privacy Policy | Steady Hands',
@@ -12,6 +13,7 @@ const PrivacyPolicyPage = async () => {
     'privacy-policy'
   );
   const pageContent: IContent = privacyPolicyData;
+  const safeHtml = sanitizeHtml(pageContent?.content || '');
 
   return (
     <div className="min-h-screen bg-gray-50 py-16 px-6 md:px-12 lg:px-24">
@@ -28,8 +30,8 @@ const PrivacyPolicyPage = async () => {
       {/* Content Section */}
       <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-2xl p-8 md:p-12">
         <div
-          className="prose max-w-none text-gray-700"
-          dangerouslySetInnerHTML={{ __html: pageContent?.content || '' }}
+          className="rich-content text-gray-700"
+          dangerouslySetInnerHTML={{ __html: safeHtml }}
         />
       </div>
     </div>

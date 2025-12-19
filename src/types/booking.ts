@@ -5,6 +5,11 @@ import { IService } from './service';
 export interface IBooking {
   _id: string;
   artist: IArtist;
+  artistName: string;
+  artistImage: string;
+  artistPhone: string;
+  artistEmail: string;
+
   client: IClient;
   service: IService;
 

@@ -1,21 +1,61 @@
 'use client';
 
 import { useState } from 'react';
-import { Table, Avatar, ConfigProvider, Form, Button } from 'antd';
+import { Table, Avatar, ConfigProvider, Form, Button, Modal } from 'antd';
 import Link from 'next/link';
 import { IBooking } from '@/types';
 import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
 import dayjs from 'dayjs';
+import { cancelBookingByClient } from '@/services/Booking';
+import { toast } from 'sonner';
 
 const Bookings = ({ bookings = [] }: { bookings: IBooking[] }) => {
-  // const [selectedBooking, setSelectedBooking] = useState<IBooking | null>(null);
-  const [form] = Form.useForm();
-
-  const [isReviewModalOpen, setIsReviewModalOpen] = useState<{
+  // State for confirmation modal
+  const [confirmModal, setConfirmModal] = useState<{
     open: boolean;
     title: string;
-    onSubmit: ((otp: string) => void) | null;
-  }>({ open: false, title: '', onSubmit: null });
+    onConfirm: (() => void) | null;
+  }>({ open: false, title: '', onConfirm: null });
+
+  // const [selectedBooking, setSelectedBooking] = useState<IBooking | null>(null);
+  // const [form] = Form.useForm();
+
+  // const [isReviewModalOpen, setIsReviewModalOpen] = useState<{
+  //   open: boolean;
+  //   title: string;
+  //   onSubmit: ((otp: string) => void) | null;
+  // }>({ open: false, title: '', onSubmit: null });
+
+  // Function to show modal
+  const showConfirmationModal = (title: string, onConfirm: () => void) => {
+    setConfirmModal({ open: true, title, onConfirm });
+  };
+
+  // Function to handle OK
+  const handleConfirmOk = () => {
+    confirmModal.onConfirm?.();
+    setConfirmModal({ ...confirmModal, open: false, onConfirm: null });
+  };
+
+  // Function to handle Cancel
+  const handleConfirmCancel = () => {
+    setConfirmModal({ ...confirmModal, open: false, onConfirm: null });
+  };
+
+  // handleCancelBookingByArtist
+  const handleCancelBookingByArtist = async (bookingId: string) => {
+    try {
+      const res = await cancelBookingByClient(bookingId);
+
+      if (res?.success) {
+        toast.success(res?.message);
+      } else {
+        toast.error(res?.message);
+      }
+    } catch (error: any) {
+      console.error(error);
+    }
+  };
 
   // const handleOtpSubmit = async () => {
   //   try {
@@ -34,23 +74,50 @@ const Bookings = ({ bookings = [] }: { bookings: IBooking[] }) => {
 
   const baseColumns = [
     {
-      title: 'Client',
-      dataIndex: 'clients',
-      key: 'client',
+      title: 'Artist',
+      dataIndex: 'artistName',
+      key: 'artistName',
       render: (text: string, booking: IBooking) => (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <Avatar
-            src={getCleanImageUrl(booking?.client?.image)}
+            src={getCleanImageUrl(booking?.artistImage)}
             style={{ marginRight: 8 }}
           />
-          {text}
+          <div className="flex flex-col">
+            <span className="font-medium">{text || 'N/A'}</span>
+            {(booking?.artistEmail || booking?.artistPhone) && (
+              <div className="text-xs text-gray-500 leading-4">
+                {booking?.artistEmail && <div>{booking.artistEmail}</div>}
+                {booking?.artistPhone && <div>{booking.artistPhone}</div>}
+                {!booking?.artistEmail && !booking?.artistPhone && (
+                  <div>N/A</div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       ),
     },
     {
       title: 'Service',
       key: 'service',
-      render: (_: any, booking: IBooking) => booking.service?.title || 'N/A',
+      render: (_: any, booking: IBooking) => booking?.serviceName || 'N/A',
+    },
+    {
+      title: 'Preferred Date',
+      key: 'preferredDate',
+      render: (_: any, booking: IBooking) => {
+        const start = booking?.preferredDate?.startDate;
+        const end = booking?.preferredDate?.endDate;
+        if (!start || !end) return 'N/A';
+
+        const startText = dayjs(start).format('YYYY-MM-DD');
+        const endText = dayjs(end).format('YYYY-MM-DD');
+
+        return startText === endText
+          ? startText
+          : `'${startText}' - '${endText}'`;
+      },
     },
     {
       title: 'Session Length',
@@ -149,6 +216,27 @@ const Bookings = ({ bookings = [] }: { bookings: IBooking[] }) => {
         </div>
       ),
     },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (_: any, booking: IBooking) => (
+        <div>
+          {booking.status === 'pending' && (
+            <div
+              className="py-2 px-6 rounded-2xl bg-red-500 text-white w-fit"
+              onClick={() =>
+                showConfirmationModal(
+                  'Are you sure you want to cancel this booking?',
+                  () => handleCancelBookingByArtist(booking._id)
+                )
+              }
+            >
+              Cancel
+            </div>
+          )}
+        </div>
+      ),
+    },
   ];
 
   return (
@@ -178,6 +266,18 @@ const Bookings = ({ bookings = [] }: { bookings: IBooking[] }) => {
           />
         </ConfigProvider>
       </div>
+
+      {/* Confirmation Modal */}
+      <Modal
+        open={confirmModal.open}
+        onOk={handleConfirmOk}
+        onCancel={handleConfirmCancel}
+        okText="Yes"
+        cancelText="No"
+        title={confirmModal.title}
+      >
+        <p>Please confirm your action.</p>
+      </Modal>
     </div>
   );
 };
