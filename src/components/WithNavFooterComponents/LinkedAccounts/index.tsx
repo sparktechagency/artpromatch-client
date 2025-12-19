@@ -46,8 +46,8 @@ const LinkedAccounts = ({ profileData }: { profileData: any }) => {
               No linked account needed for you!
             </h2>
             <p className="text-secondary text-sm">
-              You haven't connected any social accounts. When you sign up using
-              Google or other providers, they will appear here.
+              You haven&apos;t connected any social accounts. When you sign up
+              using Google or other providers, they will appear here.
             </p>
           </div>
         </div>

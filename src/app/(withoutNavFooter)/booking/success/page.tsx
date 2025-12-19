@@ -68,7 +68,7 @@ const SuccessPageContent = ({ message }: { message: string }) => {
               className={`text-base sm:text-sm text-gray-500 leading-relaxed mb-8 ${styles.slideUp2}`}
             >
               Thank you for your purchase! Your payment has been processed
-              successfully. We're excited to have you on board!
+              successfully. We&apos;re excited to have you on board!
             </p>
 
             {/* Details Card */}

@@ -1,6 +1,13 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ConfigProvider, Drawer, Spin } from 'antd';
@@ -102,7 +109,7 @@ interface ChatUser {
   online?: boolean;
 }
 
-const MessagePage = () => {
+const MessageContent = () => {
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -652,6 +659,20 @@ const MessagePage = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+const MessagePage = () => {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex h-screen items-center justify-center">
+          <Spin />
+        </div>
+      }
+    >
+      <MessageContent />
+    </Suspense>
   );
 };
 
