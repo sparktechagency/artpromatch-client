@@ -219,7 +219,10 @@ export const updateProfilePhoto = async (data: FormData): Promise<any> => {
 };
 
 // updateAuthData
-export const updateAuthData = async (fullName: string): Promise<any> => {
+export const updateAuthData = async (data: {
+  fullName: string;
+  stringLocation: string;
+}): Promise<any> => {
   const accessToken = await getValidAccessTokenForServerActions();
 
   try {
@@ -227,7 +230,7 @@ export const updateAuthData = async (fullName: string): Promise<any> => {
       `${process.env.NEXT_PUBLIC_BASE_API}/auth/update-auth-data`,
       {
         method: 'PATCH',
-        body: JSON.stringify({ fullName }),
+        body: JSON.stringify(data),
         headers: {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
