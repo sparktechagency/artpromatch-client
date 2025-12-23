@@ -58,6 +58,10 @@ const PaymentHistory = ({ payments = [] }: { payments: IPayment[] }) => {
             ? 'orange'
             : normalized === 'failed'
             ? 'red'
+            : normalized === 'authorized'
+            ? 'red'
+            : normalized === 'succeeded'
+            ? 'green'
             : 'blue';
 
         return (
