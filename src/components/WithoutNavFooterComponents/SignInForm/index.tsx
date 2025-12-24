@@ -60,9 +60,20 @@ const SignInForm: React.FC<SignInWithRedirectPath> = ({ redirectPath }) => {
     try {
       const res = await signInUser(userInfo);
       if (res?.success) {
-        setIsLoading(true);
-        toast.success(res?.message);
-        router.push(redirectPath || '/');
+        if (
+          res?.message?.toLowerCase().includes('otp') ||
+          res?.message?.toLowerCase().includes('verify')
+        ) {
+          toast.error(res?.message);
+          if (res.data.userEmail) {
+            localStorage.setItem('userEmail', res.data.userEmail);
+          }
+          router.push('/account-verification');
+        } else {
+          setIsLoading(true);
+          toast.success(res?.message);
+          router.push(redirectPath || '/');
+        }
       } else {
         toast.error(res.message);
       }
@@ -140,7 +151,7 @@ const SignInForm: React.FC<SignInWithRedirectPath> = ({ redirectPath }) => {
             initialValues={{ remember: true }}
             onFinish={handleSignInUser}
             layout="vertical"
-            className="w-full md:w-[600px] bg-white px-2 rounded-2xl"
+            className="w-full md:w-150 bg-white px-2 rounded-2xl"
           >
             <div className="mb-4 flex flex-col justify-center items-center text-center">
               <Image src={AllImages.logo} width={50} height={50} alt="logo" />
