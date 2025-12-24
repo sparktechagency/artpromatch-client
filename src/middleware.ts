@@ -8,9 +8,10 @@ const authRoutes = ['/sign-in', '/sign-up', '/forgot-password', '/otp'];
 const roleBasedPrivateRoutes = {
   CLIENT: [
     /^\/guest-spots/,
-    /^\/favourites/,
     /^\/bookings/,
     /^\/review/,
+    /^\/message/,
+    /^\/favourites/,
 
     /^\/user-type-selection/,
     /^\/preference-selection/,
@@ -31,7 +32,6 @@ const profileCreationPaths = [
   '/prefered-service',
   '/stay-updated',
   '/all-set',
-  '/pending-approval',
 ];
 
 export const middleware = async (request: NextRequest) => {
@@ -62,32 +62,29 @@ export const middleware = async (request: NextRequest) => {
     }
   }
 
-  if (
-    user.isProfile &&
-    user.isActive &&
-    profileCreationPaths.includes(pathname)
-  ) {
-    return NextResponse.redirect(new URL('/', origin));
-  }
+  if (!user.isProfile) {
+    if (!profileCreationPaths.includes(pathname)) {
+      return NextResponse.redirect(new URL('/user-type-selection', origin));
+    }
 
-  if (
-    !user.isProfile &&
-    user.isActive &&
-    !profileCreationPaths.includes(pathname)
-  ) {
-    return NextResponse.redirect(new URL('/user-type-selection', origin));
+    return NextResponse.next();
   }
 
   if (user.isProfile && !user.isActive) {
-    return NextResponse.redirect(new URL('/pending-approval', origin));
+    if (pathname !== '/pending-approval') {
+      return NextResponse.redirect(new URL('/pending-approval', origin));
+    }
+
+    return NextResponse.next();
   }
 
   if (
     user.isProfile &&
     user.isActive &&
-    profileCreationPaths.includes(pathname)
+    (profileCreationPaths.includes(pathname) ||
+      pathname === '/pending-approval')
   ) {
-    return NextResponse.redirect(new URL('/', request.url));
+    return NextResponse.redirect(new URL('/', origin));
   }
 
   if (user?.role && roleBasedPrivateRoutes[user?.role as Role]) {
@@ -109,18 +106,19 @@ export const config = {
     '/otp',
 
     '/guest-spots',
-    '/favourites',
     '/bookings',
     '/review/:page',
+    '/message',
+    '/favourites',
 
-    // '/user-type-selection',
-    // '/preference-selection',
-    // '/preferences',
-    // '/preferd-location',
-    // '/prefered-service',
-    // '/stay-updated',
-    // '/all-set',
-    // '/pending-approval',
+    '/user-type-selection',
+    '/preference-selection',
+    '/preferences',
+    '/preferd-location',
+    '/prefered-service',
+    '/stay-updated',
+    '/all-set',
+    '/pending-approval',
 
     // '/admin/:page',
     // '/user',
