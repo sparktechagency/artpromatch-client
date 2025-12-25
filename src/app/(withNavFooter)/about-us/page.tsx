@@ -2,6 +2,8 @@ import { getContentPagesData } from '@/services/Content';
 import { IContent } from '@/types';
 import { sanitizeHtml } from '@/lib/sanitize-html';
 
+export const dynamic = 'force-dynamic';
+
 const AboutUsPage = async () => {
   const { data: aboutUsData } = await getContentPagesData('about-us');
   const pageContent: IContent = aboutUsData;

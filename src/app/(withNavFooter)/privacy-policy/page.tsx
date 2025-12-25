@@ -8,6 +8,8 @@ import { sanitizeHtml } from '@/lib/sanitize-html';
 //     'Read our privacy policy to understand how we protect your data and ensure transparency.',
 // };
 
+export const dynamic = 'force-dynamic';
+
 const PrivacyPolicyPage = async () => {
   const { data: privacyPolicyData } = await getContentPagesData(
     'privacy-policy'

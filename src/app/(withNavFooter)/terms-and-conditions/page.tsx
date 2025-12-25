@@ -8,6 +8,8 @@ export const metadata = {
     'Read our Terms And Conditions to understand how we protect your data and ensure transparency.',
 };
 
+export const dynamic = 'force-dynamic';
+
 const TermsAndConditionsPage = async () => {
   const { data: termsAndConditionsData } = await getContentPagesData(
     'terms-and-conditions'

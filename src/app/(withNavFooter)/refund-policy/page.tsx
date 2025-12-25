@@ -8,6 +8,9 @@ export const metadata = {
     'Read our Refund Policy to learn about eligibility, conditions, and the process for requesting a refund.',
 };
 
+export const dynamic = 'force-dynamic';
+
+
 const RefundPolicyPage = async () => {
   const { data: refundPolicyData } = await getContentPagesData('refund-policy');
   const pageContent: IContent = refundPolicyData;
