@@ -9,6 +9,8 @@ const roleBasedPrivateRoutes = {
   CLIENT: [
     /^\/guest-spots/,
     /^\/bookings/,
+    /^\/booking-availablity/,
+    /^\/booking/,
     /^\/review/,
     /^\/message/,
     /^\/favourites/,
@@ -107,6 +109,8 @@ export const config = {
 
     '/guest-spots',
     '/bookings',
+    '/booking-availablity/:page',
+    '/booking/:page',
     '/review/:page',
     '/message',
     '/favourites',
