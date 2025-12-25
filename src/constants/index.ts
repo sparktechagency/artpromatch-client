@@ -3,6 +3,8 @@ export const protectedRoutes = [
   '/',
   '/guest-spots',
   '/bookings',
+  '/booking/:page',
+  '/booking-availablity/:page',
   '/review/:page',
   '/message',
   '/favourites',

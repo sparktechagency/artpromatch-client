@@ -146,30 +146,6 @@ const NavBar = () => {
       isDropdown: false,
       dropdownItems: [],
     },
-  ];
-
-  const afterLoginLabels = [
-    {
-      name: 'Home',
-      link: '/',
-      icon: '',
-      isDropdown: false,
-      dropdownItems: [],
-    },
-    {
-      name: 'Bookings',
-      link: '/bookings',
-      icon: '',
-      isDropdown: false,
-      dropdownItems: [],
-    },
-    {
-      name: 'Guest Spots',
-      link: '/guest-spots',
-      icon: '',
-      isDropdown: false,
-      dropdownItems: [],
-    },
 
     {
       name: 'Join As',
@@ -201,6 +177,30 @@ const NavBar = () => {
         },
       ],
       icon: <RiArrowDropDownLine className="text-black text-4xl" />,
+    },
+  ];
+
+  const afterLoginLabels = [
+    {
+      name: 'Home',
+      link: '/',
+      icon: '',
+      isDropdown: false,
+      dropdownItems: [],
+    },
+    {
+      name: 'Bookings',
+      link: '/bookings',
+      icon: '',
+      isDropdown: false,
+      dropdownItems: [],
+    },
+    {
+      name: 'Guest Spots',
+      link: '/guest-spots',
+      icon: '',
+      isDropdown: false,
+      dropdownItems: [],
     },
 
     {
@@ -336,13 +336,13 @@ const NavBar = () => {
             ) : (
               <>
                 <Link href="/sign-in">
-                  <button className="bg-primary text-white px-10 py-3 rounded-md shadow-lg">
-                    Log In
+                  <button className="bg-primary px-10 py-3 rounded-md shadow-lg">
+                    <span className="text-white font-bold"> Log In</span>
                   </button>
                 </Link>
                 <Link href="/sign-up">
-                  <button className="border border-primary text-primary px-10 py-3 rounded-md shadow-lg">
-                    Sign Up
+                  <button className="bg-primary px-10 py-3 rounded-md shadow-lg">
+                    <span className="text-white font-bold"> Sign Up</span>
                   </button>
                 </Link>
               </>

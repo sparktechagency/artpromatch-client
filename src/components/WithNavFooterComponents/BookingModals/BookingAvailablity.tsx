@@ -56,9 +56,11 @@ const CheckoutForm = ({
   };
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow">
-      <PaymentElement />
-      <div className="mt-4">
+    <div className="bg-white p-6 rounded-xl shadow max-w-lg w-full">
+      <div className="max-h-[65vh] overflow-y-auto pr-1 pb-24">
+        <PaymentElement />
+      </div>
+      <div className="mt-4 sticky bottom-0 bg-white pt-4 z-10">
         <button
           onClick={handleConfirmPayment}
           className="w-full bg-primary py-3 rounded-lg"
@@ -197,7 +199,7 @@ const BookingAvailability = ({ serviceId }: { serviceId: string }) => {
   const eventStyleGetter = () => {
     return {
       style: {
-        backgroundColor: '##816a6b',
+        backgroundColor: '#816a6b',
         color: 'white',
         borderRadius: '6px',
         border: 'none',
