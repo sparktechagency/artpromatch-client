@@ -19,6 +19,8 @@ const PreferedLocation = () => {
   const [role, setRole] = useState<string>('');
   const [stringLocation, setStringLocation] = useState<string>('');
   const [location, setLocation] = useState<LocationType | null>(null);
+  const [manualLatitude, setManualLatitude] = useState<string>('');
+  const [manualLongitude, setManualLongitude] = useState<string>('');
   const [radius, setRadius] = useState<number>(50);
   const [current, setCurrent] = useState<number>(1);
   const router = useRouter();
@@ -64,6 +66,17 @@ const PreferedLocation = () => {
     }
   }, [form]);
 
+  useEffect(() => {
+    if (!location) return;
+    setManualLatitude(location.latitude.toString());
+    setManualLongitude(location.longitude.toString());
+  }, [location]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !location) return;
+    localStorage.setItem('location', JSON.stringify(location));
+  }, [location]);
+
   // Use current location button
   const handleUseCurrentLocation = async () => {
     if (!navigator.geolocation) {
@@ -76,11 +89,8 @@ const PreferedLocation = () => {
         const { latitude, longitude } = pos.coords;
         const location = { latitude, longitude };
         setLocation(location);
-
         const locationName = await getLocationName([latitude, longitude]);
         setStringLocation(locationName);
-
-        localStorage.setItem('location', JSON.stringify(location));
       },
       err => {
         toast.warning(
@@ -89,6 +99,38 @@ const PreferedLocation = () => {
         console.error('Geolocation error:', err.message);
       }
     );
+  };
+
+  const handleManualCoordinateChange = (
+    value: string,
+    coord: 'latitude' | 'longitude'
+  ) => {
+    if (coord === 'latitude') {
+      setManualLatitude(value);
+    } else {
+      setManualLongitude(value);
+    }
+
+    const pendingLat = coord === 'latitude' ? value : manualLatitude;
+    const pendingLon = coord === 'longitude' ? value : manualLongitude;
+
+    const parsedLat = parseFloat(pendingLat);
+    const parsedLon = parseFloat(pendingLon);
+
+    const isLatValid =
+      pendingLat.trim() !== '' &&
+      Number.isFinite(parsedLat) &&
+      !Number.isNaN(parsedLat);
+    const isLonValid =
+      pendingLon.trim() !== '' &&
+      Number.isFinite(parsedLon) &&
+      !Number.isNaN(parsedLon);
+
+    if (isLatValid && isLonValid) {
+      setLocation({ latitude: parsedLat, longitude: parsedLon });
+    } else {
+      setLocation(null);
+    }
   };
 
   // Continue button
@@ -102,14 +144,14 @@ const PreferedLocation = () => {
   };
 
   return (
-    <div className="py-16 md:py-0 h-[100vh] w-full flex items-center justify-center">
+    <div className="py-16 md:py-0 h-screen w-full flex items-center justify-center">
       <div className="pt-32 pb-16">
         <div className="w-full">
           <Form
             form={form}
             name="select-user-type"
             layout="vertical"
-            className="w-full md:w-[600px] bg-white px-2 rounded-2xl"
+            className="w-full md:w-150 bg-white px-2 rounded-2xl"
           >
             <div className="mb-4 flex flex-col justify-center items-center text-center">
               <Image src={AllImages.logo} width={50} height={50} alt="logo" />
@@ -148,6 +190,30 @@ const PreferedLocation = () => {
                 className="text-md"
               />
             </Form.Item>
+
+            {/* Manual Lat/Lon */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+              <Form.Item label="Latitude">
+                <Input
+                  value={manualLatitude}
+                  onChange={e =>
+                    handleManualCoordinateChange(e.target.value, 'latitude')
+                  }
+                  placeholder="e.g. 23.8103"
+                  inputMode="decimal"
+                />
+              </Form.Item>
+              <Form.Item label="Longitude">
+                <Input
+                  value={manualLongitude}
+                  onChange={e =>
+                    handleManualCoordinateChange(e.target.value, 'longitude')
+                  }
+                  placeholder="e.g. 90.4125"
+                  inputMode="decimal"
+                />
+              </Form.Item>
+            </div>
 
             {/* Radius Slider */}
 
