@@ -1,15 +1,14 @@
 'use server';
 
 // getContentPagesData
-export const getContentPagesData = async (page:string): Promise<any> => {
+export const getContentPagesData = async (page: string): Promise<any> => {
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_API}/content/retrieve/${page}`,
       {
         method: 'GET',
-
         next: {
-          tags: ['FAQS'],
+          tags: ['CONTENT_PAGES'],
         },
       }
     );
