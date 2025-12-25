@@ -23,6 +23,7 @@ const NavBar = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   // const [isMobile, setIsMobile] = useState(false);
   const { user, setUser, setIsLoading } = useUser();
+  const [openSections, setOpenSections] = useState<Record<number, boolean>>({});
 
   const router = useRouter();
   const pathname = usePathname();
@@ -310,42 +311,95 @@ const NavBar = () => {
           </div>
         </div>
 
+        {/* Mobile Drawer */}
         <Drawer
           title=""
           placement="left"
           onClose={() => setDrawerVisible(false)}
           open={drawerVisible}
         >
-          <div className="flex flex-col items-center space-y-4">
+          <div className="flex flex-col w-full px-3 py-3 space-y-2 bg-white">
             {(user ? afterLoginLabels : beforeLoginLabels).map(
-              (item, index) => (
-                <Link
-                  href={item.link || '/'}
-                  key={index}
-                  className="text-lg font-medium hover:text-blue-600 transition"
-                  onClick={() => setDrawerVisible(false)}
-                >
-                  {item.name}
-                </Link>
-              )
+              (item, index) => {
+                if (item?.isDropdown) {
+                  const isOpen = !!openSections[index];
+                  return (
+                    <div key={index} className="w-full">
+                      <button
+                        className={`w-full flex items-center justify-between px-4 py-3 rounded-lg text-left text-base font-medium border transition ${
+                          isOpen
+                            ? 'border-primary bg-blue-50'
+                            : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'
+                        }`}
+                        onClick={() =>
+                          setOpenSections(prev => ({
+                            ...prev,
+                            [index]: !prev[index],
+                          }))
+                        }
+                      >
+                        <span className="text-primary">{item.name}</span>
+                        <RiArrowDropDownLine
+                          className={`text-3xl transition-transform ${
+                            isOpen ? 'rotate-180' : ''
+                          }`}
+                        />
+                      </button>
+                      {isOpen && (
+                        <div className="mt-1 ml-3 space-y-1">
+                          {item.dropdownItems?.map(sub => (
+                            <Link
+                              key={sub.key}
+                              href={(sub.label as any)?.props?.href || '#'}
+                              onClick={() => setDrawerVisible(false)}
+                              className="block px-4 py-2 rounded-md text-base hover:bg-gray-50 border border-gray-300"
+                            >
+                              <span className="text-primary">
+                                {(sub.label as any)?.props?.children}
+                              </span>
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
+                return (
+                  <Link
+                    href={item.link || '/'}
+                    key={index}
+                    className={`block px-4 py-3 rounded-lg text-base font-medium border transition ${
+                      pathname === item.link
+                        ? 'border-primary bg-blue-50 text-primary'
+                        : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'
+                    }`}
+                    onClick={() => setDrawerVisible(false)}
+                  >
+                    <span className="text-primary">{item.name}</span>
+                  </Link>
+                );
+              }
             )}
             {user ? (
-              <button onClick={handleLogout} className="text-red-500">
+              <button
+                onClick={handleLogout}
+                className="w-full mt-2 py-3 rounded-lg bg-red-50 text-red-600 font-semibold hover:bg-red-100 border border-red-200"
+              >
                 Logout
               </button>
             ) : (
-              <>
-                <Link href="/sign-in">
-                  <button className="bg-primary px-10 py-3 rounded-md shadow-lg">
+              <div className="grid grid-cols-2 gap-2 mt-2 w-full">
+                <Link href="/sign-in" className="w-full">
+                  <button className="w-full bg-primary px-10 py-3 rounded-md shadow-lg">
                     <span className="text-white font-bold"> Log In</span>
                   </button>
                 </Link>
-                <Link href="/sign-up">
-                  <button className="bg-primary px-10 py-3 rounded-md shadow-lg">
+                <Link href="/sign-up" className="w-full">
+                  <button className="w-full bg-primary px-10 py-3 rounded-md shadow-lg">
                     <span className="text-white font-bold"> Sign Up</span>
                   </button>
                 </Link>
-              </>
+              </div>
             )}
           </div>
         </Drawer>
