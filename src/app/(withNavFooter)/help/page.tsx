@@ -1,6 +1,8 @@
 import Help from '@/components/WithNavFooterComponents/Help';
 import { getAllFaqs } from '@/services/Faq';
 
+export const dynamic = 'force-dynamic';
+
 const HelpPage = async () => {
   const { data: faqs } = await getAllFaqs();
 
