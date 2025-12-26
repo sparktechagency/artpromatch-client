@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Collapse, Input, Modal, Form } from 'antd';
 import { toast } from 'sonner';
 import { IFaq } from '@/types';
+import { createFaqByUser } from '@/services/Faq';
 
 const { Search } = Input;
 
@@ -61,22 +62,20 @@ const Help = ({ faqs }: { faqs: IFaq[] }) => {
   //   },
   // ];
 
-  // handle submit new question
-
-  const handleAddQuestion = async () => {
+  // handleCreateFaqByUser
+  const handleCreateFaqByUser = async () => {
     try {
       const values = await form.validateFields();
-      // API call to save question
-      const res = await fetch('/api/questions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: values.question }),
-      });
 
-      if (!res.ok) throw new Error('Failed to save question');
-      toast.success('Your question has been submitted!');
-      form.resetFields();
-      setIsModalOpen(false);
+      const res = await createFaqByUser({ question: values.question });
+
+      if (res?.success) {
+        toast.success(res?.message || 'Account deactivated successfully');
+        form.resetFields();
+        setIsModalOpen(false);
+      } else {
+        toast.error(res?.message || 'Failed to deactivate account');
+      }
     } catch (error) {
       console.error(error);
       toast.error('Something went wrong. Please try again.');
@@ -109,8 +108,7 @@ const Help = ({ faqs }: { faqs: IFaq[] }) => {
       <div className="mt-8 flex flex-col justify-center items-center p-5 bg-[#faf7f7] rounded-xl">
         <h1 className="text-2xl font-bold mb-2">Still have questions?</h1>
         <p className="text-secondary">
-          Can&apos;t find the answer you&apos;re looking for? Please chat to our
-          friendly team.
+          Can&apos;t find the answer you&apos;re looking for? Please ask here.
         </p>
         <div
           onClick={() => setIsModalOpen(true)}
@@ -124,7 +122,7 @@ const Help = ({ faqs }: { faqs: IFaq[] }) => {
       <Modal
         title="Submit Your Question"
         open={isModalOpen}
-        onOk={handleAddQuestion}
+        onOk={handleCreateFaqByUser}
         onCancel={() => setIsModalOpen(false)}
         okText="Submit"
       >
@@ -132,7 +130,13 @@ const Help = ({ faqs }: { faqs: IFaq[] }) => {
           <Form.Item
             label="Your Question"
             name="question"
-            rules={[{ required: true, message: 'Please enter your question' }]}
+            rules={[
+              { required: true, message: 'Please enter your question' },
+              {
+                min: 10,
+                message: 'Question must be at least 10 characters long',
+              },
+            ]}
           >
             <Input.TextArea rows={4} placeholder="Type your question..." />
           </Form.Item>
