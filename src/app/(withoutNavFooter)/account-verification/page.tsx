@@ -76,7 +76,7 @@ const AccountVerificationPage = () => {
             </h1>
             <p className="text-center">
               To verify your account, please enter the verification code you
-              received on your phone.
+              received on your mail.
             </p>
           </div>
 
