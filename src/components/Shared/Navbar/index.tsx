@@ -20,13 +20,15 @@ import { protectedRoutes } from '@/constants';
 import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
 
 const NavBar = () => {
+  const [isModalOpenForNotification, setIsModalOpenForNotification] =
+    useState(false);
+  const [openSections, setOpenSections] = useState<Record<number, boolean>>({});
   const [drawerVisible, setDrawerVisible] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
   // const [isMobile, setIsMobile] = useState(false);
   const { user, setUser, setIsLoading } = useUser();
-  const [openSections, setOpenSections] = useState<Record<number, boolean>>({});
-
-  const router = useRouter();
   const pathname = usePathname();
+  const router = useRouter();
 
   // useEffect(() => {
   //   if (typeof window !== 'undefined') {
@@ -40,32 +42,6 @@ const NavBar = () => {
   //     return () => window.removeEventListener('resize', handleResize);
   //   }
   // }, []);
-
-  const handleLogout = async () => {
-    await logOut();
-    setUser(null);
-    setIsLoading(true);
-
-    if (protectedRoutes.some(route => pathname.match(route))) {
-      router.push('/sign-in');
-    }
-  };
-
-  const [isModalOpenForNotification, setIsModalOpenForNotification] =
-    useState(false);
-  const [unreadCount, setUnreadCount] = useState(0);
-
-  const showModalForNotification = () => {
-    setIsModalOpenForNotification(true);
-  };
-
-  const handleOkForNotification = () => {
-    setIsModalOpenForNotification(false);
-  };
-
-  const handleCancelForNotification = () => {
-    setIsModalOpenForNotification(false);
-  };
 
   useEffect(() => {
     if (!user?.id) {
@@ -85,45 +61,6 @@ const NavBar = () => {
       socket.off('unread-message-count', handleUnread);
     };
   }, [user?.id]);
-
-  // const items = [
-  //   {
-  //     key: '1',
-  //     label: (
-  //       <Link
-  //         target="_blank"
-  //         rel="noopener noreferrer"
-  //         href="https://www.antgroup.com"
-  //       >
-  //         1st menu item
-  //       </Link>
-  //     ),
-  //   },
-  //   {
-  //     key: '2',
-  //     label: (
-  //       <Link
-  //         target="_blank"
-  //         rel="noopener noreferrer"
-  //         href="https://www.aliyun.com"
-  //       >
-  //         2nd menu item
-  //       </Link>
-  //     ),
-  //   },
-  //   {
-  //     key: '3',
-  //     label: (
-  //       <a
-  //         target="_blank"
-  //         rel="noopener noreferrer"
-  //         href="https://www.luohanacademy.com"
-  //       >
-  //         3rd menu item
-  //       </a>
-  //     ),
-  //   },
-  // ];
 
   const beforeLoginLabels = [
     {
@@ -212,10 +149,26 @@ const NavBar = () => {
     },
   ];
 
+  const handleNotificationClick = () => setIsModalOpenForNotification(true);
+  const handleNotificationCancel = () => setIsModalOpenForNotification(false);
+  const handleNotificationOk = () => setIsModalOpenForNotification(false);
+
+  // handleLogout
+  const handleLogout = async () => {
+    await logOut();
+    setUser(null);
+    setIsLoading(true);
+
+    if (protectedRoutes.some(route => pathname.match(route))) {
+      router.push('/sign-in');
+    }
+  };
+
   return (
     <div>
       <nav className="w-full my-6">
         <div className="container mx-auto flex items-center justify-between py-4 px-6 lg:px-8">
+          {/* Logo */}
           <Link href="/" className="flex justify-center items-center space-x-2">
             <Image
               src={AllImages.logo}
@@ -229,6 +182,7 @@ const NavBar = () => {
             </div>
           </Link>
 
+          {/* Desktop Navigation */}
           <div className="hidden lg:flex flex-grow justify-center space-x-6">
             {(user ? afterLoginLabels : beforeLoginLabels).map((item, index) =>
               item?.isDropdown ? (
@@ -257,13 +211,14 @@ const NavBar = () => {
             )}
           </div>
 
+          {/* Desktop Right Section */}
           {user ? (
             <div className="hidden lg:flex items-center space-x-4">
               {/* <Link href="/favourites">
                 <CiHeart className="h-5 w-5 cursor-pointer" />
               </Link> */}
               <IoIosNotificationsOutline
-                onClick={showModalForNotification}
+                onClick={handleNotificationClick}
                 className="cursor-pointer h-5 w-5"
               />
               <Link href="/message" className="relative">
@@ -303,6 +258,34 @@ const NavBar = () => {
             </div>
           )}
 
+          {/* Mobile Right Section */}
+          {user && (
+            <div className="flex lg:hidden items-center justify-end space-x-3 mr-3 w-full">
+              <IoIosNotificationsOutline
+                onClick={handleNotificationClick}
+                className="cursor-pointer h-5 w-5"
+              />
+              <Link href="/message" className="relative">
+                <AiOutlineMessage className="h-5 w-5" />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-semibold text-white shadow-lg">
+                    {unreadCount > 99 ? '99+' : unreadCount}
+                  </span>
+                )}
+              </Link>
+              <Link href="/profile">
+                <Image
+                  src={getCleanImageUrl(user?.image)}
+                  alt="user"
+                  height={40}
+                  width={40}
+                  className="h-9 w-9 rounded-full"
+                />
+              </Link>
+            </div>
+          )}
+
+          {/* Mobile Drawer Button */}
           <div className="lg:hidden">
             <Button
               icon={<RxHamburgerMenu className="text-black text-2xl" />}
@@ -404,10 +387,12 @@ const NavBar = () => {
           </div>
         </Drawer>
       </nav>
+
+      {/* Notification Modal */}
       <Modal
         open={isModalOpenForNotification}
-        onOk={handleOkForNotification}
-        onCancel={handleCancelForNotification}
+        onOk={handleNotificationOk}
+        onCancel={handleNotificationCancel}
       >
         <NotificationModal />
       </Modal>
