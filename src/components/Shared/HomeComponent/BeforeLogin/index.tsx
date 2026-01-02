@@ -84,7 +84,7 @@ const BeforeLogin = ({
         <WantATattoo title="Want a Piercing Now?" services={pierceServices} />
       )}
 
-      <Testimonials bookings={bookings} />
+      {bookings.length > 0 && <Testimonials bookings={bookings} />}
 
       <SteadyHands />
     </div>
