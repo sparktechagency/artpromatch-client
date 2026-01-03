@@ -48,9 +48,10 @@ const Services = ({ services = [] }: { services: IService[] }) => {
 
   // UI state
   const [artistType, setArtistType] = useState<string>(artistTypes[0] ?? ALL);
-  const [tattooCategory, setTattooCategory] = useState<string>(
-    tattooCategories[0] ?? ALL
-  );
+  const [tattooCategoriesSelected, setTattooCategoriesSelected] = useState<
+    string[]
+  >([]);
+
   const [view, setView] = useState<ViewMode>('list');
   const [selectedService, setSelectedService] = useState<IService | null>(null);
   const [isShowServiceModalOpen, setIsShowServiceModalOpen] =
@@ -60,7 +61,14 @@ const Services = ({ services = [] }: { services: IService[] }) => {
 
   useEffect(() => {
     setArtistType(searchParams.get('artistType') || ALL);
-    setTattooCategory(searchParams.get('tattooCategory') || ALL);
+
+    const categoryParam = searchParams.get('tattooCategory');
+
+    if (categoryParam) {
+      setTattooCategoriesSelected(categoryParam.split(','));
+    } else {
+      setTattooCategoriesSelected([]);
+    }
   }, []);
 
   // Dedup artists for Map view
@@ -75,14 +83,14 @@ const Services = ({ services = [] }: { services: IService[] }) => {
     return services.filter(s => {
       const byType = artistType === ALL ? true : s?.artist?.type === artistType;
       const byCategory =
-        tattooCategory === ALL
+        tattooCategoriesSelected.length === 0
           ? true
-          : (s?.artist?.expertise || []).includes(
-              tattooCategory as ExpertiseType
+          : (s?.artist?.expertise || []).some(exp =>
+              tattooCategoriesSelected.includes(exp)
             );
       return byType && byCategory;
     });
-  }, [services, artistType, tattooCategory]);
+  }, [services, artistType, tattooCategoriesSelected]);
 
   const openShowServiceModal = (id: string) => {
     setSelectedService(services.find(s => s._id === id) || null);
@@ -106,9 +114,15 @@ const Services = ({ services = [] }: { services: IService[] }) => {
   };
 
   // helper function
-  const updateQuery = (key: string, value: string) => {
+  const updateQuery = (key: string, values: string[]) => {
     const params = new URLSearchParams(searchParams.toString());
-    value === ALL ? params.delete(key) : params.set(key, value);
+
+    if (values.length === 0) {
+      params.delete(key);
+    } else {
+      params.set(key, values.join(','));
+    }
+
     router.push(`?${params.toString()}`, { scroll: false });
   };
 
@@ -123,7 +137,7 @@ const Services = ({ services = [] }: { services: IService[] }) => {
             style={{ width: 180 }}
             onChange={v => {
               setArtistType(v);
-              updateQuery('artistType', v);
+              updateQuery('artistType', [v]);
             }}
             options={artistTypes.map(t => ({ label: t, value: t }))}
           />
@@ -133,15 +147,26 @@ const Services = ({ services = [] }: { services: IService[] }) => {
               <div
                 key={cat}
                 onClick={() => {
-                  setTattooCategory(cat);
-                  updateQuery('tattooCategory', cat);
+                  if (cat === ALL) {
+                    setTattooCategoriesSelected([]);
+                    updateQuery('tattooCategory', []);
+                    return;
+                  }
+
+                  setTattooCategoriesSelected(prev => {
+                    const updated = prev.includes(cat)
+                      ? prev.filter(c => c !== cat)
+                      : [...prev, cat];
+
+                    updateQuery('tattooCategory', updated);
+                    return updated;
+                  });
                 }}
-                className={`px-4 py-2 rounded-full text-sm transition
-                  ${
-                    tattooCategory === cat
-                      ? 'bg-primary text-white shadow'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                  }`}
+                className={`px-4 py-2 rounded-full text-sm transition cursor-pointer ${
+                  tattooCategoriesSelected.includes(cat)
+                    ? 'bg-primary text-white shadow'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }`}
               >
                 {cat}
               </div>
@@ -152,7 +177,10 @@ const Services = ({ services = [] }: { services: IService[] }) => {
         {/* View toggle */}
         <div className="flex justify-between items-center my-8">
           <p className="text-sm text-slate-600">
-            {tattooCategory} ({filteredServices.length})
+            {tattooCategoriesSelected.length > 0
+              ? tattooCategoriesSelected.join(', ')
+              : 'All'}{' '}
+            ({filteredServices.length})
           </p>
 
           <div className="flex bg-slate-100 p-1 rounded-xl">
@@ -190,15 +218,19 @@ const Services = ({ services = [] }: { services: IService[] }) => {
                   key={service._id}
                   className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition border overflow-hidden flex flex-col"
                 >
-                  <Image
+                  <div
                     onClick={() => openShowServiceModal(service._id)}
-                    src={getCleanImageUrl(service?.thumbnail)}
-                    alt="service"
-                    width={500}
-                    height={300}
-                    quality={90}
-                    className="w-full h-56 object-cover cursor-pointer"
-                  />
+                    className="w-full h-56 bg-slate-100 flex items-center justify-center cursor-pointer"
+                  >
+                    <Image
+                      src={getCleanImageUrl(service?.thumbnail)}
+                      alt="service"
+                      width={1000}
+                      height={1000}
+                      quality={90}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
 
                   <div className="p-4 flex flex-col h-full">
                     <h3 className="text-lg font-semibold">{service?.title}</h3>
