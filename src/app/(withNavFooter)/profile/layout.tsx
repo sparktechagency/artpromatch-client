@@ -138,7 +138,7 @@ const UserDashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 {/* Small Camera Icon Button */}
                 <Upload {...uploadProps}>
                   <button
-                    className="absolute bottom-3 right-0 bg-white border-2 border-gray-200 rounded-full p-2 shadow-md hover:shadow-lg hover:bg-gray-50 transition"
+                    className="absolute bottom-3 right-0 bg-white border-2 border-gray-200 rounded-full p-2 shadow-md hover:shadow-lg hover:bg-gray-50 transition cursor-pointer"
                     title="Change profile photo"
                   >
                     <FaCamera className="text-red-600" size={16} />

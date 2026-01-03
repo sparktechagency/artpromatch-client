@@ -33,9 +33,9 @@ const BeforeLogin = ({
   return (
     <div className="container mx-auto px-2 md:px-0">
       <div className="mb-4 flex flex-col justify-center items-center text-center pt-16 bg-[#fafafa] border rounded-lg border-gray-300/50">
-        <Image src={AllImages.logo} width={50} height={50} alt="logo" />
+        <Image src={AllImages.logo} width={80} height={80} alt="logo" />
         <h1>
-          <div className="text-center md:text-6xl font-bold mt-6 mb-2 ">
+          <div className="text-center md:text-5xl font-bold mt-6 mb-2">
             Your next masterpiece <br /> starts here
           </div>
         </h1>
@@ -50,11 +50,11 @@ const BeforeLogin = ({
             </div>
           </Link>
           <Link href="/guest-spots">
-            <button className="bg-primary py-3 px-6 rounded-lg">
+            <div className="bg-primary py-3 px-6 rounded-lg">
               <div className="flex justify-center text-white items-center gap-2">
                 Explore Guest Spot <IoIosArrowForward />
               </div>
-            </button>
+            </div>
           </Link>
         </div>
         <MarqueeComponent allImages={allImages} />

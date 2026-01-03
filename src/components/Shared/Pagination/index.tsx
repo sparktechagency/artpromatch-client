@@ -22,7 +22,7 @@ const Pagination = ({ meta }: { meta: IMeta }) => {
       <button
         onClick={() => handlePage(Math.max(1, currentPage - 1))}
         disabled={currentPage <= 1}
-        className="px-4 py-2 border rounded-lg bg-white disabled:opacity-50"
+        className="px-4 py-2 border rounded-lg bg-white disabled:opacity-50 cursor-pointer"
       >
         Prev
       </button>
@@ -34,7 +34,7 @@ const Pagination = ({ meta }: { meta: IMeta }) => {
       <button
         onClick={() => handlePage(Math.min(totalPage, currentPage + 1))}
         disabled={currentPage >= totalPage}
-        className="px-4 py-2 border rounded-lg bg-white disabled:opacity-50"
+        className="px-4 py-2 border rounded-lg bg-white disabled:opacity-50 cursor-pointer"
       >
         Next
       </button>

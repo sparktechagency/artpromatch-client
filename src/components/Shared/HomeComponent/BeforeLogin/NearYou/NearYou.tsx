@@ -28,8 +28,16 @@ const NearYou = () => {
             width={200}
           />
         </div>
-        <div className=" flex items-center justify-center">
-          <Image src={AllImages.image9} alt="logo" height={300} width={300} />
+        
+        <div className="flex items-center justify-center">
+          <Image
+            src={AllImages.image9}
+            alt="logo"
+            width={300}
+            height={300}
+            quality={100}
+            priority
+          />
         </div>
       </div>
     </div>

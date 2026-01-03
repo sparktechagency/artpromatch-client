@@ -223,7 +223,7 @@ const Bookings = ({ bookings = [] }: { bookings: IBooking[] }) => {
         <div>
           {booking.status === 'pending' && (
             <div
-              className="py-2 px-6 rounded-2xl bg-red-500 text-white w-fit"
+              className="py-2 px-6 rounded-2xl bg-red-500 text-white w-fit cursor-pointer"
               onClick={() =>
                 showConfirmationModal(
                   'Are you sure you want to cancel this booking?',

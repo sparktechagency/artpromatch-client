@@ -168,7 +168,7 @@ const PreferedLocation = () => {
               <button
                 type="button"
                 onClick={handleUseCurrentLocation}
-                className="flex justify-center items-center gap-2 text-primary border border-primary w-full py-2 rounded-xl"
+                className="flex justify-center items-center gap-2 text-primary border border-primary w-full py-2 rounded-xl cursor-pointer"
               >
                 <FaLocationArrow />
                 {location ? (
@@ -257,7 +257,7 @@ const PreferedLocation = () => {
                 disabled={!location || !stringLocation}
                 type="button"
                 onClick={handleContinue}
-                className="bg-primary w-full px-6 py-2 rounded-md"
+                className="bg-primary w-full px-6 py-2 rounded-md cursor-pointer"
               >
                 <div className="text-lg text-white">Continue</div>
               </button>

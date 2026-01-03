@@ -97,7 +97,7 @@ const UserTypeSelection = () => {
 
             <button
               onClick={handleNext}
-              className="w-full bg-primary py-2 rounded-lg mt-5"
+              className="w-full bg-primary py-2 rounded-lg mt-5 cursor-pointer"
             >
               <div className="text-lg text-white">Continue</div>
             </button>

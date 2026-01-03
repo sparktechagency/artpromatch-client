@@ -7,7 +7,7 @@ const SteadyHands = () => {
       <div className="md:mt-20 bg-[#f5f5f5] rounded-xl p-5 grid grid-cols-1 md:grid-cols-2 justify-center items-center">
         <div className="">
           <h1>
-            <span className="text-2xl font-semibold">
+            <span className="text-3xl font-semibold">
               Steady Hands: In your pocket.
             </span>
           </h1>

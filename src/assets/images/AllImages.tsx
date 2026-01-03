@@ -1,4 +1,4 @@
-import logo from '../images/logo.png';
+import logo from '../images/logo.svg';
 import logoOfset from '../images/opset-logo.png';
 import google from '../images/google.png';
 import user from '../images/user.png';
@@ -11,7 +11,7 @@ import image5 from '../images/image (5).png';
 import image6 from '../images/image (6).png';
 import image7 from '../images/image (7).png';
 import image8 from '../images/image (8).png';
-import image9 from '../images/image (9).png';
+import image9 from '../images/image (9).svg';
 import apple from '../images/apple.png';
 import playStore from '../images/playStore.png';
 import image10 from '../images/Image10.png';

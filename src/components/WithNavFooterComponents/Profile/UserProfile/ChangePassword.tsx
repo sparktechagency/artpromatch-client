@@ -148,7 +148,7 @@ const ChangePassword = () => {
           <Form.Item className="text-end">
             <button
               type="submit"
-              className="px-5 py-2 bg-primary rounded-xl font-bold"
+              className="px-5 py-2 bg-primary rounded-xl font-bold cursor-pointer"
             >
               <span className="text-white"> Update</span>
             </button>

@@ -93,7 +93,7 @@ const ServiceDetailsModal: React.FC<ServiceDetailsModalProps> = ({
         {images.length > 1 && (
           <button
             onClick={prevSlide}
-            className="absolute left-2 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow"
+            className="absolute left-2 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow cursor-pointer"
           >
             <FaChevronLeft className="text-xl" />
           </button>
@@ -103,7 +103,7 @@ const ServiceDetailsModal: React.FC<ServiceDetailsModalProps> = ({
         {images.length > 1 && (
           <button
             onClick={nextSlide}
-            className="absolute right-2 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow"
+            className="absolute right-2 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow cursor-pointer"
           >
             <FaChevronRight className="text-xl" />
           </button>

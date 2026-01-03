@@ -55,9 +55,27 @@ const Footer = () => {
         <div className="container mx-auto flex flex-col md:flex-row justify-between items-center my-10 md:my-16">
           <p>© {new Date().getFullYear()} Steady Hands. All rights reserved.</p>
           <div className="flex items-center gap-2">
-            <Image src={AllImages.x} alt="x" height={30} width={30} />
-            <Image src={AllImages.fb} alt="fb" height={30} width={30} />
-            <Image src={AllImages.insta} alt="insta" height={30} width={30} />
+            <Image
+              src={AllImages.x}
+              alt="x"
+              height={30}
+              width={30}
+              className="cursor-pointer"
+            />
+            <Image
+              src={AllImages.fb}
+              alt="fb"
+              height={30}
+              width={30}
+              className="cursor-pointer"
+            />
+            <Image
+              src={AllImages.insta}
+              alt="insta"
+              height={30}
+              width={30}
+              className="cursor-pointer"
+            />
           </div>
         </div>
       </div>

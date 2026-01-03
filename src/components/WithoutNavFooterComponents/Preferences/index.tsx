@@ -57,6 +57,16 @@ const Preferences = () => {
       }
     }
 
+    // artist part - set description and hourlyRate if available
+    if (savedRole === 'ARTIST') {
+      const savedDescription = localStorage.getItem('description');
+      const savedHourlyRate = localStorage.getItem('hourlyRate');
+      form.setFieldsValue({
+        description: savedDescription,
+        hourlyRate: savedHourlyRate,
+      });
+    }
+
     // business part
     const studioName = localStorage.getItem('studioName');
     const contactNumber = localStorage.getItem('contactNumber');
@@ -159,7 +169,7 @@ const Preferences = () => {
             <button
               disabled={!favoriteTattoos.length || !role}
               type="button"
-              className="w-full bg-primary text-white py-2 rounded-lg mt-5 mb-10"
+              className="w-full bg-primary text-white py-2 rounded-lg mt-5 mb-10 cursor-pointer"
             >
               <div className="text-lg text-white"> Get Started</div>
             </button>
@@ -254,7 +264,7 @@ const Preferences = () => {
           <Form.Item>
             <button
               type="submit"
-              className="w-full bg-primary text-white py-2 rounded-lg mt-5 mb-10"
+              className="w-full bg-primary text-white py-2 rounded-lg mt-5 mb-10 cursor-pointer"
             >
               <div className="text-lg text-white">Get Started</div>
             </button>
@@ -358,7 +368,7 @@ const Preferences = () => {
           <Form.Item>
             <button
               type="submit"
-              className="w-full bg-primary text-white py-2 rounded-lg mt-5 mb-10"
+              className="w-full bg-primary text-white py-2 rounded-lg mt-5 mb-10 cursor-pointer"
             >
               <div className="text-lg text-white">Get Started</div>
             </button>

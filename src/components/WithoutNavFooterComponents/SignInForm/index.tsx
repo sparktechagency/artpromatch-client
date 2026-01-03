@@ -203,7 +203,7 @@ const SignInForm: React.FC<SignInWithRedirectPath> = ({ redirectPath }) => {
               <button
                 type="submit"
                 disabled={loading}
-                className="bg-primary w-full px-6 py-2 rounded-md"
+                className="bg-primary w-full px-6 py-2 rounded-md cursor-pointer"
               >
                 <span className="text-white">Continue</span>
               </button>
@@ -214,7 +214,7 @@ const SignInForm: React.FC<SignInWithRedirectPath> = ({ redirectPath }) => {
           <div className="text-center">
             <div
               onClick={() => googleLogin()}
-              className="border w-full px-6 py-2 rounded-md text-primary flex justify-center items-center gap-5"
+              className="border w-full px-6 py-2 rounded-md text-primary flex justify-center items-center gap-5 cursor-pointer"
             >
               <Image src={AllImages.google} width={20} height={20} alt="logo" />
               Login with Google
