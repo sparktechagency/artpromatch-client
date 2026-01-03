@@ -71,20 +71,12 @@ const NavBar = () => {
       dropdownItems: [],
     },
     {
-      name: 'Guest Spots',
-      link: '/guest-spots',
-      icon: '',
-      isDropdown: false,
-      dropdownItems: [],
-    },
-    {
       name: 'Help',
       link: '/help',
       icon: '',
       isDropdown: false,
       dropdownItems: [],
     },
-
     {
       name: 'Join As',
       isDropdown: true,
@@ -239,21 +231,24 @@ const NavBar = () => {
                 />
               </Link>
 
-              <button onClick={handleLogout} className="text-red-500">
+              <div
+                onClick={handleLogout}
+                className="text-red-500 font-semibold cursor-pointer border border-primary px-10 py-3 rounded-md shadow-lg"
+              >
                 Logout
-              </button>
+              </div>
             </div>
           ) : (
             <div className="hidden lg:flex items-center space-x-4 ">
               <Link href="/sign-in" className="text-white">
-                <button className="bg-primary px-10 py-3 rounded-md shadow-lg">
+                <div className="bg-primary px-10 py-3 rounded-md shadow-lg">
                   Log In
-                </button>
+                </div>
               </Link>
               <Link href="/sign-up">
-                <button className="border border-primary text-primary px-10 py-3 rounded-md shadow-lg">
+                <div className="border border-primary text-primary px-10 py-3 rounded-md shadow-lg">
                   Sign Up
-                </button>
+                </div>
               </Link>
             </div>
           )}

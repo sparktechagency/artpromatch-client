@@ -74,7 +74,7 @@ const ForgotPasswordPage = () => {
               <Form.Item className="text-center">
                 <button
                   disabled={isLoading}
-                  className="w-full bg-primary text-center py-2 rounded-lg mt-5"
+                  className="w-full bg-primary text-center py-2 rounded-lg mt-5 cursor-pointer"
                   type="submit"
                 >
                   <span className="text-lg text-white">

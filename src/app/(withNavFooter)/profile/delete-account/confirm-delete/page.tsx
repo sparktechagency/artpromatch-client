@@ -92,7 +92,7 @@ const ConfirmDelete = () => {
         <div className="my-5 flex justify-end items-end">
           <button
             onClick={showDeleteModal}
-            className="bg-red-100 text-red-500 border border-red-500 rounded-xl px-4 py-2"
+            className="bg-red-100 text-red-500 border border-red-500 rounded-xl px-4 py-2 cursor-pointer"
           >
             Delete Account
           </button>
@@ -115,12 +115,12 @@ const ConfirmDelete = () => {
             </p>
             <div className="flex justify-center items-center gap-2 mt-4">
               <button
-                className="bg-slate-50 text-slate-900 border border-slate-900 rounded-xl px-4 py-2"
+                className="bg-slate-50 text-slate-900 border border-slate-900 rounded-xl px-4 py-2 cursor-pointer"
                 onClick={handleCancel}
               >
                 Cancel
               </button>
-              <button className="bg-red-100 text-red-500 border border-red-500 rounded-xl px-4 py-2">
+              <button className="bg-red-100 text-red-500 border border-red-500 rounded-xl px-4 py-2 cursor-pointer">
                 Delete Account
               </button>
             </div>

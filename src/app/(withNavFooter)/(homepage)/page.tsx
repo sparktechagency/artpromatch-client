@@ -9,18 +9,23 @@ const Homepage = async ({
 }) => {
   const query = await searchParams;
 
-  const { data: services, meta } = await getAllNormalServices(
-    query.page,
-    '12',
-    query
-  );
+  // const { data: services, meta } = await getAllNormalServices(
+  //   query.page,
+  //   '12',
+  //   query
+  // );
 
-  const { data: bookings } =
-    await getBookingsWithReviewThatHaveReviewForClientHomePage();
+  // const { data: bookings } =
+  //   await getBookingsWithReviewThatHaveReviewForClientHomePage();
+
+  const [{ data, meta }, { data: bookings }] = await Promise.all([
+    getAllNormalServices(query.page, '12', query),
+    getBookingsWithReviewThatHaveReviewForClientHomePage(),
+  ]);
 
   return (
     <div>
-      <HomeComponent services={services} meta={meta} bookings={bookings} />
+      <HomeComponent data={data} meta={meta} bookings={bookings} />
     </div>
   );
 };

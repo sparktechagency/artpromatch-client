@@ -14,7 +14,7 @@ const GuestSpotsPage = async ({
 }) => {
   const query = await searchParams;
 
-  const { data: services, meta } = await getAllGuestServicesFromDB(
+  const { data, meta } = await getAllGuestServicesFromDB(
     query.page,
     '12',
     query
@@ -22,7 +22,7 @@ const GuestSpotsPage = async ({
 
   return (
     <div className="container mx-auto px-2 md:px-0">
-      <Services services={services} />
+      <Services data={data} />
       <Pagination meta={meta} />
     </div>
   );

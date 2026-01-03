@@ -508,7 +508,7 @@ const StayUpdated = () => {
               <button
                 disabled={isLoading}
                 type="submit"
-                className="w-full bg-primary text-lg font-medium text-white text-center p-2 rounded-xl mt-6 transition hover:bg-primary/90"
+                className="w-full bg-primary text-lg font-medium text-white text-center p-2 rounded-xl mt-6 transition hover:bg-primary/90 cursor-pointer"
               >
                 {isLoading ? 'Creating...' : 'Create Profile'}
               </button>
@@ -578,7 +578,7 @@ const StayUpdated = () => {
               <button
                 disabled={isLoading}
                 type="submit"
-                className="w-full bg-primary text-lg font-medium text-center p-2 rounded-xl mt-6 transition hover:bg-primary/90"
+                className="w-full bg-primary text-lg font-medium text-center p-2 rounded-xl mt-6 transition hover:bg-primary/90 cursor-pointer"
               >
                 <div className="text-white">
                   {isLoading ? 'Creating...' : 'Create Profile'}

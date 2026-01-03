@@ -26,7 +26,7 @@ const PreferenceSelection = async () => {
                 </div>
               </div>
               <Link href="/preferences">
-                <button className="w-full bg-primary py-2 rounded-lg mt-5 text-center">
+                <button className="w-full bg-primary py-2 rounded-lg mt-5 text-center cursor-pointer">
                   <div className="text-lg text-white">Get Started</div>
                 </button>
               </Link>

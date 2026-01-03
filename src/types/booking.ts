@@ -33,6 +33,7 @@ export interface IBooking {
   scheduledDurationInMin: number;
   // Booking-level status
   status: TBookingStatus;
+  isReviewed: boolean;
 
   serviceName: string;
   price: number;

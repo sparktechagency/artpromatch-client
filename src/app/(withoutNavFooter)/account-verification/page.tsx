@@ -92,7 +92,7 @@ const AccountVerificationPage = () => {
 
           <div
             onClick={handleSubmit}
-            className="bg-primary text-white text-center py-3 rounded-xl w-full my-5"
+            className="bg-primary text-white text-center py-3 rounded-xl w-full my-5 cursor-pointer"
           >
             Send
           </div>

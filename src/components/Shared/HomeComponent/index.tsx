@@ -6,22 +6,25 @@ import { useUser } from '@/context/UserContext';
 import { IBooking, IMeta, IService } from '@/types';
 
 const HomeComponent = ({
-  services = [],
+  data,
   meta,
   bookings = [],
 }: {
-  services: IService[];
+  data: {
+    sortedServices: IService[];
+    favoriteTattoos: string[];
+  };
   meta: IMeta;
   bookings: IBooking[];
 }) => {
   const { user } = useUser();
 
   const renderContent = () => {
-    if (!user) return <BeforeLogin services={services} bookings={bookings} />;
+    if (!user) return <BeforeLogin services={data?.sortedServices} bookings={bookings} />;
 
     switch (user.role) {
       case 'CLIENT':
-        return <ClientAfterLogin services={services} meta={meta} />;
+        return <ClientAfterLogin data={data} meta={meta} />;
 
       // case 'ARTIST':
       //   return <ArtistAfterLogin />;
@@ -30,7 +33,9 @@ const HomeComponent = ({
       //   return <BusinessAfterLogin />;
 
       default:
-        return <BeforeLogin services={services} bookings={bookings} />;
+        return (
+          <BeforeLogin services={data?.sortedServices} bookings={bookings} />
+        );
     }
   };
 

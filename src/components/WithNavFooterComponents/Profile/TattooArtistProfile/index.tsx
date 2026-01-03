@@ -118,11 +118,12 @@ const TattoArtistProfile = ({
                 <CiHeart className="h-4 w-4 " />
               </button>
             </Link> */}
-            <Link href={`/message?receiverId=${artistAuthId}`}>
-              <button className="px-3 py-1 rounded-xl border flex justify-center items-center gap-2">
-                <AiOutlineMessage className="h-4 w-4 " />
-                Message
-              </button>
+            <Link
+              href={`/message?receiverId=${artistAuthId}`}
+              className="px-3 py-1 rounded-xl border flex justify-center items-center gap-2"
+            >
+              <AiOutlineMessage className="h-4 w-4 " />
+              Message
             </Link>
             {/* <Link href="/booking-availablity">
               <button className="px-3 py-1 rounded-xl border flex justify-center items-center gap-2 bg-primary text-white">

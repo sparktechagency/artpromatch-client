@@ -644,7 +644,7 @@ const MessageContent = () => {
                   <button
                     type="button"
                     onClick={sendMessage}
-                    className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white"
+                    className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white cursor-pointer"
                   >
                     <div className="text-white">Send</div>
                   </button>

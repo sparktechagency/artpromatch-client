@@ -63,7 +63,7 @@ const CheckoutForm = ({
       <div className="mt-4 sticky bottom-0 bg-white pt-4 z-10">
         <button
           onClick={handleConfirmPayment}
-          className="w-full bg-primary py-3 rounded-lg"
+          className="w-full bg-primary py-3 rounded-lg cursor-pointer"
         >
           <span className="text-white">Pay Now</span>
         </button>
@@ -288,7 +288,7 @@ const BookingAvailability = ({ serviceId }: { serviceId: string }) => {
             </h3>
             <div
               onClick={clearSelection}
-              className="text-black hover:text-red-800 hover:scale-105 transition-colors flex items-center text-sm"
+              className="text-black hover:text-red-800 hover:scale-105 transition-colors flex items-center text-sm cursor-pointer"
             >
               <FaTimes className="mr-1" />
               Clear
@@ -321,7 +321,7 @@ const BookingAvailability = ({ serviceId }: { serviceId: string }) => {
             <button
               onClick={handleSubmit}
               disabled={isSubmitting}
-              className="flex-1 bg-primary hover:bg-blue-700 py-3 px-6 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 bg-primary hover:bg-blue-700 py-3 px-6 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               <div className="text-white flex justify-center items-center">
                 {isSubmitting ? (

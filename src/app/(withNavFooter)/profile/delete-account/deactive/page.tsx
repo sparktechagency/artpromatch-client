@@ -155,7 +155,7 @@ const DeactiveAccount = () => {
           <Form.Item>
             <button
               onClick={handleOpenConfirm}
-              className="bg-red-100 text-red-500 border border-red-500 rounded-xl px-4 py-2"
+              className="bg-red-100 text-red-500 border border-red-500 rounded-xl px-4 py-2 cursor-pointer"
             >
               Deactivate Account
             </button>
@@ -181,13 +181,13 @@ const DeactiveAccount = () => {
             <div className="flex justify-center items-center gap-2">
               <button
                 onClick={handleCancel}
-                className="bg-slate-50 text-slate-900 border border-slate-900 rounded-xl px-4 py-2"
+                className="bg-slate-50 text-slate-900 border border-slate-900 rounded-xl px-4 py-2 cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 onClick={handleOk}
-                className="bg-red-100 text-red-500 border border-red-500 rounded-xl px-4 py-2"
+                className="bg-red-100 text-red-500 border border-red-500 rounded-xl px-4 py-2 cursor-pointer"
               >
                 Deactivate Account
               </button>
