@@ -20,7 +20,7 @@ const HomeComponent = ({
   const { user } = useUser();
 
   const renderContent = () => {
-    if (!user) return <BeforeLogin services={data.sortedServices} bookings={bookings} />;
+    if (!user) return <BeforeLogin services={data?.sortedServices} bookings={bookings} />;
 
     switch (user.role) {
       case 'CLIENT':
@@ -34,7 +34,7 @@ const HomeComponent = ({
 
       default:
         return (
-          <BeforeLogin services={data.sortedServices} bookings={bookings} />
+          <BeforeLogin services={data?.sortedServices} bookings={bookings} />
         );
     }
   };

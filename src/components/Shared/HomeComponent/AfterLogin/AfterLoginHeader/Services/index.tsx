@@ -8,7 +8,7 @@ import { FaStar } from 'react-icons/fa6';
 import { SiGoogletasks } from 'react-icons/si';
 import ServiceDetailsModal from './ServiceDetailsModal';
 import Mapview from './Mapview';
-import { ExpertiseType, IService } from '@/types';
+import { IService } from '@/types';
 import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
 import { toast } from 'sonner';
 import { updateClientRadius } from '@/services/Service';
@@ -22,17 +22,22 @@ const Services = ({
   data,
 }: {
   data: {
-    sortedServices: IService[];
-    favoriteTattoos: string[];
+    sortedServices?: IService[];
+    favoriteTattoos?: string[];
+    availableExpertise?: string[];
   };
 }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const services = data?.sortedServices;
-  const favoriteTattoos = data?.favoriteTattoos;
+
+  const services = data?.sortedServices ?? [];
+  const favoriteTattoos = data?.favoriteTattoos ?? [];
+  const availableExpertise = data?.availableExpertise
+    ? [ALL, ...data?.availableExpertise]
+    : [];
 
   /* ---------------- filters ---------------- */
-  const { artistTypes, tattooCategories } = useMemo(() => {
+  const { artistTypes } = useMemo(() => {
     const types = Array.from(
       new Set(
         services
@@ -41,17 +46,17 @@ const Services = ({
       )
     );
 
-    const categories = Array.from(
-      new Set(
-        services
-          ?.flatMap(s => s?.artist?.expertise || [])
-          .filter(v => Boolean(v && String(v).trim()))
-      )
-    );
+    // const categories = Array.from(
+    //   new Set(
+    //     services
+    //       ?.flatMap(s => s?.artist?.expertise || [])
+    //       .filter(v => Boolean(v && String(v).trim()))
+    //   )
+    // );
 
     return {
       artistTypes: [ALL, ...types],
-      tattooCategories: [ALL, ...categories],
+      // tattooCategories: [ALL, ...categories],
     };
   }, [services]);
 
@@ -69,15 +74,32 @@ const Services = ({
   const [radius, setRadius] = useState<string>('');
 
   useEffect(() => {
-    setArtistType(searchParams.get('artistType') || ALL);
+    const urlArtistType = searchParams.get('artistType');
+    const urlTattooCategory = searchParams.get('tattooCategory');
 
-    const categoryParam = searchParams.get('tattooCategory');
+    // artist type:
+    // - if missing => keep your default logic (or preferredArtistType if you have it)
+    // - if 'All' => set ALL
+    // - else => set value
+    setArtistType(urlArtistType || ALL);
 
-    if (categoryParam) {
-      setTattooCategoriesSelected(categoryParam.split(','));
-    } else {
+    // tattoo category:
+    // - if missing => default favorites
+    // - if 'All' => no filter
+    // - else => parse list
+    if (urlTattooCategory == null) {
+      setTattooCategoriesSelected(favoriteTattoos ?? []);
+    } else if (urlTattooCategory === 'All') {
       setTattooCategoriesSelected([]);
+    } else {
+      setTattooCategoriesSelected(
+        urlTattooCategory
+          .split(',')
+          .map(s => s.trim())
+          .filter(Boolean)
+      );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Dedup artists for Map view
@@ -89,14 +111,16 @@ const Services = ({
 
   // Apply both filters consistently
   const filteredServices = useMemo(() => {
-    return services?.filter(s => {
+    return services.filter(s => {
       const byType = artistType === ALL ? true : s?.artist?.type === artistType;
+
       const byCategory =
         tattooCategoriesSelected.length === 0
           ? true
           : (s?.artist?.expertise || []).some(exp =>
               tattooCategoriesSelected.includes(exp)
             );
+
       return byType && byCategory;
     });
   }, [services, artistType, tattooCategoriesSelected]);
@@ -126,13 +150,22 @@ const Services = ({
   const updateQuery = (key: string, values: string[]) => {
     const params = new URLSearchParams(searchParams.toString());
 
+    // ✅ Explicit "All" kept in URL so it doesn't fallback to favorites next time
     if (values.length === 0) {
-      params.delete(key);
+      params.set(key, 'All');
     } else {
       params.set(key, values.join(','));
     }
 
-    router.push(`?${params.toString()}`, { scroll: false });
+    const next = `?${params.toString()}`;
+    const current = `?${searchParams.toString()}`;
+
+    if (next === current) return;
+
+    // ✅ defer navigation out of render phase
+    queueMicrotask(() => {
+      router.push(next, { scroll: false });
+    });
   };
 
   /* ---------------- UI ---------------- */
@@ -152,7 +185,7 @@ const Services = ({
           />
 
           <div className="flex flex-wrap gap-2">
-            {tattooCategories.map(cat => (
+            {availableExpertise?.map(cat => (
               <div
                 key={cat}
                 onClick={() => {
@@ -189,7 +222,7 @@ const Services = ({
             {tattooCategoriesSelected.length > 0
               ? tattooCategoriesSelected.join(', ')
               : 'All'}{' '}
-            ({filteredServices.length})
+            ({filteredServices?.length})
           </p>
 
           <div className="flex bg-slate-100 p-1 rounded-xl">
@@ -197,7 +230,7 @@ const Services = ({
               <button
                 key={v}
                 onClick={() => setView(v)}
-                className={`px-5 py-2 rounded-lg text-sm transition
+                className={`px-5 py-2 rounded-lg text-sm transition cursor-pointer
                   ${
                     view === v
                       ? 'bg-white shadow text-primary'
@@ -213,7 +246,7 @@ const Services = ({
         {/* Content */}
         {view === 'list' ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {filteredServices.map(service => {
+            {filteredServices?.map(service => {
               const km = `${((service?.artist?.distance ?? 0) / 1000).toFixed(
                 2
               )} km`;

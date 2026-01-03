@@ -32,7 +32,7 @@ export const getAllNormalServices = async (
     params.set('artistType', artistType);
   }
 
-  if (tattooCategory && tattooCategory !== 'All') {
+  if (tattooCategory) {
     params.set('tattooCategory', tattooCategory);
   }
 

@@ -206,7 +206,7 @@ const Bookings = ({ bookings = [] }: { bookings: IBooking[] }) => {
             {booking.status || 'N/A'}
           </span>
 
-          {booking.status === 'completed' && (
+          {booking.status === 'completed' && !booking.isReviewed && (
             <Link href={`/review/${booking._id}`}>
               <Button type="primary" size="small">
                 Leave Review
