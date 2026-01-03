@@ -18,14 +18,14 @@ const Homepage = async ({
   // const { data: bookings } =
   //   await getBookingsWithReviewThatHaveReviewForClientHomePage();
 
-  const [{ data: services, meta }, { data: bookings }] = await Promise.all([
+  const [{ data, meta }, { data: bookings }] = await Promise.all([
     getAllNormalServices(query.page, '12', query),
     getBookingsWithReviewThatHaveReviewForClientHomePage(),
   ]);
 
   return (
     <div>
-      <HomeComponent services={services} meta={meta} bookings={bookings} />
+      <HomeComponent data={data} meta={meta} bookings={bookings} />
     </div>
   );
 };

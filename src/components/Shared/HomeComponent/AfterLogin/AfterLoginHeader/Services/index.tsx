@@ -18,16 +18,25 @@ import { formatCount } from '@/lib/formatCount';
 type ViewMode = 'list' | 'map';
 const ALL = 'All';
 
-const Services = ({ services = [] }: { services: IService[] }) => {
+const Services = ({
+  data,
+}: {
+  data: {
+    sortedServices: IService[];
+    favoriteTattoos: string[];
+  };
+}) => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const services = data?.sortedServices;
+  const favoriteTattoos = data?.favoriteTattoos;
 
   /* ---------------- filters ---------------- */
   const { artistTypes, tattooCategories } = useMemo(() => {
     const types = Array.from(
       new Set(
         services
-          .map(s => s?.artist?.type)
+          ?.map(s => s?.artist?.type)
           .filter(v => Boolean(v && String(v).trim()))
       )
     );
@@ -35,7 +44,7 @@ const Services = ({ services = [] }: { services: IService[] }) => {
     const categories = Array.from(
       new Set(
         services
-          .flatMap(s => s?.artist?.expertise || [])
+          ?.flatMap(s => s?.artist?.expertise || [])
           .filter(v => Boolean(v && String(v).trim()))
       )
     );
@@ -74,13 +83,13 @@ const Services = ({ services = [] }: { services: IService[] }) => {
   // Dedup artists for Map view
   const uniqueArtists = useMemo(() => {
     const map = new Map<string, NonNullable<IService['artist']>>();
-    services.forEach(s => s?.artist?._id && map.set(s.artist._id, s.artist));
+    services?.forEach(s => s?.artist?._id && map.set(s.artist._id, s.artist));
     return Array.from(map.values());
   }, [services]);
 
   // Apply both filters consistently
   const filteredServices = useMemo(() => {
-    return services.filter(s => {
+    return services?.filter(s => {
       const byType = artistType === ALL ? true : s?.artist?.type === artistType;
       const byCategory =
         tattooCategoriesSelected.length === 0
@@ -93,7 +102,7 @@ const Services = ({ services = [] }: { services: IService[] }) => {
   }, [services, artistType, tattooCategoriesSelected]);
 
   const openShowServiceModal = (id: string) => {
-    setSelectedService(services.find(s => s._id === id) || null);
+    setSelectedService(services?.find(s => s._id === id) || null);
     setIsShowServiceModalOpen(true);
   };
 
