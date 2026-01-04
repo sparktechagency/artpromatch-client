@@ -242,6 +242,15 @@ const Services = ({
                   key={service._id}
                   className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition border overflow-hidden flex flex-col"
                 >
+                  {/* <Image
+                    onClick={() => openShowServiceModal(service._id)}
+                    src={getCleanImageUrl(service?.thumbnail)}
+                    alt={service?.title || 'Service thumbnail'}
+                    height={300}
+                    width={500}
+                    className="cursor-pointer w-full h-60 object-cover rounded-lg"
+                  /> */}
+
                   <div
                     onClick={() => openShowServiceModal(service._id)}
                     className="w-full h-56 bg-slate-100 flex items-center justify-center cursor-pointer"
