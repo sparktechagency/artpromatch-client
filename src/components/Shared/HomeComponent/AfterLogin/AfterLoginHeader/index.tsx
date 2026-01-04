@@ -9,6 +9,8 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useUser } from '@/context/UserContext';
 import { RxCross2 } from 'react-icons/rx';
+import Link from 'next/link';
+import { FiEdit2 } from 'react-icons/fi';
 
 const ClientAfterLoginHeader = () => {
   const router = useRouter();
@@ -43,11 +45,12 @@ const ClientAfterLoginHeader = () => {
     params.delete('searchTerm');
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
+
   // const items = [
   //   {
   //     key: '1',
   //     label: (
-  //       <Link target="_blank" rel="noopener noreferrer" href="">
+  //       <Link target="_blank" rel="noopener noreferrer" href="/profile/update">
   //         Current Location
   //       </Link>
   //     ),
@@ -55,7 +58,7 @@ const ClientAfterLoginHeader = () => {
   //   {
   //     key: '2',
   //     label: (
-  //       <Link target="_blank" rel="noopener noreferrer" href="">
+  //       <Link target="_blank" rel="noopener noreferrer" href="/profile/update">
   //         Change Location
   //       </Link>
   //     ),
@@ -66,7 +69,16 @@ const ClientAfterLoginHeader = () => {
     <div>
       <div className="mb-4 flex flex-col justify-center items-center text-center pt-16">
         <Image src={AllImages.logo} width={50} height={50} alt="logo" />
-        <h2 className="text-center md:text-6xl font-bold mt-6 mb-2">
+
+        {/* <Image
+          src={AllImages.logo}
+          width={80}
+          height={80}
+          alt="logo"
+          className="my-10"
+        /> */}
+
+        <h2 className="text-center md:text-5xl font-bold mt-6 mb-2">
           Discover Artists and Studios <br /> Near You
         </h2>
         <Typography.Text className="md:text-xl text-center text-primary mt-3 mb-10">
@@ -74,14 +86,26 @@ const ClientAfterLoginHeader = () => {
           preferences.
         </Typography.Text>
 
-        <div className="bg-slate-100 rounded-3xl p-2 flex justify-center items-center gap-3">
+        {/* <div className="bg-slate-100 rounded-3xl p-2 flex justify-center items-center gap-3">
           <IoLocationOutline className="h-5 w-5 text-primary" />
           <div className="text-sm">
             {user?.stringLocation || 'Your location'}
           </div>
-          {/* <Dropdown menu={{ items }} placement="bottom">
+          <Dropdown menu={{ items }} placement="bottom">
             <IoIosArrowDown className="h-5 w-5 text-primary cursor-pointer" />
-          </Dropdown> */}
+          </Dropdown>
+        </div> */}
+
+        <div className="bg-slate-100 rounded-3xl p-2 flex justify-center items-center gap-3">
+          <IoLocationOutline className="h-5 w-5 text-primary" />
+          <div className="text-sm">{user?.stringLocation}</div>
+          <Link
+            href="/profile/update"
+            className="p-1 rounded-full hover:bg-white/80 cursor-pointer transition-colors"
+            aria-label="Edit address"
+          >
+            <FiEdit2 className="h-4 w-4 text-primary" />
+          </Link>
         </div>
 
         {/* Search field */}
