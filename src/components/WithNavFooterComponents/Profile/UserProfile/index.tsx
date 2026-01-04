@@ -2,8 +2,23 @@
 
 import { useUser } from '@/context/UserContext';
 import { updateAuthData } from '@/services/Auth';
-import { ConfigProvider, Form, Input } from 'antd';
+import {
+  AutoComplete,
+  Button,
+  Col,
+  ConfigProvider,
+  Form,
+  Input,
+  InputNumber,
+  Row,
+} from 'antd';
+import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
+import {
+  getPlaceDetailsById,
+  getPlacesAutocomplete,
+  reverseGeocodeLatLng,
+} from '@/services/Location';
 
 interface UserProfileFormValues {
   fullName: string;
@@ -11,18 +26,39 @@ interface UserProfileFormValues {
   phoneNumber: string;
   // country: string;
   stringLocation: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 const UserProfile = () => {
   const { user, setIsLoading } = useUser();
   const [form] = Form.useForm<UserProfileFormValues>();
+  const [suggestions, setSuggestions] = useState<
+    { value: string; place_id: string }[]
+  >([]);
+  const [locating, setLocating] = useState(false);
+  const [, startTransition] = useTransition();
 
   const handleUpdateData = async (values: UserProfileFormValues) => {
     try {
-      const res = await updateAuthData({
+      const payload: {
+        fullName: string;
+        stringLocation: string;
+        latitude?: number;
+        longitude?: number;
+      } = {
         fullName: values.fullName,
         stringLocation: values.stringLocation,
-      });
+      };
+
+      if (typeof values.latitude === 'number') {
+        payload.latitude = values.latitude;
+      }
+      if (typeof values.longitude === 'number') {
+        payload.longitude = values.longitude;
+      }
+
+      const res = await updateAuthData(payload);
 
       if (res?.success) {
         toast.success(res?.message);
@@ -33,6 +69,103 @@ const UserProfile = () => {
     } catch (error: any) {
       console.error(error);
     }
+  };
+
+  const fetchLocationSuggestions = (input: string) => {
+    if (!input.trim()) {
+      setSuggestions([]);
+      return;
+    }
+    startTransition(async () => {
+      try {
+        const data = await getPlacesAutocomplete(input);
+        if (data.status === 'OK') {
+          setSuggestions(
+            (data.predictions || []).map(item => ({
+              value: item.description,
+              place_id: item.place_id,
+            }))
+          );
+        } else {
+          setSuggestions([]);
+        }
+      } catch (error) {
+        console.error(error);
+        setSuggestions([]);
+        toast.error('Location suggestions unavailable right now.');
+      }
+    });
+  };
+
+  const geocodeByPlaceId = (placeId: string) => {
+    if (!placeId) return;
+    startTransition(async () => {
+      try {
+        const details = await getPlaceDetailsById(placeId);
+        if (details.status === 'OK' && details.result?.geometry?.location) {
+          const loc = details.result.geometry.location;
+          const formatted =
+            details.result.formatted_address || details.result.name;
+          form.setFieldsValue({
+            stringLocation: formatted,
+            latitude: loc.lat,
+            longitude: loc.lng,
+          });
+        } else {
+          toast.error('Unable to fetch place details.');
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error('Failed to fetch place details.');
+      }
+    });
+  };
+
+  const handleSelectSuggestion = (
+    _: string,
+    option: { value: string; place_id?: string }
+  ) => {
+    form.setFieldsValue({ stringLocation: option.value });
+    if (option.place_id) {
+      geocodeByPlaceId(option.place_id);
+    }
+  };
+
+  const useCurrentLocation = () => {
+    if (!navigator?.geolocation) {
+      toast.error('Geolocation is not supported by this browser.');
+      return;
+    }
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        const { latitude, longitude } = position.coords;
+        startTransition(async () => {
+          try {
+            const data = await reverseGeocodeLatLng(latitude, longitude);
+
+            const formatted =
+              data.results?.[0]?.formatted_address ??
+              `${latitude}, ${longitude}`;
+            form.setFieldsValue({
+              stringLocation: formatted,
+              latitude,
+              longitude,
+            });
+          } catch (error) {
+            console.error(error);
+            toast.error('Unable to reverse geocode your location.');
+          } finally {
+            setLocating(false);
+          }
+        });
+      },
+      () => {
+        setLocating(false);
+        toast.error('Unable to retrieve your location');
+      },
+      { enableHighAccuracy: true, timeout: 5000 }
+    );
   };
 
   return (
@@ -112,14 +245,63 @@ const UserProfile = () => {
           <Form.Item
             name="stringLocation"
             label={<p className=" text-md">Address</p>}
-            rules={[{ required: true, message: 'Please enter your name!' }]}
+            rules={[{ required: true, message: 'Please enter your address!' }]}
           >
-            <Input
-              style={{ padding: '6px' }}
-              className=" text-md"
-              placeholder="Your Address"
-            />
+            <AutoComplete
+              options={suggestions}
+              onSearch={value => {
+                if (!value) {
+                  setSuggestions([]);
+                  return;
+                }
+                fetchLocationSuggestions(value);
+              }}
+              onSelect={handleSelectSuggestion}
+              style={{ width: '100%' }}
+            >
+              <Input
+                style={{ padding: '6px' }}
+                className=" text-md"
+                placeholder="Your Address"
+              />
+            </AutoComplete>
           </Form.Item>
+          <Button
+            onClick={useCurrentLocation}
+            loading={locating}
+            className="mb-3!"
+          >
+            Use Current Location
+          </Button>
+
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="latitude"
+                label={<p className=" text-md">Latitude</p>}
+                rules={[{ required: true, message: 'Latitude is required' }]}
+              >
+                <InputNumber
+                  style={{ width: '100%' }}
+                  className=" text-md"
+                  placeholder="Latitude"
+                />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="longitude"
+                label={<p className=" text-md">Longitude</p>}
+                rules={[{ required: true, message: 'Longitude is required' }]}
+              >
+                <InputNumber
+                  style={{ width: '100%' }}
+                  className=" text-md"
+                  placeholder="Longitude"
+                />
+              </Form.Item>
+            </Col>
+          </Row>
 
           {/* <Form.Item
             name="country"

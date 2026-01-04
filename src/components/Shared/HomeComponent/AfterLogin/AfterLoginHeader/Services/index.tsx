@@ -3,7 +3,7 @@
 import { Input, Modal, Select } from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FaStar } from 'react-icons/fa6';
 import { SiGoogletasks } from 'react-icons/si';
 import ServiceDetailsModal from './ServiceDetailsModal';
@@ -36,32 +36,8 @@ const Services = ({
     ? [ALL, ...data?.availableExpertise]
     : [];
 
-  /* ---------------- filters ---------------- */
-  const { artistTypes } = useMemo(() => {
-    const types = Array.from(
-      new Set(
-        services
-          ?.map(s => s?.artist?.type)
-          .filter(v => Boolean(v && String(v).trim()))
-      )
-    );
-
-    // const categories = Array.from(
-    //   new Set(
-    //     services
-    //       ?.flatMap(s => s?.artist?.expertise || [])
-    //       .filter(v => Boolean(v && String(v).trim()))
-    //   )
-    // );
-
-    return {
-      artistTypes: [ALL, ...types],
-      // tattooCategories: [ALL, ...categories],
-    };
-  }, [services]);
-
   // UI state
-  const [artistType, setArtistType] = useState<string>(artistTypes[0] ?? ALL);
+  const [artistType, setArtistType] = useState<string>(ALL);
   const [tattooCategoriesSelected, setTattooCategoriesSelected] = useState<
     string[]
   >([]);
@@ -176,12 +152,18 @@ const Services = ({
         <div className="bg-white rounded-xl p-4 shadow-sm border flex flex-col md:flex-row gap-4 justify-between items-center">
           <Select
             value={artistType}
-            style={{ width: 180 }}
-            onChange={v => {
+            style={{ minWidth: 120 }}
+            popupMatchSelectWidth={false}
+            listHeight={200}
+            onChange={(v: string) => {
               setArtistType(v);
               updateQuery('artistType', [v]);
             }}
-            options={artistTypes.map(t => ({ label: t, value: t }))}
+            options={['All', 'Tattoo Artist', 'Piercer', 'Both']?.map(t => ({
+              label: t,
+              value: t,
+            }))}
+            className="w-fit"
           />
 
           <div className="flex flex-wrap gap-2">
