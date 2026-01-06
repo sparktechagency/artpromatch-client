@@ -118,7 +118,7 @@ export const config = {
     '/user-type-selection',
     '/preference-selection',
     '/preferences',
-    // '/preferred-location',
+    '/preferred-location',
     '/preferred-service',
     '/stay-updated',
     '/all-set',
