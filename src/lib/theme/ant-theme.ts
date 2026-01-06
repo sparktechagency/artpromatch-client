@@ -20,8 +20,8 @@ export const mainTheme = {
     // },
     Input: {
       activeBorderColor: '#667085',
-      hoverBorderColor: 'rgb(245,97,0)',
-      // colorBorder: 'rgb(245,97,0)',
+      hoverBorderColor: 'rgb(148,118,118)',
+      // colorBorder: 'rgb(148,118,118)',
       borderRadius: 5,
       controlHeight: 40,
     },

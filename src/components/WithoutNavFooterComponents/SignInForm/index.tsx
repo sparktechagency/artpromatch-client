@@ -143,87 +143,105 @@ const SignInForm: React.FC<SignInWithRedirectPath> = ({ redirectPath }) => {
   if (!isClient) return null;
 
   return (
-    <div className="container mx-auto my-10 md:my-40">
-      <div className="flex justify-center items-center">
-        <div>
+    <div className="min-h-screen w-full flex items-center justify-center px-4 py-12">
+      <div className="w-full max-w-xl">
+        <div className="">
+          <div className="mb-8 flex flex-col items-center text-center space-y-4">
+            <Image src={AllImages.logo} width={60} height={60} alt="logo" />
+            <div>
+              <h2 className="text-2xl font-semibold text-[#4c3636]">Sign In</h2>
+              <p className="text-sm text-black mt-2">
+                Sign in if you already have an account.
+              </p>
+            </div>
+          </div>
+
           <Form
             name="login"
             initialValues={{ remember: true }}
             onFinish={handleSignInUser}
             layout="vertical"
-            className="w-full md:w-150 bg-white px-2 rounded-2xl"
+            className="space-y-3"
           >
-            <div className="mb-4 flex flex-col justify-center items-center text-center">
-              <Image src={AllImages.logo} width={50} height={50} alt="logo" />
-              <h2 className="text-center text-2xl font-bold mt-6 mb-2 text-primary">
-                Sign In
-              </h2>
-              <div className="text-center text-base">
-                Sign in if you already have an account.
-              </div>
-            </div>
-
             <Form.Item
               name="email"
-              label={<p className=" text-md">Enter your email</p>}
+              label={
+                <p className="text-sm font-medium text-gray-500">
+                  Enter your email
+                </p>
+              }
+              className="mb-2"
             >
               <Input
                 required
-                style={{ padding: '6px' }}
-                className=" text-md"
+                className="h-11 rounded-xl border-[#d7c6c3] text-sm"
                 placeholder="slota812@gmail.com"
               />
             </Form.Item>
+
             <Form.Item
               name="password"
-              label={<p className=" text-md">Enter your Password</p>}
+              label={
+                <p className="text-sm font-medium text-gray-500">
+                  Enter your Password
+                </p>
+              }
+              className="mb-2"
             >
               <Input.Password
                 required
-                style={{ padding: '6px' }}
-                className=" text-md"
-                type="password"
-                placeholder="Password"
+                className="h-11 rounded-xl border-[#d7c6c3] text-sm"
+                placeholder="***********"
               />
             </Form.Item>
-            <Form.Item>
-              <div className="flex items-center justify-between">
-                <Form.Item name="remember" valuePropName="checked" noStyle>
-                  <Checkbox required className="text-md hover: text-md">
-                    Accept terms of services
-                  </Checkbox>
-                </Form.Item>
-                <p className=" text-primary">
-                  <Link href="/forgot-password">Forgot Password</Link>
-                </p>
-              </div>
-            </Form.Item>
 
-            <Form.Item className="text-center">
-              <button
-                type="submit"
-                disabled={loading}
-                className="bg-primary w-full px-6 py-2 rounded-md cursor-pointer"
+            <div className="flex items-center justify-between text-sm">
+              <Form.Item
+                name="remember"
+                valuePropName="checked"
+                className="mb-0"
+                rules={[
+                  { required: true, message: 'Please accept the terms first.' },
+                ]}
               >
-                <span className="text-white">Continue</span>
-              </button>
-            </Form.Item>
-          </Form>
-          <p className="text-center my-6 text-sm"> Or Sign in With</p>
-          {/* <GooleLogin /> */}
-          <div className="text-center">
-            <div
-              onClick={() => googleLogin()}
-              className="border w-full px-6 py-2 rounded-md text-primary flex justify-center items-center gap-5 cursor-pointer"
-            >
-              <Image src={AllImages.google} width={20} height={20} alt="logo" />
-              Login with Google
+                <Checkbox className=" text-sm text-gray-500">
+                  Remember me
+                </Checkbox>
+              </Form.Item>
+              <Link href="/forgot-password">
+                <span className="text-sm font-medium text-[#947676]">
+                  Forgot Password
+                </span>
+              </Link>
             </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full rounded-2xl bg-[#7b5859] py-3 text-base font-semibold text-white transition hover:bg-[#6a4a4b] disabled:opacity-60"
+            >
+              Continue
+            </button>
+          </Form>
+
+          <div className="mt-8 flex items-center gap-4 text-sm text-[#a38f8f]">
+            <span className="h-px flex-1 bg-[#f0e5e3]" />
+            or sign up with
+            <span className="h-px flex-1 bg-[#f0e5e3]" />
           </div>
 
-          <div className="text-center text-sm my-5">
+          <button
+            type="button"
+            onClick={() => googleLogin()}
+            className="mt-4 flex w-full items-center justify-center gap-3 rounded-2xl border-2 border-[#c8b4b2] py-3 text-sm font-medium text-[#403131] transition hover:bg-[#fdf5f3]"
+          >
+            <Image src={AllImages.google} width={20} height={20} alt="Google" />
+            Login with Google
+          </button>
+
+          <div className="mt-6 text-center text-sm text-[#6d5b5b]">
             Don&apos;t have an Account?
-            <Link href="/sign-up" className="text-blue-600 font-medium pl-2">
+            <Link href="/sign-up" className="pl-2 font-semibold text-[#947676]">
               Sign Up
             </Link>
           </div>
