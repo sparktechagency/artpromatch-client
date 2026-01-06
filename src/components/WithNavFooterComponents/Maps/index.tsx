@@ -3,7 +3,7 @@
 import { useRef } from 'react';
 import { useEffect } from 'react';
 import { Loader } from '@googlemaps/js-api-loader';
-import { LocationType } from '@/app/(withoutNavFooter)/preferd-location/page';
+import { LocationType } from '@/app/(withoutNavFooter)/preferred-location/page';
 
 const Maps = ({ location }: { location: LocationType }) => {
   const mapRef = useRef<HTMLDivElement | null>(null);

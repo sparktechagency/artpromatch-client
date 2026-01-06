@@ -5,34 +5,27 @@ import Link from 'next/link';
 
 const PreferenceSelection = async () => {
   return (
-    <div className="py-16 md:py-0 h-[100vh] w-full flex items-center justify-center ">
-      <div className="pt-32 pb-16">
-        <div className="">
-          <div className="w-[450px]">
-            <Form
-              name="select-user-type"
-              initialValues={{ remember: true }}
-              layout="vertical"
-              className="w-full md:w-[600px] bg-white px-2 rounded-2xl"
-            >
-              <div className="mb-4 flex flex-col justify-center items-center text-center">
-                <Image src={AllImages.logo} width={50} height={50} alt="logo" />
-                <h2 className="text-center text-2xl font-bold mt-6 mb-2 text-primary">
-                  Let&apos;s Personalize Your Experience!
-                </h2>
-                <div className="text-center text-base">
-                  Tell us what you&apos;re looking for so we can tailor
-                  recommendations just for you.
-                </div>
-              </div>
-              <Link href="/preferences">
-                <button className="w-full bg-primary py-2 rounded-lg mt-5 text-center cursor-pointer">
-                  <div className="text-lg text-white">Get Started</div>
-                </button>
-              </Link>
-            </Form>
+    <div className="min-h-screen w-full flex items-center justify-center px-4 py-16">
+      <div className="w-full max-w-md">
+        <Form className="rounded-[32px] bg-white px-8 py-10 text-center ">
+          <div className="flex flex-col items-center space-y-4">
+            <Image src={AllImages.logo} width={50} height={50} alt="logo" />
+            <div className="space-y-3">
+              <h2 className="text-2xl font-semibold text-[#2c1f1f]">
+                Let&apos;s Personalize Your Experience!
+              </h2>
+              <p className="text-base text-[#7e6d6e]">
+                Tell us what you&apos;re looking for so we can tailor
+                recommendations just for you.
+              </p>
+            </div>
           </div>
-        </div>
+          <Link href="/preferences">
+            <button className="mt-8 w-full rounded-2xl bg-[#7b5859] py-3 text-base font-semibold text-white transition hover:bg-[#6a4a4b] cursor-pointer">
+              Get Started
+            </button>
+          </Link>
+        </Form>
       </div>
     </div>
   );

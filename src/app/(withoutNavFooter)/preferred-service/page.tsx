@@ -24,7 +24,7 @@ interface OperatingHours {
   [day: string]: OperatingHour[];
 }
 
-const PreferdService = () => {
+const PreferredService = () => {
   const [role, setRole] = useState<string | null>(null);
 
   // client part
@@ -363,4 +363,4 @@ const PreferdService = () => {
   );
 };
 
-export default PreferdService;
+export default PreferredService;
