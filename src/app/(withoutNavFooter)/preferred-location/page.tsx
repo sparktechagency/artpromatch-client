@@ -1,21 +1,34 @@
 'use client';
 
 import { AllImages } from '@/assets/images/AllImages';
-import { ConfigProvider, Form, Input, Slider, Steps, Typography } from 'antd';
+import {
+  AutoComplete,
+  ConfigProvider,
+  Form,
+  Input,
+  Slider,
+  Steps,
+  Typography,
+} from 'antd';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { FaLocationArrow } from 'react-icons/fa6';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { getLocationName } from '@/services/Service';
+import {
+  getPlaceDetailsById,
+  getPlacesAutocomplete,
+} from '@/services/Location';
 
 export interface LocationType {
   longitude: number;
   latitude: number;
 }
 
-const PreferedLocation = () => {
+const PreferredLocation = () => {
   const [form] = Form.useForm();
+  const [hasMounted, setHasMounted] = useState<boolean>(false);
   const [role, setRole] = useState<string>('');
   const [stringLocation, setStringLocation] = useState<string>('');
   const [location, setLocation] = useState<LocationType | null>(null);
@@ -23,7 +36,15 @@ const PreferedLocation = () => {
   const [manualLongitude, setManualLongitude] = useState<string>('');
   const [radius, setRadius] = useState<number>(50);
   const [current, setCurrent] = useState<number>(1);
+  const [suggestions, setSuggestions] = useState<
+    { value: string; place_id: string }[]
+  >([]);
+  const [, startTransition] = useTransition();
   const router = useRouter();
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -32,7 +53,7 @@ const PreferedLocation = () => {
     const savedRole = localStorage.getItem('role');
     if (!savedRole) {
       toast.error('Please select all profile section!');
-      router.push('/user-type-selection');
+      // router.push('/user-type-selection');
       return;
     } else {
       setRole(savedRole);
@@ -72,6 +93,68 @@ const PreferedLocation = () => {
     setManualLongitude(location.longitude.toString());
   }, [location]);
 
+  const handleFetchPlaceDetails = (placeId: string) => {
+    if (!placeId) return;
+    startTransition(async () => {
+      try {
+        const details = await getPlaceDetailsById(placeId);
+        if (details.status === 'OK' && details.result?.geometry?.location) {
+          const loc = details.result.geometry.location;
+          setLocation({ latitude: loc.lat, longitude: loc.lng });
+          const formatted =
+            details.result.formatted_address || details.result.name;
+          if (formatted) {
+            setStringLocation(formatted);
+          }
+        } else {
+          toast.error('Unable to fetch place details.');
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error('Failed to fetch place details.');
+      }
+    });
+  };
+
+  const handleLocationSearch = (value: string) => {
+    setStringLocation(value);
+    if (!value.trim()) {
+      setSuggestions([]);
+      return;
+    }
+
+    startTransition(async () => {
+      try {
+        const data = await getPlacesAutocomplete(value);
+        if (data.status === 'OK') {
+          setSuggestions(
+            (data.predictions || []).map(item => ({
+              value: item.description,
+              place_id: item.place_id,
+            }))
+          );
+        } else {
+          setSuggestions([]);
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error('Location suggestions unavailable right now.');
+        setSuggestions([]);
+      }
+    });
+  };
+
+  const handleSuggestionSelect = (
+    _: string,
+    option: { value: string; place_id?: string }
+  ) => {
+    setStringLocation(option.value);
+    setSuggestions([]);
+    if (option.place_id) {
+      handleFetchPlaceDetails(option.place_id);
+    }
+  };
+
   useEffect(() => {
     if (typeof window === 'undefined' || !location) return;
     localStorage.setItem('location', JSON.stringify(location));
@@ -101,37 +184,15 @@ const PreferedLocation = () => {
     );
   };
 
-  const handleManualCoordinateChange = (
-    value: string,
-    coord: 'latitude' | 'longitude'
-  ) => {
-    if (coord === 'latitude') {
-      setManualLatitude(value);
+  useEffect(() => {
+    if (location) {
+      setManualLatitude(location.latitude.toString());
+      setManualLongitude(location.longitude.toString());
     } else {
-      setManualLongitude(value);
+      setManualLatitude('');
+      setManualLongitude('');
     }
-
-    const pendingLat = coord === 'latitude' ? value : manualLatitude;
-    const pendingLon = coord === 'longitude' ? value : manualLongitude;
-
-    const parsedLat = parseFloat(pendingLat);
-    const parsedLon = parseFloat(pendingLon);
-
-    const isLatValid =
-      pendingLat.trim() !== '' &&
-      Number.isFinite(parsedLat) &&
-      !Number.isNaN(parsedLat);
-    const isLonValid =
-      pendingLon.trim() !== '' &&
-      Number.isFinite(parsedLon) &&
-      !Number.isNaN(parsedLon);
-
-    if (isLatValid && isLonValid) {
-      setLocation({ latitude: parsedLat, longitude: parsedLon });
-    } else {
-      setLocation(null);
-    }
-  };
+  }, [location]);
 
   // Continue button
   const handleContinue = () => {
@@ -140,8 +201,12 @@ const PreferedLocation = () => {
     }
 
     localStorage.setItem('stringLocation', stringLocation);
-    router.push('/prefered-service');
+    router.push('/preferred-service');
   };
+
+  if (!hasMounted) {
+    return null;
+  }
 
   return (
     <div className="py-16 md:py-0 h-screen w-full flex items-center justify-center">
@@ -183,12 +248,16 @@ const PreferedLocation = () => {
 
             {/* Address Input */}
             <Form.Item>
-              <Input
+              <AutoComplete
                 value={stringLocation}
-                onChange={e => setStringLocation(e.target.value)}
-                placeholder="Enter your address"
-                className="text-md"
-              />
+                options={suggestions}
+                onSearch={handleLocationSearch}
+                onChange={handleLocationSearch}
+                onSelect={handleSuggestionSelect}
+                style={{ width: '100%' }}
+              >
+                <Input placeholder="Enter your address" className="text-md" />
+              </AutoComplete>
             </Form.Item>
 
             {/* Manual Lat/Lon */}
@@ -196,21 +265,19 @@ const PreferedLocation = () => {
               <Form.Item label="Latitude">
                 <Input
                   value={manualLatitude}
-                  onChange={e =>
-                    handleManualCoordinateChange(e.target.value, 'latitude')
-                  }
-                  placeholder="e.g. 23.8103"
-                  inputMode="decimal"
+                  readOnly
+                  disabled
+                  placeholder="Latitude"
+                  className="bg-gray-100 cursor-not-allowed"
                 />
               </Form.Item>
               <Form.Item label="Longitude">
                 <Input
                   value={manualLongitude}
-                  onChange={e =>
-                    handleManualCoordinateChange(e.target.value, 'longitude')
-                  }
-                  placeholder="e.g. 90.4125"
-                  inputMode="decimal"
+                  readOnly
+                  disabled
+                  placeholder="Longitude"
+                  className="bg-gray-100 cursor-not-allowed"
                 />
               </Form.Item>
             </div>
@@ -267,7 +334,7 @@ const PreferedLocation = () => {
           {/* Steps */}
           <Steps
             current={current}
-            direction="horizontal"
+            orientation="horizontal"
             size="small"
             items={[
               { title: '', status: 'finish' },
@@ -283,4 +350,4 @@ const PreferedLocation = () => {
   );
 };
 
-export default PreferedLocation;
+export default PreferredLocation;

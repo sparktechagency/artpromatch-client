@@ -30,5 +30,11 @@ export const mainTheme = {
       colorPrimaryBorder: 'rgb(223,88,0)',
       colorPrimaryHover: 'rgb(223,88,0)',
     },
+    Tabs: {
+      itemColor: '#816a6b',
+      itemHoverColor: '#6a5454',
+      itemActiveColor: '#6a5454',
+      inkBarColor: '#6a5454',
+    },
   },
 };

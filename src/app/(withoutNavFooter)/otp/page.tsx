@@ -75,28 +75,30 @@ const OtpPage = () => {
             </p>
           </div>
 
-          <div className="flex justify-center pt-5">
-            <Input.OTP
-              value={otp}
-              onChange={handleChange}
-              className="w-full max-w-sm"
-              length={6}
-            />
-          </div>
+          <div className="pt-5 flex flex-col gap-8">
+            <div className="flex justify-center">
+              <Input.OTP
+                value={otp}
+                onChange={handleChange}
+                className="w-full max-w-sm"
+                length={6}
+              />
+            </div>
 
-          <button
-            disabled={isLoading}
-            onClick={handleOtpSubmit}
-            className="bg-primary text-white py-3 rounded-xl w-full mt-10 hover:bg-blue-700 transition"
-          >
-            {isLoading ? 'Verifying...' : 'Verify OTP'}
-          </button>
+            <button
+              disabled={isLoading}
+              onClick={handleOtpSubmit}
+              className="bg-primary text-white py-3 rounded-xl w-full hover:bg-blue-700 transition cursor-pointer"
+            >
+              {isLoading ? 'Verifying...' : 'Verify OTP'}
+            </button>
+          </div>
 
           <div className="text-center mt-5">
             <span>Didn&apos;t get the code? </span>
             <button
               onClick={handleSendOtpAgain}
-              className="text-primary underline hover:text-blue-600 transition"
+              className="text-primary underline hover:text-blue-600 transition cursor-pointer"
             >
               Send Again
             </button>

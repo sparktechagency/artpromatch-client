@@ -102,7 +102,7 @@ const Preferences = () => {
     localStorage.setItem('description', values.description);
     localStorage.setItem('hourlyRate', values.hourlyRate);
 
-    router.push('/preferd-location');
+    router.push('/preferred-location');
   };
 
   // handleBusinessDetails
@@ -112,7 +112,7 @@ const Preferences = () => {
     localStorage.setItem('contactEmail', values.contactEmail);
     localStorage.setItem('businessType', values.businessType);
 
-    router.push('/preferd-location');
+    router.push('/preferred-location');
   };
 
   return role === 'CLIENT' ? (
@@ -165,7 +165,7 @@ const Preferences = () => {
           </div>
 
           {/* Navigation buttons */}
-          <Link href="/preferd-location">
+          <Link href="/preferred-location">
             <button
               disabled={!favoriteTattoos.length || !role}
               type="button"
