@@ -261,7 +261,7 @@ const PreferredLocation = () => {
             </Form.Item>
 
             {/* Manual Lat/Lon */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
               <Form.Item label="Latitude">
                 <Input
                   value={manualLatitude}
@@ -280,10 +280,9 @@ const PreferredLocation = () => {
                   className="bg-gray-100 cursor-not-allowed"
                 />
               </Form.Item>
-            </div>
+            </div> */}
 
             {/* Radius Slider */}
-
             {role === 'CLIENT' && (
               <ConfigProvider
                 theme={{
