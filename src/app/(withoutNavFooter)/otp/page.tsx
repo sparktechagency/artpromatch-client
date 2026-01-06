@@ -62,43 +62,47 @@ const OtpPage = () => {
   };
 
   return (
-    <div className="py-16 md:py-0 h-[100vh] w-full flex items-center justify-center">
-      <div className="mx-4 md:mx-0 w-auto md:w-[600px]">
-        <div className="py-10 px-5 md:px-14 bg-white rounded-2xl shadow-lg">
-          <div className="flex flex-col justify-center items-center">
-            <Image src={AllImages.logo} width={50} height={50} alt="logo" />
-            <h1 className="text-3xl text-center font-bold py-5">
-              OTP Verification
-            </h1>
-            <p className="text-center text-gray-600">
-              Please enter the verification code sent to your email.
-            </p>
+    <div className="min-h-screen w-full flex items-center justify-center px-4 py-12">
+      <div className="w-full max-w-xl">
+        <div className="rounded-[32px] bg-white px-8 py-10">
+          <div className="flex flex-col items-center text-center space-y-4">
+            <Image src={AllImages.logo} width={60} height={60} alt="logo" />
+            <div>
+              <h1 className="text-3xl font-semibold text-[#4c3636]">
+                OTP Verification
+              </h1>
+              <p className="text-sm text-[#7a6a6a] mt-2">
+                To reset you account, please enter the verification code you
+                received on your mail.
+              </p>
+            </div>
           </div>
 
-          <div className="pt-5 flex flex-col gap-8">
+          <div className="pt-6 flex flex-col gap-8">
             <div className="flex justify-center">
               <Input.OTP
                 value={otp}
                 onChange={handleChange}
-                className="w-full max-w-sm"
                 length={6}
+                size="large"
+                className="otp-input-large"
               />
             </div>
 
             <button
               disabled={isLoading}
               onClick={handleOtpSubmit}
-              className="bg-primary text-white py-3 rounded-xl w-full hover:bg-blue-700 transition cursor-pointer"
+              className="w-full rounded-2xl bg-[#7b5859] py-3 text-base font-semibold text-white transition hover:bg-[#6a4a4b] disabled:opacity-60 cursor-pointer"
             >
               {isLoading ? 'Verifying...' : 'Verify OTP'}
             </button>
           </div>
 
-          <div className="text-center mt-5">
+          <div className="text-center mt-5 text-sm text-[#6d5b5b]">
             <span>Didn&apos;t get the code? </span>
             <button
               onClick={handleSendOtpAgain}
-              className="text-primary underline hover:text-blue-600 transition cursor-pointer"
+              className="text-[#947676] font-semibold hover:text-[#7b5859] transition cursor-pointer"
             >
               Send Again
             </button>

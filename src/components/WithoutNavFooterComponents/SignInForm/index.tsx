@@ -145,7 +145,7 @@ const SignInForm: React.FC<SignInWithRedirectPath> = ({ redirectPath }) => {
   return (
     <div className="min-h-screen w-full flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-xl">
-        <div className="">
+        <div className="rounded-[32px] bg-white px-8 py-10">
           <div className="mb-8 flex flex-col items-center text-center space-y-4">
             <Image src={AllImages.logo} width={60} height={60} alt="logo" />
             <div>
@@ -218,7 +218,7 @@ const SignInForm: React.FC<SignInWithRedirectPath> = ({ redirectPath }) => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-2xl bg-[#7b5859] py-3 text-base font-semibold text-white transition hover:bg-[#6a4a4b] disabled:opacity-60"
+              className="w-full rounded-2xl bg-[#7b5859] py-3 text-base font-semibold text-white transition hover:bg-[#6a4a4b] disabled:opacity-60 cursor-pointer"
             >
               Continue
             </button>
@@ -233,7 +233,7 @@ const SignInForm: React.FC<SignInWithRedirectPath> = ({ redirectPath }) => {
           <button
             type="button"
             onClick={() => googleLogin()}
-            className="mt-4 flex w-full items-center justify-center gap-3 rounded-2xl border-2 border-[#c8b4b2] py-3 text-sm font-medium text-[#403131] transition hover:bg-[#fdf5f3]"
+            className="mt-4 flex w-full items-center justify-center gap-3 rounded-2xl border-2 border-[#c8b4b2] py-3 text-sm font-medium text-[#403131] transition hover:bg-[#fdf5f3] cursor-pointer"
           >
             <Image src={AllImages.google} width={20} height={20} alt="Google" />
             Login with Google

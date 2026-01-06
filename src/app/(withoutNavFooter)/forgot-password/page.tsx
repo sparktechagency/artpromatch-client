@@ -36,54 +36,49 @@ const ForgotPasswordPage = () => {
   if (!isClient) return null;
 
   return (
-    <div className="py-16 md:py-0 h-[100vh] w-full flex items-center justify-center ">
-      <div className="pt-32 pb-16">
-        <div className="">
-          <div className="w-[450px]">
-            <Form
-              name="login"
-              initialValues={{ remember: true }}
-              onFinish={handleForgotPassword}
-              layout="vertical"
-              className="w-full md:w-[600px] bg-white px-2 rounded-2xl"
-            >
-              <div className="mb-4 flex flex-col justify-center items-center text-center">
-                <Image src={AllImages.logo} width={50} height={50} alt="logo" />
-                <h2 className="text-center text-2xl font-bold mt-6 mb-2 text-primary">
-                  Forgot Password
-                </h2>
-                <Typography.Text className=" text-center text-base ">
-                  To reset your password, please enter the email address.
-                  You&apos;ll get the link on your email.
-                </Typography.Text>
-              </div>
-
-              <Form.Item
-                name="email"
-                label={<p className=" text-md">Enter your email</p>}
-              >
-                <Input
-                  required
-                  type="email"
-                  style={{ padding: '6px' }}
-                  className=" text-md"
-                  placeholder="slota812@gmail.com"
-                />
-              </Form.Item>
-
-              <Form.Item className="text-center">
-                <button
-                  disabled={isLoading}
-                  className="w-full bg-primary text-center py-2 rounded-lg mt-5 cursor-pointer"
-                  type="submit"
-                >
-                  <span className="text-lg text-white">
-                    {isLoading ? 'Running...' : 'Continue'}
-                  </span>
-                </button>
-              </Form.Item>
-            </Form>
+    <div className="min-h-screen w-full flex items-center justify-center px-4 py-12">
+      <div className="w-full max-w-xl">
+        <div className="rounded-[32px] bg-white px-8 py-10">
+          <div className="mb-6 flex flex-col items-center text-center space-y-4">
+            <Image src={AllImages.logo} width={60} height={60} alt="logo" />
+            <div>
+              <h2 className="text-2xl font-semibold text-[#4c3636]">
+                Forgot Password
+              </h2>
+              <Typography.Text className="block text-sm text-[#7a6a6a] mt-2">
+                To reset your password, please enter the email address. <br />
+                You&apos;ll get the link on your email.
+              </Typography.Text>
+            </div>
           </div>
+
+          <Form
+            name="forgot-password"
+            initialValues={{ remember: true }}
+            onFinish={handleForgotPassword}
+            layout="vertical"
+            className="space-y-4"
+          >
+            <Form.Item
+              name="email"
+              label={<p className="text-sm font-medium text-gray-500">Email</p>}
+            >
+              <Input
+                required
+                type="email"
+                className="h-11 rounded-xl border-[#d7c6c3] text-sm"
+                placeholder="Enter your email address"
+              />
+            </Form.Item>
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full rounded-2xl bg-[#7b5859] py-3 text-base font-semibold text-white transition hover:bg-[#6a4a4b] disabled:opacity-60 cursor-pointer"
+            >
+              {isLoading ? 'Sending...' : 'Send'}
+            </button>
+          </Form>
         </div>
       </div>
     </div>
