@@ -86,6 +86,8 @@ const AccountVerificationPage = () => {
                 value={otp}
                 onChange={onChange}
                 formatter={str => str.toUpperCase()}
+                size="large"
+                className="otp-input-large"
               />
             </Flex>
           </div>
@@ -101,7 +103,7 @@ const AccountVerificationPage = () => {
             Didn&apos;t get the code?{' '}
             <span
               onClick={handleResendOtp}
-              className="text-primary cursor-pointer"
+              className="text-primary cursor-pointer font-semibold"
             >
               Send Again
             </span>

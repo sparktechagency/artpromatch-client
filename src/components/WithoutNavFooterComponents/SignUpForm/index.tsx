@@ -167,46 +167,72 @@ const SignUpForm = () => {
   if (!isClient) return null;
 
   return (
-    <div className="container mx-auto my-10 md:my-40">
-      <div className="flex justify-center items-center">
-        <div>
-          <Form
-            name="login"
-            initialValues={{ remember: true }}
-            style={{ maxWidth: 550 }}
-            onFinish={handleSignUpUser}
-            layout="vertical"
-            className="w-full md:w-[600px] bg-white px-2 rounded-2xl"
-          >
-            <div className="mb-4 flex flex-col justify-center items-center text-center">
-              <Image src={AllImages.logo} width={50} height={50} alt="logo" />
-              <h2 className="text-center text-2xl font-bold mt-6 mb-2 text-primary">
+    <div className="min-h-screen w-full flex items-center justify-center px-4 py-12">
+      <div className="w-full max-w-xl">
+        <div className="rounded-[32px] bg-white px-8 py-10">
+          <div className="mb-8 flex flex-col items-center text-center space-y-4">
+            <Image src={AllImages.logo} width={60} height={60} alt="logo" />
+            <div>
+              <h2 className="text-2xl font-semibold text-[#4c3636]">
                 Create Account
               </h2>
-              <Typography.Text className=" text-center text-base ">
+              <Typography.Text className="block text-sm text-[#7a6a6a] mt-2">
                 Register for Your Account Instantly!
               </Typography.Text>
             </div>
+          </div>
 
+          <Form
+            name="signup"
+            initialValues={{ remember: true }}
+            onFinish={handleSignUpUser}
+            layout="vertical"
+            className="space-y-4"
+          >
             <Form.Item
               name="fullName"
-              label={<p className=" text-md">Enter your Full Name</p>}
+              label={
+                <p className="text-sm font-medium text-gray-500">
+                  Enter your full name.
+                </p>
+              }
+              rules={[
+                { required: true, message: 'Please input your full name!' },
+                { type: 'string', message: 'Please enter a valid full name!' },
+              ]}
             >
-              <Input required placeholder="Olivia Reiss" />
+              <Input
+                required
+                className="h-11 rounded-xl border-[#d7c6c3] text-sm"
+                placeholder="Olivia Reiss"
+              />
             </Form.Item>
+
             <Form.Item
               name="email"
-              label="Enter your Email"
+              label={
+                <p className="text-sm font-medium text-gray-500">
+                  Enter your email to get started.
+                </p>
+              }
               rules={[
                 { required: true, message: 'Please input your email!' },
                 { type: 'email', message: 'Please enter a valid email!' },
               ]}
             >
-              <Input placeholder="slota812@gmail.com" />
+              <Input
+                className="h-11 rounded-xl border-[#d7c6c3] text-sm"
+                placeholder="slota812@gmail.com"
+              />
             </Form.Item>
+
             <Form.Item
               name="phoneNumber"
-              label="Enter your Phone Number"
+              label={
+                <p className="text-sm font-medium text-gray-500">
+                  Enter your phone number
+                </p>
+              }
               rules={[
                 { required: true, message: 'Please input your phone number!' },
                 {
@@ -216,24 +242,34 @@ const SignUpForm = () => {
                 },
               ]}
             >
-              <Input placeholder="+14155556666" />
+              <Input
+                className="h-11 rounded-xl border-[#d7c6c3] text-sm"
+                placeholder="+12 3456789"
+              />
             </Form.Item>
 
             <Form.Item
               name="password"
               label={
-                <p className="text-md">
+                <p className="text-sm font-medium text-gray-500">
                   Choose a password with at least 8 characters.
                 </p>
               }
               rules={passwordRules}
             >
-              <Input.Password placeholder="Password" />
+              <Input.Password
+                className="h-11 rounded-xl border-[#d7c6c3] text-sm"
+                placeholder="***********"
+              />
             </Form.Item>
 
             <Form.Item
               name="confirmPassword"
-              label="Confirm Password"
+              label={
+                <p className="text-sm font-medium text-gray-500">
+                  Confirm password
+                </p>
+              }
               dependencies={['password']}
               rules={[
                 { required: true, message: 'Please confirm your password' },
@@ -247,35 +283,40 @@ const SignUpForm = () => {
                 }),
               ]}
             >
-              <Input.Password placeholder="Confirm new password" />
+              <Input.Password
+                className="h-11 rounded-xl border-[#d7c6c3] text-sm"
+                placeholder="***********"
+              />
             </Form.Item>
 
-            <Form.Item className="text-center">
-              <button
-                type="submit"
-                disabled={loading}
-                className="bg-primary w-full px-6 py-2 rounded-md cursor-pointer"
-              >
-                <span className="text-white">Create Account</span>
-              </button>
-            </Form.Item>
-          </Form>
-          <p className="text-center my-6 text-sm"> Or Sign up with</p>
-          {/* <SocialLogin /> */}
-          <div className="text-center">
-            <div
-              onClick={() => googleLogin()}
-              className="border w-full px-6 py-2 rounded-md text-primary flex justify-center items-center gap-5 cursor-pointer"
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full rounded-2xl bg-[#7b5859] py-3 text-base font-semibold text-white transition hover:bg-[#6a4a4b] disabled:opacity-60 cursor-pointer"
             >
-              <Image src={AllImages.google} width={20} height={20} alt="logo" />
-              Login with Google
-            </div>
+              Create Account
+            </button>
+          </Form>
+
+          <div className="mt-8 flex items-center gap-4 text-sm text-[#a38f8f]">
+            <span className="h-px flex-1 bg-[#f0e5e3]" />
+            or sign up with
+            <span className="h-px flex-1 bg-[#f0e5e3]" />
           </div>
 
-          <div className="text-center text-sm my-5">
-            Already have an Account?
-            <Link href="/sign-in" className="text-blue-600 font-medium pl-2">
-              Sign In
+          <button
+            type="button"
+            onClick={() => googleLogin()}
+            className="mt-4 flex w-full items-center justify-center gap-3 rounded-2xl border-2 border-[#c8b4b2] py-3 text-sm font-medium text-[#403131] transition hover:bg-[#fdf5f3] cursor-pointer"
+          >
+            <Image src={AllImages.google} width={20} height={20} alt="Google" />
+            Sign Up with Google
+          </button>
+
+          <div className="mt-6 text-center text-sm text-[#6d5b5b]">
+            Already have an account?
+            <Link href="/sign-in" className="pl-2 font-semibold text-[#947676]">
+              Sign in
             </Link>
           </div>
         </div>
