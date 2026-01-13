@@ -5,12 +5,12 @@ import { updateAuthData } from '@/services/Auth';
 import {
   AutoComplete,
   Button,
-  Col,
+  // Col,
   ConfigProvider,
   Form,
   Input,
-  InputNumber,
-  Row,
+  // InputNumber,
+  // Row,
 } from 'antd';
 import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
@@ -274,7 +274,7 @@ const UserProfile = () => {
             Use Current Location
           </Button>
 
-          <Row gutter={16}>
+          {/* <Row gutter={16}>
             <Col span={12}>
               <Form.Item
                 name="latitude"
@@ -301,7 +301,7 @@ const UserProfile = () => {
                 />
               </Form.Item>
             </Col>
-          </Row>
+          </Row> */}
 
           {/* <Form.Item
             name="country"
