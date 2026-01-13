@@ -17,6 +17,7 @@ import { formatCount } from '@/lib/formatCount';
 
 type ViewMode = 'list' | 'map';
 const ALL = 'All';
+const ARTIST_TYPES = ['Tattoo Artist', 'Piercer', 'Both'];
 
 const Services = ({
   data,
@@ -31,13 +32,15 @@ const Services = ({
   const searchParams = useSearchParams();
 
   const services = data?.sortedServices ?? [];
+
+  console.log({ services });
   const favoriteTattoos = data?.favoriteTattoos ?? [];
   const availableExpertise = data?.availableExpertise
     ? [ALL, ...data?.availableExpertise]
     : [];
 
   // UI state
-  const [artistType, setArtistType] = useState<string>(ALL);
+  const [artistType, setArtistType] = useState<string[]>([]);
   const [tattooCategoriesSelected, setTattooCategoriesSelected] = useState<
     string[]
   >([]);
@@ -57,7 +60,16 @@ const Services = ({
     // - if missing => keep your default logic (or preferredArtistType if you have it)
     // - if 'All' => set ALL
     // - else => set value
-    setArtistType(urlArtistType || ALL);
+    if (!urlArtistType || urlArtistType === ALL) {
+      setArtistType([]);
+    } else {
+      setArtistType(
+        urlArtistType
+          .split(',')
+          .map(s => s.trim())
+          .filter(Boolean)
+      );
+    }
 
     // tattoo category:
     // - if missing => default favorites
@@ -88,7 +100,10 @@ const Services = ({
   // Apply both filters consistently
   const filteredServices = useMemo(() => {
     return services.filter(s => {
-      const byType = artistType === ALL ? true : s?.artist?.type === artistType;
+      const byType =
+        artistType.length === 0
+          ? true
+          : artistType.includes(s?.artist?.type || '');
 
       const byCategory =
         tattooCategoriesSelected.length === 0
@@ -151,18 +166,36 @@ const Services = ({
         {/* Filters */}
         <div className="bg-white rounded-xl p-4 shadow-sm border flex flex-col md:flex-row gap-4 justify-between items-center">
           <Select
-            value={artistType}
-            style={{ minWidth: 120 }}
+            mode="multiple"
+            allowClear
+            value={artistType.length ? artistType : [ALL]}
+            placeholder="Artist type"
+            style={{ minWidth: 180 }}
             popupMatchSelectWidth={false}
             listHeight={200}
-            onChange={(v: string) => {
-              setArtistType(v);
-              updateQuery('artistType', [v]);
+            onChange={(values: string[]) => {
+              if (values.includes(ALL)) {
+                const withoutAll = values.filter(v => v !== ALL);
+                if (withoutAll.length === 0) {
+                  setArtistType([]);
+                  updateQuery('artistType', []);
+                } else {
+                  setArtistType(withoutAll);
+                  updateQuery('artistType', withoutAll);
+                }
+                return;
+              }
+
+              setArtistType(values);
+              updateQuery('artistType', values);
             }}
-            options={['All', 'Tattoo Artist', 'Piercer', 'Both']?.map(t => ({
-              label: t,
-              value: t,
-            }))}
+            options={[
+              { label: ALL, value: ALL },
+              ...ARTIST_TYPES.map(t => ({
+                label: t,
+                value: t,
+              })),
+            ]}
             className="w-fit"
           />
 
