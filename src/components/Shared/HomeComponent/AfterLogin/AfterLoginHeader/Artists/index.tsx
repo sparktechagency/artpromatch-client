@@ -5,80 +5,20 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { FaStar } from 'react-icons/fa6';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa6';
 import { SiGoogletasks } from 'react-icons/si';
-import { loadStripe } from '@stripe/stripe-js';
-import {
-  Elements,
-  PaymentElement,
-  useElements,
-  useStripe,
-} from '@stripe/react-stripe-js';
 import ServiceDetailsModal from './ServiceDetailsModal';
 import Mapview from './Mapview';
+import BookingRequestModal from './BookingRequestModal';
 import { IArtist, IService } from '@/types';
 import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
 import { toast } from 'sonner';
-import { requestAServiceBooking, updateClientRadius } from '@/services/Service';
+import { updateClientRadius } from '@/services/Service';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { formatCount } from '@/lib/formatCount';
 
 type ViewMode = 'list' | 'map';
 const ALL = 'All';
 const ARTIST_TYPES = ['Tattoo Artist', 'Piercer', 'Both'];
-
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ''
-);
-
-const CheckoutForm = ({
-  onSuccess,
-  onError,
-}: {
-  onSuccess: () => void;
-  onError: (error: any) => void;
-}) => {
-  const stripe = useStripe();
-  const elements = useElements();
-
-  const handleConfirmPayment = async () => {
-    if (!stripe || !elements) return;
-
-    const { error, paymentIntent } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: `${window.location.origin}/booking/success`,
-      },
-      redirect: 'if_required',
-    });
-
-    if (error) {
-      onError(error);
-    } else if (
-      paymentIntent?.status === 'requires_capture' ||
-      paymentIntent?.status === 'succeeded'
-    ) {
-      onSuccess();
-    }
-  };
-
-  return (
-    <div className="bg-white p-6 rounded-xl shadow max-w-lg w-full mx-auto">
-      <div className="max-h-[65vh] overflow-y-auto pr-1 pb-24">
-        <PaymentElement />
-      </div>
-      <div className="mt-4 sticky bottom-0 bg-white pt-4 z-10">
-        <button
-          type="button"
-          onClick={handleConfirmPayment}
-          className="w-full bg-primary py-3 rounded-lg cursor-pointer"
-        >
-          <span className="text-white">Pay Now</span>
-        </button>
-      </div>
-    </div>
-  );
-};
 
 const Artists = ({
   data,
@@ -119,122 +59,10 @@ const Artists = ({
 
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [bookingArtist, setBookingArtist] = useState<IArtist | null>(null);
-  const [bookingType, setBookingType] = useState<
-    'hourly' | 'day' | 'consultation' | null
-  >(null);
-  const [selectedBookingImage, setSelectedBookingImage] = useState<string>('');
-  const [selectedBookingImageIndex, setSelectedBookingImageIndex] =
-    useState<number>(0);
-  const [isBookingSubmitting, setIsBookingSubmitting] = useState(false);
-  const [showPaymentForm, setShowPaymentForm] = useState(false);
-  const [clientSecret, setClientSecret] = useState('');
-
-  const availableBookingTypes = useMemo(() => {
-    const types: Array<'hourly' | 'day' | 'consultation'> = ['hourly'];
-
-    if (bookingArtist?.dayRate != null) {
-      types.push('day');
-    }
-
-    if (bookingArtist?.consultationFee != null) {
-      types.push('consultation');
-    }
-
-    return types;
-  }, [bookingArtist]);
-
-  const bookingImages = useMemo(() => {
-    const merged = [
-      ...(bookingArtist?.flashImages ?? []),
-      ...(bookingArtist?.portfolioImages ?? []),
-    ]
-      .map(s => (typeof s === 'string' ? s.trim() : ''))
-      .filter(Boolean);
-
-    const unique = Array.from(new Set(merged));
-    return unique.length ? unique : [bookingArtist?.auth?.image || ''];
-  }, [bookingArtist]);
-
-  useEffect(() => {
-    if (!isBookingModalOpen) return;
-    const first = bookingImages[0] || '';
-    setSelectedBookingImage(first);
-    setSelectedBookingImageIndex(0);
-    setBookingType(availableBookingTypes[0] ?? null);
-    setShowPaymentForm(false);
-    setClientSecret('');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isBookingModalOpen]);
-
-  useEffect(() => {
-    if (!isBookingModalOpen) return;
-    const idx = Math.max(0, bookingImages.indexOf(selectedBookingImage));
-    setSelectedBookingImageIndex(idx);
-  }, [bookingImages, isBookingModalOpen, selectedBookingImage]);
-
-  const prevBookingImage = () => {
-    if (bookingImages.length <= 1) return;
-    const nextIndex =
-      selectedBookingImageIndex === 0
-        ? bookingImages.length - 1
-        : selectedBookingImageIndex - 1;
-    setSelectedBookingImageIndex(nextIndex);
-    setSelectedBookingImage(bookingImages[nextIndex] || '');
-  };
-
-  const nextBookingImage = () => {
-    if (bookingImages.length <= 1) return;
-    const nextIndex =
-      selectedBookingImageIndex === bookingImages.length - 1
-        ? 0
-        : selectedBookingImageIndex + 1;
-    setSelectedBookingImageIndex(nextIndex);
-    setSelectedBookingImage(bookingImages[nextIndex] || '');
-  };
 
   const openBookingModal = (artist: IArtist) => {
     setBookingArtist(artist);
     setIsBookingModalOpen(true);
-  };
-
-  const handleSubmitBookingRequest = async () => {
-    if (!bookingArtist?._id) return;
-    if (!bookingType || !availableBookingTypes.includes(bookingType)) {
-      toast.warning('Please select a booking type');
-      return;
-    }
-    if (!selectedBookingImage) {
-      toast.warning('Please select an image');
-      return;
-    }
-
-    setIsBookingSubmitting(true);
-    try {
-      const payload = {
-        artistId: bookingArtist._id,
-        image: selectedBookingImage,
-        bookingType,
-      };
-
-      const res = await requestAServiceBooking(payload);
-      if (res?.success) {
-        toast.success(res?.message);
-
-        if (res?.data?.clientSecret) {
-          setClientSecret(res.data.clientSecret);
-          setShowPaymentForm(true);
-        } else {
-          setIsBookingModalOpen(false);
-        }
-      } else {
-        toast.error(res?.message);
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error('Something went wrong');
-    } finally {
-      setIsBookingSubmitting(false);
-    }
   };
 
   useEffect(() => {
@@ -629,127 +457,11 @@ const Artists = ({
           </div>
         </Modal>
 
-        <Modal
+        <BookingRequestModal
           open={isBookingModalOpen}
-          footer={null}
-          onCancel={() => setIsBookingModalOpen(false)}
-          centered
-          width={900}
-          destroyOnHidden
-        >
-          {showPaymentForm && clientSecret ? (
-            <div className="p-5">
-              <Elements stripe={stripePromise} options={{ clientSecret }}>
-                <CheckoutForm
-                  onSuccess={() => {
-                    toast.success('Payment successful!');
-                    setIsBookingModalOpen(false);
-                    setShowPaymentForm(false);
-                    setClientSecret('');
-                    router.push('/booking/success');
-                  }}
-                  onError={error => {
-                    toast.error(error?.message || 'Payment failed');
-                  }}
-                />
-              </Elements>
-            </div>
-          ) : (
-            <div className="p-5">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <h2 className="text-xl font-semibold">Request a Booking</h2>
-                  <p className="text-sm text-slate-500">
-                    Choose booking type and select an image
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="rounded-2xl overflow-hidden bg-slate-100 relative">
-                  <Image
-                    src={getCleanImageUrl(selectedBookingImage)}
-                    alt="booking image"
-                    width={1200}
-                    height={800}
-                    className="w-full h-[420px] object-cover"
-                  />
-
-                  {bookingImages.length > 1 && (
-                    <div className="absolute left-1/2 bottom-4 -translate-x-1/2 flex items-center gap-3 bg-white/80 backdrop-blur px-3 py-2 rounded-full shadow">
-                      <button
-                        type="button"
-                        onClick={prevBookingImage}
-                        className="h-9 w-9 flex items-center justify-center rounded-full border bg-white hover:bg-slate-50 cursor-pointer"
-                        aria-label="Previous"
-                      >
-                        <FaChevronLeft />
-                      </button>
-
-                      <div className="text-sm font-medium tabular-nums">
-                        {String(selectedBookingImageIndex + 1).padStart(2, '0')}
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={nextBookingImage}
-                        className="h-9 w-9 flex items-center justify-center rounded-full border bg-white hover:bg-slate-50 cursor-pointer"
-                        aria-label="Next"
-                      >
-                        <FaChevronRight />
-                      </button>
-                    </div>
-                  )}
-                </div>
-
-                <div>
-                  <div className="text-sm font-semibold text-slate-700 mb-2">
-                    Booking Type
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {availableBookingTypes.map(t => (
-                      <div
-                        key={t}
-                        onClick={() => setBookingType(t)}
-                        className={`px-4 py-2 rounded-full text-sm transition cursor-pointer capitalize border ${
-                          bookingType === t
-                            ? 'bg-primary text-white border-primary'
-                            : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
-                        }`}
-                      >
-                        {t}
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="mt-6">
-                    <div className="text-sm font-semibold text-slate-700 mb-2">
-                      Selected Image
-                    </div>
-                    <div className="rounded-2xl overflow-hidden bg-slate-100 border border-slate-200">
-                      <Image
-                        src={getCleanImageUrl(selectedBookingImage)}
-                        alt="selected"
-                        width={1200}
-                        height={800}
-                        className="w-full h-[160px] object-cover"
-                      />
-                    </div>
-                  </div>
-
-                  <button
-                    type="button"
-                    disabled={isBookingSubmitting}
-                    onClick={handleSubmitBookingRequest}
-                    className="w-full mt-6! text-white! py-3 rounded-xl bg-primary font-semibold hover:bg-primary/90 transition disabled:opacity-60 cursor-pointer"
-                  >
-                    {isBookingSubmitting ? 'Submitting...' : 'Request Booking'}
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-        </Modal>
+          artist={bookingArtist}
+          onClose={() => setIsBookingModalOpen(false)}
+        />
       </div>
     </div>
   );
