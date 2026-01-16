@@ -55,7 +55,13 @@ const CheckoutForm = ({
   return (
     <div className="bg-white p-6 rounded-xl shadow max-w-lg w-full mx-auto">
       <div className="max-h-[65vh] overflow-y-auto pr-1 pb-24">
-        <PaymentElement />
+        {/* <PaymentElement /> */}
+        <PaymentElement
+          options={{
+            layout: 'tabs',
+            paymentMethodOrder: ['card'],
+          }}
+        />
       </div>
       <div className="mt-4 sticky bottom-0 bg-white pt-4 z-10">
         <button
