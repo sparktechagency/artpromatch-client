@@ -8,8 +8,6 @@ import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
 import Image from 'next/image';
 import Link from 'next/link';
 import { AiOutlineMessage } from 'react-icons/ai';
-import { CiHeart } from 'react-icons/ci';
-import { SlCalender } from 'react-icons/sl';
 
 type TattooArtistProfileProps = {
   name: string;

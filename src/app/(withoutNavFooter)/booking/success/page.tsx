@@ -27,7 +27,7 @@ const Confetti = () => {
 // SuccessPageContent
 const SuccessPageContent = ({ message }: { message: string }) => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#667eea] to-[#764ba2] relative overflow-hidden p-5">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#7b5859] to-[#764ba2] relative overflow-hidden p-5">
       <Confetti />
 
       {/* Animated gradient overlay */}
@@ -106,7 +106,7 @@ const SuccessPageContent = ({ message }: { message: string }) => {
             {/* Action Button */}
             <Link
               href="/"
-              className={`inline-flex items-center gap-2 bg-gradient-to-br from-[#667eea] to-[#764ba2] text-white px-8 py-4 rounded-xl text-base font-semibold no-underline transition-all duration-300 shadow-[0_4px_16px_rgba(102,126,234,0.4)] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(102,126,234,0.5)] active:translate-y-0 ${styles.slideUp4}`}
+              className={`inline-flex items-center gap-2 bg-gradient-to-br from-[#7b5859] to-[#764ba2] text-white px-8 py-4 rounded-xl text-base font-semibold no-underline transition-all duration-300 shadow-[0_4px_16px_rgba(102,126,234,0.4)] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(102,126,234,0.5)] active:translate-y-0 ${styles.slideUp4}`}
             >
               <span>Continue to Dashboard</span>
               <svg
