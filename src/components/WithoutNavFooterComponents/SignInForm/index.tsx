@@ -219,9 +219,11 @@ const SignInForm: React.FC<SignInWithRedirectPath> = ({ redirectPath }) => {
               type="submit"
               disabled={loading}
               style={{ color: '#fff' }}
-              className="w-full rounded-2xl bg-primary py-3 text-base font-semibold text-white! transition hover:bg-[#6a4a4b] disabled:opacity-60 disabled:text-white! cursor-pointer"
+              className="w-full rounded-2xl bg-primary py-3 text-base font-semibold transition hover:bg-[#6a4a4b] disabled:opacity-60 cursor-pointer"
             >
-              Continue
+              <span className="flex items-center justify-center text-white">
+                {loading ? 'Signing in...' : 'Continue'}
+              </span>
             </button>
           </Form>
 
