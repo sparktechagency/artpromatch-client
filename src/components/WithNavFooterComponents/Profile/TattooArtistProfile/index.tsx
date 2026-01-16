@@ -2,12 +2,13 @@
 
 import { initSocket } from '@/utils/socket';
 import { useUser } from '@/context/UserContext';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AllImages } from '@/assets/images/AllImages';
 import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
 import Image from 'next/image';
 import Link from 'next/link';
 import { AiOutlineMessage } from 'react-icons/ai';
+import { trackArtistProfileView } from '@/services/ArtistProfileViews';
 
 type TattooArtistProfileProps = {
   name: string;
@@ -63,6 +64,45 @@ const TattoArtistProfile = ({
   artistAuthId,
 }: TattooArtistProfileProps) => {
   const isOnline = useArtistOnlineStatus(artistAuthId);
+
+  // profile view starts here
+  const hasTrackedRef = useRef(false);
+
+  useEffect(() => {
+    if (!artistAuthId) return;
+    if (hasTrackedRef.current) return;
+
+    const key = `artist_profile_view_tracked_at_${artistAuthId}`;
+    const ttlMs = 5 * 60 * 1000;
+
+    if (typeof window !== 'undefined') {
+      const lastTrackedAtRaw = localStorage.getItem(key);
+      const lastTrackedAt = lastTrackedAtRaw ? Number(lastTrackedAtRaw) : 0;
+      const now = Date.now();
+
+      if (Number.isFinite(lastTrackedAt) && lastTrackedAt > 0) {
+        if (now - lastTrackedAt < ttlMs) {
+          hasTrackedRef.current = true;
+          return;
+        }
+      }
+    }
+
+    hasTrackedRef.current = true;
+
+    (async () => {
+      try {
+        await trackArtistProfileView(artistAuthId);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem(key, String(Date.now()));
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, [artistAuthId]);
+  // profile view ends here
+
   const availabilityLabel =
     isOnline === null
       ? 'Checking availability...'

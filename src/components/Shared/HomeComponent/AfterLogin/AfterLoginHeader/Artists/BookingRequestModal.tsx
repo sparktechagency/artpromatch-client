@@ -14,7 +14,7 @@ import { Modal } from 'antd';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa6';
+import { FaCheck, FaChevronLeft, FaChevronRight } from 'react-icons/fa6';
 import { toast } from 'sonner';
 
 const stripePromise = loadStripe(
@@ -284,20 +284,61 @@ const BookingRequestModal = ({
               <div className="text-sm font-semibold text-slate-700 mb-2">
                 Booking Type
               </div>
-              <div className="flex flex-wrap gap-2">
-                {availableBookingTypes.map(t => (
-                  <div
-                    key={t}
-                    onClick={() => setBookingType(t)}
-                    className={`px-4 py-2 rounded-full text-sm transition cursor-pointer capitalize border ${
-                      bookingType === t
-                        ? 'bg-primary text-white border-primary'
-                        : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
-                    }`}
-                  >
-                    {t}
-                  </div>
-                ))}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {availableBookingTypes.map(t => {
+                  const selected = bookingType === t;
+                  const title =
+                    t === 'hourly'
+                      ? 'Hourly'
+                      : t === 'day'
+                      ? 'Day'
+                      : 'Consultation';
+                  const price =
+                    t === 'hourly'
+                      ? artist?.hourlyRate
+                      : t === 'day'
+                      ? artist?.dayRate
+                      : artist?.consultationFee;
+                  const suffix =
+                    t === 'hourly' ? '/hr' : t === 'day' ? '/day' : '';
+
+                  return (
+                    <button
+                      key={t}
+                      type="button"
+                      onClick={() => setBookingType(t)}
+                      className={`w-full text-left rounded-2xl border p-4 transition cursor-pointer ${
+                        selected
+                          ? 'border-primary bg-primary/5 ring-1 ring-primary'
+                          : 'border-slate-200 bg-white hover:bg-slate-50'
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <div className="text-sm font-semibold text-slate-900">
+                            {title}
+                          </div>
+                          <div className="mt-1 text-sm text-slate-600">
+                            {typeof price === 'number'
+                              ? `$${price}${suffix}`
+                              : 'N/A'}
+                          </div>
+                        </div>
+
+                        <div
+                          className={`h-6 w-6 rounded-full flex items-center justify-center border ${
+                            selected
+                              ? 'bg-primary border-primary text-white'
+                              : 'bg-white border-slate-200 text-transparent'
+                          }`}
+                          aria-hidden
+                        >
+                          <FaCheck className="h-3.5 w-3.5" />
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
 
               <div className="mt-6">
