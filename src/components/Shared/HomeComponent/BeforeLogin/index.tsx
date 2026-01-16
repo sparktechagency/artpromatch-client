@@ -8,26 +8,26 @@ import WantATattoo from './WantATattoo';
 import Testimonials from './Testimonials';
 import SteadyHands from './SteadyHands';
 import Link from 'next/link';
-import { IBooking, IService } from '@/types';
+import { IArtist, IBooking } from '@/types';
 
 const BeforeLogin = ({
-  services = [],
+  artists = [],
   bookings = [],
 }: {
-  services: IService[];
+  artists: IArtist[];
   bookings: IBooking[];
 }) => {
-  const allImages: string[] = services?.flatMap(service => [
-    service.thumbnail,
-    ...(service.images || []),
+  const allImages: string[] = artists?.flatMap(artist => [
+    ...(artist.flashImages ?? []),
+    ...(artist.portfolioImages ?? []),
   ]);
 
-  const tattooServices: IService[] = services?.filter(
-    service => service?.artist?.type === 'Tattoo Artist'
+  const tattooArtists = artists?.filter(
+    artist => artist?.type === 'Tattoo Artist' || artist?.type === 'Both'
   );
 
-  const pierceServices: IService[] = services?.filter(
-    service => service?.artist?.type === 'Piercer'
+  const pierceArtists = artists?.filter(
+    artist => artist?.type === 'Piercer' || artist?.type === 'Both'
   );
 
   return (
@@ -60,28 +60,28 @@ const BeforeLogin = ({
         <MarqueeComponent allImages={allImages} />
       </div>
 
-      {tattooServices?.length > 0 && (
+      {tattooArtists?.length > 0 && (
         <FeaturedArtists
-          services={tattooServices}
+          artists={tattooArtists}
           title="Featured Tattoo Artists"
         />
       )}
 
-      {pierceServices?.length > 0 && (
+      {pierceArtists?.length > 0 && (
         <FeaturedArtists
-          services={pierceServices}
+          artists={pierceArtists}
           title="Featured Piercing Artists"
         />
       )}
 
       <NearYou />
 
-      {tattooServices?.length > 0 && (
-        <WantATattoo title="Want a Tattoo Now?" services={tattooServices} />
+      {tattooArtists?.length > 0 && (
+        <WantATattoo title="Want a Tattoo Now?" artists={tattooArtists} />
       )}
 
-      {pierceServices?.length > 0 && (
-        <WantATattoo title="Want a Piercing Now?" services={pierceServices} />
+      {pierceArtists?.length > 0 && (
+        <WantATattoo title="Want a Piercing Now?" artists={pierceArtists} />
       )}
 
       {bookings.length > 0 && <Testimonials bookings={bookings} />}

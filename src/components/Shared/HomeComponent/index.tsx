@@ -3,7 +3,7 @@
 import ClientAfterLogin from '@/components/Shared/HomeComponent/AfterLogin/ClientAfterLogin';
 import BeforeLogin from '@/components/Shared/HomeComponent/BeforeLogin';
 import { useUser } from '@/context/UserContext';
-import { IBooking, IMeta, IService } from '@/types';
+import { IArtist, IBooking, IMeta } from '@/types';
 
 const HomeComponent = ({
   data,
@@ -11,8 +11,9 @@ const HomeComponent = ({
   bookings = [],
 }: {
   data: {
-    sortedServices: IService[];
-    favoriteTattoos: string[];
+    sortedArtists: IArtist[];
+    favoriteList: string[];
+    availableExpertise: string[];
   };
   meta: IMeta;
   bookings: IBooking[];
@@ -20,7 +21,8 @@ const HomeComponent = ({
   const { user } = useUser();
 
   const renderContent = () => {
-    if (!user) return <BeforeLogin services={data?.sortedServices} bookings={bookings} />;
+    if (!user)
+      return <BeforeLogin artists={data?.sortedArtists} bookings={bookings} />;
 
     switch (user.role) {
       case 'CLIENT':
@@ -34,7 +36,7 @@ const HomeComponent = ({
 
       default:
         return (
-          <BeforeLogin services={data?.sortedServices} bookings={bookings} />
+          <BeforeLogin artists={data?.sortedArtists} bookings={bookings} />
         );
     }
   };

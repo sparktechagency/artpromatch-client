@@ -1,6 +1,6 @@
 import { getAllGuestServicesFromDB } from '@/services/Service';
 import Pagination from '@/components/Shared/Pagination';
-import Services from '@/components/Shared/HomeComponent/AfterLogin/AfterLoginHeader/Services';
+import Artists from '@/components/Shared/HomeComponent/AfterLogin/AfterLoginHeader/Artists';
 
 const GuestSpotsPage = async ({
   searchParams,
@@ -22,7 +22,7 @@ const GuestSpotsPage = async ({
 
   return (
     <div className="container mx-auto px-2 md:px-0">
-      <Services data={data} />
+      <Artists data={data} />
       <Pagination meta={meta} />
     </div>
   );

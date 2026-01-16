@@ -44,7 +44,7 @@ export const getAllNormalServices = async (
     const res = await fetch(
       `${
         process.env.NEXT_PUBLIC_BASE_API
-      }/clients/normal-services?${params.toString()}`,
+      }/clients/normal-artists?${params.toString()}`,
       {
         method: 'GET',
         headers: {
@@ -100,7 +100,7 @@ export const getAllGuestServicesFromDB = async (
     const res = await fetch(
       `${
         process.env.NEXT_PUBLIC_BASE_API
-      }/clients/guest-services?${params.toString()}`,
+      }/clients/guest-artists?${params.toString()}`,
       {
         method: 'GET',
         headers: {

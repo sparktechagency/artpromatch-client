@@ -9,6 +9,8 @@ export interface IArtist {
   isConnBusiness: boolean;
   type: TArtistType;
   expertise: ExpertiseType[];
+  flashImages: string[];
+  portfolioImages: string[];
   city: string;
   stripeAccountId: string;
   isStripeReady: boolean;
@@ -23,6 +25,9 @@ export interface IArtist {
   distance?: number;
 
   hourlyRate: number;
+  dayRate: number | null;
+  consultationFee: number | null;
+
   idCardFront: string;
   idCardBack: string;
   selfieWithId: string;
