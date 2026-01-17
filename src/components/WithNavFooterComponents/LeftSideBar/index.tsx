@@ -71,14 +71,39 @@ const LeftSideBar = ({
       setIsModalOpen(false);
       setSearchResults([]);
       setSearchTerm('');
+
+      const existingConversation = conversations.find(
+        conversation => conversation?.userData?.userId === userData._id,
+      );
+
+      if (existingConversation) {
+        router.push(
+          `/message?conversationId=${existingConversation.conversationId}&receiverId=${userData._id}`,
+        );
+        return;
+      }
+
       router.push(
         `/message?receiverId=${userData._id}&receiverName=${encodeURIComponent(
-          userData.fullName
-        )}&receiverImage=${encodeURIComponent(userData.image || '')}`
+          userData.fullName,
+        )}&receiverImage=${encodeURIComponent(userData.image || '')}`,
       );
     } catch (err) {
       console.error('Failed to start conversation:', err);
     }
+  };
+
+  const getLastMessagePreview = (value?: string) => {
+    if (!value) return 'No messages yet';
+    const trimmed = value.trim();
+    if (!trimmed) return 'No messages yet';
+
+    const normalized = trimmed.toLowerCase();
+    if (normalized === '[unsupported message]') {
+      return 'Media attachment';
+    }
+
+    return trimmed;
   };
 
   return (
@@ -137,13 +162,13 @@ const LeftSideBar = ({
                   {conversation?.userData?.name}
                 </h3>
                 <p
-                  className={`text-sm truncate max-w-[160px] ${
+                  className={`text-sm truncate max-w-40 ${
                     conversation.conversationId === activeConversationId
                       ? 'text-gray-600'
                       : 'text-secondary'
                   }`}
                 >
-                  {conversation.lastMsg || 'No messages yet'}
+                  {getLastMessagePreview(conversation.lastMsg)}
                 </p>
               </div>
             </div>
@@ -155,7 +180,7 @@ const LeftSideBar = ({
                       {
                         month: 'short',
                         day: 'numeric',
-                      }
+                      },
                     )
                   : ''}
               </p>

@@ -14,13 +14,14 @@ import { ConfigProvider, Drawer, Spin } from 'antd';
 import { FaUsers } from 'react-icons/fa';
 import { FaX } from 'react-icons/fa6';
 import { BsEmojiSmile } from 'react-icons/bs';
-// import { IoIosAttach } from 'react-icons/io';
+import { IoIosAttach } from 'react-icons/io';
 // import { AudioOutlined } from '@ant-design/icons';
 import LeftSideBar from '@/components/WithNavFooterComponents/LeftSideBar';
 import { useUser } from '@/context/UserContext';
 import { getSocket, initSocket } from '@/utils/socket';
 import avatarImage from '@/assets/avatar.png';
 import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
+import { toast } from 'sonner';
 
 interface Conversation {
   conversationId: string;
@@ -42,6 +43,7 @@ interface Message {
   seen: boolean;
   createdAt: string;
   conversationId?: string;
+  imageUrl?: string[];
 }
 
 type MessageLike = Omit<Message, '_id' | 'conversationId'> & {
@@ -114,6 +116,7 @@ const MessageContent = () => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
+  const [attachments, setAttachments] = useState<string[]>([]);
   const [chatUser, setChatUser] = useState<ChatUser | null>(null);
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [isChatUserTyping, setIsChatUserTyping] = useState(false);
@@ -122,6 +125,7 @@ const MessageContent = () => {
   const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isTypingRef = useRef(false);
   const activeConversationRef = useRef<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const { user } = useUser();
   const router = useRouter();
@@ -163,7 +167,7 @@ const MessageContent = () => {
 
       if (!conversationId && receiverId) {
         router.replace(
-          `/message?conversationId=${payload.conversationId}&receiverId=${receiverId}`
+          `/message?conversationId=${payload.conversationId}&receiverId=${receiverId}`,
         );
       }
     };
@@ -176,6 +180,11 @@ const MessageContent = () => {
           ? (err as { message: string }).message
           : err;
       console.error('Socket error:', message);
+      toast.error(
+        typeof message === 'string'
+          ? message
+          : 'Something went wrong. Please try again.',
+      );
     };
 
     socket.on('connect', fetchConversations);
@@ -236,7 +245,7 @@ const MessageContent = () => {
       }) => {
         if (!isMounted || data.conversationId !== conversationId) return;
         const normalizedMessages = (data.messages || []).map(item =>
-          normalizeMessage(item)
+          normalizeMessage(item),
         );
         setMessages(normalizedMessages);
         if (data.userData) {
@@ -259,7 +268,7 @@ const MessageContent = () => {
             ? prev.map(existing =>
                 existing._id === normalized._id
                   ? { ...existing, ...normalized }
-                  : existing
+                  : existing,
               )
             : [...prev, normalized];
         });
@@ -273,8 +282,8 @@ const MessageContent = () => {
         const ids = new Set(data.messageIds.map(id => id.toString()));
         setMessages(prev =>
           prev.map(message =>
-            ids.has(message._id) ? { ...message, seen: true } : message
-          )
+            ids.has(message._id) ? { ...message, seen: true } : message,
+          ),
         );
         fetchConversations();
       };
@@ -353,7 +362,7 @@ const MessageContent = () => {
     }
 
     const fromList = conversations.find(
-      conversation => conversation.userData?.userId === receiverId
+      conversation => conversation.userData?.userId === receiverId,
     );
 
     if (fromList) {
@@ -382,12 +391,29 @@ const MessageContent = () => {
   }, [conversationId]);
 
   const sendMessage = () => {
-    if (!newMessage.trim() || !user?.id || !receiverId) return;
+    const trimmed = newMessage.trim();
+    if (!trimmed && attachments.length === 0) return;
+    if (!user?.id || !receiverId) return;
 
     try {
       const socket = getSocket();
-      socket.emit('send-message', { receiverId, text: newMessage.trim() });
+      const payload: {
+        receiverId: string;
+        text?: string;
+        imageBase64?: string[];
+      } = { receiverId };
+
+      if (trimmed) {
+        payload.text = trimmed;
+      }
+
+      if (attachments.length > 0) {
+        payload.imageBase64 = attachments;
+      }
+
+      socket.emit('send-message', payload);
       setNewMessage('');
+      setAttachments([]);
       emitStopTyping();
       if (typingTimeoutRef.current) {
         clearTimeout(typingTimeoutRef.current);
@@ -395,7 +421,170 @@ const MessageContent = () => {
       }
     } catch (error) {
       console.warn('Socket not ready yet.', error);
+      toast.error('Unable to send message. Please try again.');
     }
+  };
+
+  const handleAttachmentButtonClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === 'string') {
+          resolve(reader.result);
+        } else {
+          reject(new Error('Failed to read file'));
+        }
+      };
+      reader.onerror = () =>
+        reject(reader.error ?? new Error('Failed to read file'));
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const compressImageToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const image = document.createElement('img');
+      const url = URL.createObjectURL(file);
+
+      image.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          URL.revokeObjectURL(url);
+          reject(new Error('Canvas not supported'));
+          return;
+        }
+
+        const MAX_DIMENSION = 1280;
+        let { width, height } = image;
+
+        if (width > height && width > MAX_DIMENSION) {
+          height = (height * MAX_DIMENSION) / width;
+          width = MAX_DIMENSION;
+        } else if (height >= width && height > MAX_DIMENSION) {
+          width = (width * MAX_DIMENSION) / height;
+          height = MAX_DIMENSION;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(image, 0, 0, width, height);
+
+        canvas.toBlob(
+          blob => {
+            URL.revokeObjectURL(url);
+            if (!blob) {
+              reject(new Error('Failed to compress image'));
+              return;
+            }
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              if (typeof reader.result === 'string') {
+                resolve(reader.result);
+              } else {
+                reject(new Error('Failed to read compressed image'));
+              }
+            };
+            reader.onerror = () =>
+              reject(
+                reader.error ?? new Error('Failed to read compressed image'),
+              );
+            reader.readAsDataURL(blob);
+          },
+          file.type.includes('png') ? 'image/png' : 'image/jpeg',
+          0.85,
+        );
+      };
+
+      image.onerror = () => {
+        URL.revokeObjectURL(url);
+        reject(new Error('Failed to load image for compression'));
+      };
+
+      image.src = url;
+    });
+  };
+
+  const getProcessedBase64 = async (file: File) => {
+    const SIZE_THRESHOLD = 1.5 * 1024 * 1024; // 1.5MB
+    if (file.size <= SIZE_THRESHOLD) {
+      return fileToBase64(file);
+    }
+
+    try {
+      return await compressImageToBase64(file);
+    } catch (error) {
+      console.warn('Compression failed, using original image', error);
+      return fileToBase64(file);
+    }
+  };
+
+  const handleFilesSelected = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const files = event.target?.files;
+    if (!files || files.length === 0) {
+      if (event.target) {
+        event.target.value = '';
+      }
+      return;
+    }
+
+    const MAX_ATTACHMENTS = 5;
+    const current = attachments.length;
+    const remainingSlots = MAX_ATTACHMENTS - current;
+
+    if (remainingSlots <= 0) {
+      toast.error(
+        `You can attach up to ${MAX_ATTACHMENTS} images per message.`,
+      );
+      if (event.target) {
+        event.target.value = '';
+      }
+      return;
+    }
+
+    const SIZE_LIMIT = 400 * 1024; // 400KB
+    const selectedFiles = Array.from(files)
+      .filter(file => {
+        if (file.size > SIZE_LIMIT) {
+          toast.error(
+            `${file.name} is larger than 400KB. Please choose a smaller image.`,
+          );
+          return false;
+        }
+        return true;
+      })
+      .slice(0, remainingSlots);
+
+    if (selectedFiles.length === 0) {
+      if (event.target) {
+        event.target.value = '';
+      }
+      return;
+    }
+
+    try {
+      const base64List = await Promise.all(
+        selectedFiles.map(getProcessedBase64),
+      );
+      setAttachments(prev => [...prev, ...base64List]);
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to process selected images.');
+    } finally {
+      if (event.target) {
+        event.target.value = '';
+      }
+    }
+  };
+
+  const removeAttachment = (index: number) => {
+    setAttachments(prev => prev.filter((_, idx) => idx !== index));
   };
 
   const chatHeading = useMemo(() => {
@@ -525,9 +714,10 @@ const MessageContent = () => {
             placement="left"
             onClose={closeDrawer}
             open={isDrawerVisible}
-            width="80%"
+            size="large"
             closeIcon={<FaX className="text-black" />}
             className="lg:hidden"
+            styles={{ body: { padding: 0 }, wrapper: { maxWidth: '80%' } }}
           >
             <LeftSideBar
               conversations={conversations}
@@ -602,7 +792,36 @@ const MessageContent = () => {
                           : 'bg-neutral-100 text-gray-900'
                       }`}
                     >
-                      <p>{message.text}</p>
+                      {message.text && message.text.trim() !== '' && (
+                        <p>{message.text}</p>
+                      )}
+                      {Array.isArray(message.imageUrl) &&
+                        message.imageUrl.length > 0 && (
+                          <div
+                            className="mt-3 grid gap-2"
+                            style={{
+                              gridTemplateColumns:
+                                'repeat(auto-fit, minmax(120px, 1fr))',
+                            }}
+                          >
+                            {message.imageUrl.map((url, idx) => (
+                              <a
+                                key={`${message._id}-img-${idx}`}
+                                href={url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="block overflow-hidden rounded-xl border border-white/10"
+                              >
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img
+                                  src={url}
+                                  alt="Message attachment"
+                                  className="h-32 w-full object-cover"
+                                />
+                              </a>
+                            ))}
+                          </div>
+                        )}
                       <span className="mt-2 block text-right text-xs text-gray-400">
                         {formattedTime}
                         {isOwnMessage && message.seen ? ' • Seen' : ''}
@@ -617,6 +836,31 @@ const MessageContent = () => {
           <div className="border-t border-neutral-200 bg-white px-4 md:px-6 py-4">
             {receiverId ? (
               <div className="flex flex-col gap-3 rounded-2xl border border-neutral-200 bg-white px-4 py-3 shadow-sm">
+                {attachments.length > 0 && (
+                  <div className="flex flex-wrap gap-3">
+                    {attachments.map((src, index) => (
+                      <div
+                        key={`attachment-${index}`}
+                        className="relative h-20 w-20 overflow-hidden rounded-xl border"
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={src}
+                          alt="Attachment preview"
+                          className="h-full w-full object-cover"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removeAttachment(index)}
+                          className="absolute -top-2 -right-2 rounded-full bg-black/80 px-2 text-xs text-white"
+                          aria-label="Remove attachment"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
                 <div className="flex items-center gap-3">
                   <BsEmojiSmile className="text-xl text-gray-500" />
                   <input
@@ -639,8 +883,11 @@ const MessageContent = () => {
                       emitStopTyping();
                     }}
                   />
-                  {/* <IoIosAttach className="cursor-pointer text-lg text-gray-500" />
-                  <AudioOutlined className="cursor-pointer text-lg text-gray-500" /> */}
+                  <IoIosAttach
+                    className="cursor-pointer text-lg text-gray-500"
+                    onClick={handleAttachmentButtonClick}
+                  />
+                  {/* <AudioOutlined className="cursor-pointer text-lg text-gray-500" /> */}
                   <button
                     type="button"
                     onClick={sendMessage}
@@ -648,6 +895,14 @@ const MessageContent = () => {
                   >
                     <div className="text-white">Send</div>
                   </button>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    className="hidden"
+                    onChange={handleFilesSelected}
+                  />
                 </div>
               </div>
             ) : (
