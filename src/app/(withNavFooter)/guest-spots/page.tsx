@@ -1,4 +1,4 @@
-import { getAllGuestServicesFromDB } from '@/services/Service';
+import { getAllGuestArtists } from '@/services/Service';
 import Pagination from '@/components/Shared/Pagination';
 import Artists from '@/components/Shared/HomeComponent/AfterLogin/AfterLoginHeader/Artists';
 
@@ -14,11 +14,7 @@ const GuestSpotsPage = async ({
 }) => {
   const query = await searchParams;
 
-  const { data, meta } = await getAllGuestServicesFromDB(
-    query.page,
-    '12',
-    query
-  );
+  const { data, meta } = await getAllGuestArtists(query.page, '12', query);
 
   return (
     <div className="container mx-auto px-2 md:px-0">

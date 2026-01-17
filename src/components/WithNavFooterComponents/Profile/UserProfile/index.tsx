@@ -5,12 +5,12 @@ import { updateAuthData } from '@/services/Auth';
 import {
   AutoComplete,
   Button,
-  // Col,
+  Col,
   ConfigProvider,
   Form,
   Input,
-  // InputNumber,
-  // Row,
+  InputNumber,
+  Row,
 } from 'antd';
 import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
@@ -84,7 +84,7 @@ const UserProfile = () => {
             (data.predictions || []).map(item => ({
               value: item.description,
               place_id: item.place_id,
-            }))
+            })),
           );
         } else {
           setSuggestions([]);
@@ -123,7 +123,7 @@ const UserProfile = () => {
 
   const handleSelectSuggestion = (
     _: string,
-    option: { value: string; place_id?: string }
+    option: { value: string; place_id?: string },
   ) => {
     form.setFieldsValue({ stringLocation: option.value });
     if (option.place_id) {
@@ -164,7 +164,7 @@ const UserProfile = () => {
         setLocating(false);
         toast.error('Unable to retrieve your location');
       },
-      { enableHighAccuracy: true, timeout: 5000 }
+      { enableHighAccuracy: true, timeout: 5000 },
     );
   };
 
@@ -274,7 +274,7 @@ const UserProfile = () => {
             Use Current Location
           </Button>
 
-          {/* <Row gutter={16}>
+          <Row gutter={16} hidden>
             <Col span={12}>
               <Form.Item
                 name="latitude"
@@ -301,7 +301,7 @@ const UserProfile = () => {
                 />
               </Form.Item>
             </Col>
-          </Row> */}
+          </Row>
 
           {/* <Form.Item
             name="country"

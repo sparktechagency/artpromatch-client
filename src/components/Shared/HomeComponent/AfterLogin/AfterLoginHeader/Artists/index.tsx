@@ -80,7 +80,7 @@ const Artists = ({
         urlArtistType
           .split(',')
           .map(s => s.trim())
-          .filter(Boolean)
+          .filter(Boolean),
       );
     }
 
@@ -97,7 +97,7 @@ const Artists = ({
         urlTattooCategory
           .split(',')
           .map(s => s.trim())
-          .filter(Boolean)
+          .filter(Boolean),
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -122,7 +122,7 @@ const Artists = ({
         tattooCategoriesSelected.length === 0
           ? true
           : (artist?.expertise || []).some(exp =>
-              tattooCategoriesSelected.includes(exp)
+              tattooCategoriesSelected.includes(exp),
             );
 
       return byType && byCategory;

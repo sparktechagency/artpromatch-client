@@ -18,7 +18,7 @@ import { FaCheck, FaChevronLeft, FaChevronRight } from 'react-icons/fa6';
 import { toast } from 'sonner';
 
 const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ''
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '',
 );
 
 const CheckoutForm = ({
@@ -182,6 +182,7 @@ const BookingRequestModal = ({
         artistId: artist._id,
         image: selectedImage,
         bookingType,
+        location: artist?.stringLocation,
       };
 
       const res = await requestAServiceBooking(payload);
@@ -291,14 +292,14 @@ const BookingRequestModal = ({
                     t === 'hourly'
                       ? 'Hourly'
                       : t === 'day'
-                      ? 'Day'
-                      : 'Consultation';
+                        ? 'Day'
+                        : 'Consultation';
                   const price =
                     t === 'hourly'
                       ? artist?.hourlyRate
                       : t === 'day'
-                      ? artist?.dayRate
-                      : artist?.consultationFee;
+                        ? artist?.dayRate
+                        : artist?.consultationFee;
                   const suffix =
                     t === 'hourly' ? '/hr' : t === 'day' ? '/day' : '';
 

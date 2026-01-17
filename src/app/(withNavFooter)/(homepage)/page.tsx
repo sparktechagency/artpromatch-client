@@ -1,6 +1,6 @@
 import HomeComponent from '@/components/Shared/HomeComponent';
 import { getBookingsWithReviewThatHaveReviewForClientHomePage } from '@/services/Booking';
-import { getAllNormalServices } from '@/services/Service';
+import { getAllNormalArtists } from '@/services/Service';
 
 const Homepage = async ({
   searchParams,
@@ -19,7 +19,7 @@ const Homepage = async ({
   //   await getBookingsWithReviewThatHaveReviewForClientHomePage();
 
   const [{ data, meta }, { data: bookings }] = await Promise.all([
-    getAllNormalServices(query.page, '12', query),
+    getAllNormalArtists(query.page, '12', query),
     getBookingsWithReviewThatHaveReviewForClientHomePage(),
   ]);
 

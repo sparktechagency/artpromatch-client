@@ -7,11 +7,11 @@ import {
 import { FieldValues } from '@/types';
 import { revalidateTag } from 'next/cache';
 
-// getAllNormalServices
-export const getAllNormalServices = async (
+// getAllNormalArtists
+export const getAllNormalArtists = async (
   page: string = '1',
   limit: string = '12',
-  query: { [key: string]: string | string[] | undefined } = {}
+  query: { [key: string]: string | string[] | undefined } = {},
 ): Promise<any> => {
   const accessToken = await getValidAccessTokenForServerHandlerGet();
 
@@ -53,7 +53,7 @@ export const getAllNormalServices = async (
         next: {
           tags: ['SERVICES'],
         },
-      }
+      },
     );
 
     const result = await res.json();
@@ -63,11 +63,11 @@ export const getAllNormalServices = async (
   }
 };
 
-// getAllGuestServicesFromDB
-export const getAllGuestServicesFromDB = async (
+// getAllGuestArtists
+export const getAllGuestArtists = async (
   page: string = '1',
   limit: string = '12',
-  query: { [key: string]: string | string[] | undefined } = {}
+  query: { [key: string]: string | string[] | undefined } = {},
 ): Promise<any> => {
   const accessToken = await getValidAccessTokenForServerHandlerGet();
 
@@ -109,7 +109,7 @@ export const getAllGuestServicesFromDB = async (
         next: {
           tags: ['SERVICES'],
         },
-      }
+      },
     );
 
     const result = await res.json();
@@ -143,7 +143,7 @@ export const getAllGuestServicesFromDB = async (
 
 // requestAServiceBooking
 export const requestAServiceBooking = async (
-  bookingData: FieldValues
+  bookingData: FieldValues,
 ): Promise<any> => {
   const accessToken = await getValidAccessTokenForServerActions();
 
@@ -157,7 +157,7 @@ export const requestAServiceBooking = async (
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(bookingData),
-      }
+      },
     );
 
     const result = await res.json();
@@ -181,7 +181,7 @@ export const updateClientRadius = async (radius: number): Promise<any> => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ radius }),
-      }
+      },
     );
 
     revalidateTag('SERVICES');
@@ -206,7 +206,7 @@ export const getArtistProfileByHisId = async (id: string): Promise<any> => {
           Authorization: `Bearer ${accessToken}`,
         },
         cache: 'no-store',
-      }
+      },
     );
 
     const result = await res.json();
@@ -224,7 +224,7 @@ export const getLocationName = async (location: number[]) => {
   }
 
   const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${encodeURIComponent(
-    lat
+    lat,
   )}&lon=${encodeURIComponent(lon)}&accept-language=en`;
 
   const fetchWithTimeout = async (timeoutMs: number, signal?: AbortSignal) => {
