@@ -28,8 +28,8 @@ const ProfileMarker = ({ artist }: { artist: IArtist }) => {
           <div class="relative">
             <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-white shadow-lg">
               <img src="${getCleanImageUrl(artist?.auth?.image)}" alt="${
-          artist?.auth?.fullName
-        }" class="w-full h-full object-cover" />
+                artist?.auth?.fullName
+              }" class="w-full h-full object-cover" />
             </div>
             <div class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-white rotate-45"></div>
           </div>
@@ -48,7 +48,18 @@ const ProfileMarker = ({ artist }: { artist: IArtist }) => {
   if (!icon) return null;
 
   const coordinates = artist?.currentLocation?.coordinates;
-  const position: [number, number] = [coordinates[1], coordinates[0]];
+  const lng = coordinates?.[0];
+  const lat = coordinates?.[1];
+  if (
+    typeof lat !== 'number' ||
+    !Number.isFinite(lat) ||
+    typeof lng !== 'number' ||
+    !Number.isFinite(lng)
+  ) {
+    return null;
+  }
+
+  const position: [number, number] = [lat, lng];
 
   return (
     <Marker position={position} icon={icon}>

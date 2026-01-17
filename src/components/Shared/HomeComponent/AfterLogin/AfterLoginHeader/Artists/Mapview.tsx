@@ -6,11 +6,11 @@ import ProfileMarker from './ProfileMarker';
 // Dynamically import the map component to avoid SSR issues
 const MapContainer = dynamic(
   () => import('react-leaflet').then(mod => mod.MapContainer),
-  { ssr: false }
+  { ssr: false },
 );
 const TileLayer = dynamic(
   () => import('react-leaflet').then(mod => mod.TileLayer),
-  { ssr: false }
+  { ssr: false },
 );
 
 const Mapview = ({ artists }: { artists: IArtist[] }) => {
@@ -20,12 +20,24 @@ const Mapview = ({ artists }: { artists: IArtist[] }) => {
     setMounted(true);
   }, []);
 
+  const artistsWithValidCoords = (artists ?? []).filter(a => {
+    const coords = a?.currentLocation?.coordinates;
+    const lng = coords?.[0];
+    const lat = coords?.[1];
+    return (
+      typeof lat === 'number' &&
+      Number.isFinite(lat) &&
+      typeof lng === 'number' &&
+      Number.isFinite(lng)
+    );
+  });
+
   // Default center (first artist's location or fallback)
   const defaultCenter: [number, number] =
-    artists?.length > 0
+    artistsWithValidCoords.length > 0
       ? [
-          artists[0]?.currentLocation?.coordinates[1],
-          artists[0]?.currentLocation?.coordinates[0],
+          artistsWithValidCoords[0].currentLocation.coordinates[1],
+          artistsWithValidCoords[0].currentLocation.coordinates[0],
         ]
       : [40.7128, -74.006]; // Default to New York
 
@@ -52,7 +64,7 @@ const Mapview = ({ artists }: { artists: IArtist[] }) => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {artists?.map(artist => (
+        {artistsWithValidCoords.map(artist => (
           <ProfileMarker key={artist._id} artist={artist} />
         ))}
       </MapContainer>
