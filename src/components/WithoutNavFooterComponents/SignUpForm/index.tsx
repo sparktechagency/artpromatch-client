@@ -91,7 +91,7 @@ const SignUpForm = () => {
           `${process.env.NEXT_PUBLIC_GOOGLE_OAUTH_URL}`,
           {
             headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
-          }
+          },
         );
 
         const userData = await response.json();
@@ -147,17 +147,17 @@ const SignUpForm = () => {
         if (!value) return Promise.resolve();
         if (!/[A-Z]/.test(value))
           return Promise.reject(
-            'Password must contain at least one uppercase letter'
+            'Password must contain at least one uppercase letter',
           );
         if (!/[a-z]/.test(value))
           return Promise.reject(
-            'Password must contain at least one lowercase letter'
+            'Password must contain at least one lowercase letter',
           );
         if (!/[0-9]/.test(value))
           return Promise.reject('Password must contain at least one number');
         if (!/[@$!%*?&#]/.test(value))
           return Promise.reject(
-            'Password must contain at least one special character'
+            'Password must contain at least one special character',
           );
         return Promise.resolve();
       },
@@ -169,7 +169,7 @@ const SignUpForm = () => {
   return (
     <div className="min-h-screen w-full flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-xl">
-        <div className="rounded-[32px] bg-white px-8 py-10">
+        <div className="rounded-4xl bg-white px-8 py-10">
           <div className="mb-8 flex flex-col items-center text-center space-y-4">
             <Image src={AllImages.logo} width={60} height={60} alt="logo" />
             <div>
@@ -292,13 +292,15 @@ const SignUpForm = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-2xl bg-primary py-3 text-base font-semibold text-white transition hover:bg-[#6a4a4b] disabled:opacity-60 cursor-pointer"
+              className="w-full rounded-2xl bg-primary py-3 text-base font-semibold transition hover:bg-[#6a4a4b] disabled:opacity-60 cursor-pointer"
             >
-              Create Account
+              <span className="flex items-center justify-center text-white">
+                {loading ? 'Creating Account...' : 'Create Account'}
+              </span>
             </button>
           </Form>
 
-          <div className="mt-8 flex items-center gap-4 text-sm text-[#a38f8f]">
+          <div className="mt-8! flex items-center gap-4 text-sm text-[#a38f8f]">
             <span className="h-px flex-1 bg-[#f0e5e3]" />
             or sign up with
             <span className="h-px flex-1 bg-[#f0e5e3]" />
@@ -307,7 +309,7 @@ const SignUpForm = () => {
           <button
             type="button"
             onClick={() => googleLogin()}
-            className="mt-4 flex w-full items-center justify-center gap-3 rounded-2xl border-2 border-[#c8b4b2] py-3 text-sm font-medium text-[#403131] transition hover:bg-[#fdf5f3] cursor-pointer"
+            className="mt-4! flex w-full items-center justify-center gap-3 rounded-2xl border-2 border-[#c8b4b2] py-3 text-sm font-medium text-[#403131] transition hover:bg-[#fdf5f3] cursor-pointer"
           >
             <Image src={AllImages.google} width={20} height={20} alt="Google" />
             Sign Up with Google
