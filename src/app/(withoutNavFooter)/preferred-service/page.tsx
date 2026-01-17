@@ -175,10 +175,10 @@ const PreferredService = () => {
                 {role === 'CLIENT'
                   ? 'services are you looking for'
                   : role === 'ARTIST'
-                  ? 'expertises do you have'
-                  : role === 'BUSINESS'
-                  ? 'type of business do you have'
-                  : ''}
+                    ? 'expertises do you have'
+                    : role === 'BUSINESS'
+                      ? 'type of business do you have'
+                      : ''}
                 ?
               </h2>
               <Typography.Text className="text-center text-base">
@@ -347,7 +347,7 @@ const PreferredService = () => {
           {/* Steps */}
           <Steps
             current={current}
-            direction="horizontal"
+            orientation="horizontal"
             size="small"
             items={[
               { title: '', status: 'finish' },

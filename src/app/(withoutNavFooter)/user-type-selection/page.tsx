@@ -69,7 +69,7 @@ const UserTypeSelection = () => {
           </div>
         </div>
 
-        <div className="mt-8 space-y-4 max-w-[440px] mx-auto">
+        <div className="mt-8 space-y-4! max-w-[440px] mx-auto">
           {roleOptions.map(option => {
             const isSelected = option.value === role;
             return (
@@ -109,9 +109,9 @@ const UserTypeSelection = () => {
 
         <button
           onClick={handleNext}
-          className="mt-8 w-full rounded-2xl bg-[#7b5859] py-3 text-base font-semibold text-white transition hover:bg-[#6a4a4b] cursor-pointer"
+          className="mt-8! w-full rounded-2xl bg-[#7b5859] py-3 transition hover:bg-[#6a4a4b] cursor-pointer"
         >
-          Continue
+          <div className="text-base font-semibold text-white">Continue</div>
         </button>
       </div>
     </div>

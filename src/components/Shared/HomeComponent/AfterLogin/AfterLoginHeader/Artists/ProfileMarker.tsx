@@ -48,18 +48,7 @@ const ProfileMarker = ({ artist }: { artist: IArtist }) => {
   if (!icon) return null;
 
   const coordinates = artist?.currentLocation?.coordinates;
-  const lng = coordinates?.[0];
-  const lat = coordinates?.[1];
-  if (
-    typeof lat !== 'number' ||
-    !Number.isFinite(lat) ||
-    typeof lng !== 'number' ||
-    !Number.isFinite(lng)
-  ) {
-    return null;
-  }
-
-  const position: [number, number] = [lat, lng];
+  const position: [number, number] = [coordinates[1], coordinates[0]];
 
   return (
     <Marker position={position} icon={icon}>

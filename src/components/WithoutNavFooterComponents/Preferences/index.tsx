@@ -1,13 +1,17 @@
 'use client';
 
 import { AllImages } from '@/assets/images/AllImages';
-import { expertiseTattooServicesList } from '@/constants';
+import {
+  expertisePiercingsServicesList,
+  expertiseTattooServicesList,
+} from '@/constants';
 import { Form, Input, Radio, Steps, Typography } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { FaCheck } from 'react-icons/fa6';
 import { toast } from 'sonner';
 
 const Preferences = () => {
@@ -16,6 +20,7 @@ const Preferences = () => {
   const [role, setRole] = useState<string | null>(null);
   const [current, setCurrent] = useState<number>(0);
   const [favoriteTattoos, setFavoriteTattoos] = useState<string[]>([]);
+  const [favoritePiercing, setFavoritePiercing] = useState<string[]>([]);
   const [artistType, setArtistType] = useState<string>('');
 
   // const [studioName, setStudioName] = useState<string>('');
@@ -44,6 +49,15 @@ const Preferences = () => {
         setFavoriteTattoos(JSON.parse(savedFavoriteTattoos));
       } catch (error) {
         console.error('Error parsing favorite tattoos', error);
+      }
+    }
+
+    const savedFavoritePiercing = localStorage.getItem('favoritePiercing');
+    if (savedFavoritePiercing) {
+      try {
+        setFavoritePiercing(JSON.parse(savedFavoritePiercing));
+      } catch (error) {
+        console.error('Error parsing favorite piercing', error);
       }
     }
 
@@ -91,6 +105,15 @@ const Preferences = () => {
     localStorage.setItem('favoriteTattoos', JSON.stringify(updated));
   };
 
+  const handleFavoritePiercingSelect = (style: string) => {
+    const updated = favoritePiercing.includes(style)
+      ? favoritePiercing.filter(item => item !== style)
+      : [...favoritePiercing, style];
+
+    setFavoritePiercing(updated);
+    localStorage.setItem('favoritePiercing', JSON.stringify(updated));
+  };
+
   // handleArtistType
   const handleArtistType = (type: string) => {
     setArtistType(type);
@@ -115,6 +138,16 @@ const Preferences = () => {
     router.push('/preferred-location');
   };
 
+  if (!role) {
+    return (
+      <div className="py-16 md:py-0 h-[100vh] w-full flex items-center justify-center">
+        <div className="pt-32 pb-16">
+          <Form form={form} />
+        </div>
+      </div>
+    );
+  }
+
   return role === 'CLIENT' ? (
     <div className="py-16 md:py-0 h-[100vh] w-full flex items-center justify-center">
       <div className="pt-32 pb-16">
@@ -127,7 +160,7 @@ const Preferences = () => {
           <div className="mb-4 flex flex-col justify-center items-center text-center">
             <Image src={AllImages.logo} width={50} height={50} alt="logo" />
             <h2 className="text-center text-2xl font-bold mt-6 mb-2 text-primary">
-              What styles of art do you love?
+              What styles of Tattoos do you love?
             </h2>
             <Typography.Text className="text-center text-base">
               Pick as many as you&apos;d like.
@@ -156,18 +189,80 @@ const Preferences = () => {
                             : 'hover:border-primary'
                         }`}
                       >
-                        {style}
+                        <span className="flex items-center gap-2">
+                          {favoriteTattoos.includes(style) && (
+                            <FaCheck className="text-primary text-sm" />
+                          )}
+                          <span>{style}</span>
+                        </span>
                       </button>
                     ))}
                 </div>
-              )
+              ),
             )}
+          </div>
+
+          <div className="my-10 flex items-center gap-4">
+            <span className="h-px flex-1 bg-[#f0e5e3]" />
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#a38f8f]">
+              Piercings
+            </span>
+            <span className="h-px flex-1 bg-[#f0e5e3]" />
+          </div>
+
+          <div className="mt-10 pt-10 border-t border-dashed border-[#f0e5e3]">
+            <div className="mb-4 flex flex-col justify-center items-center text-center">
+              <h2 className="text-center text-2xl font-bold mb-2 text-primary">
+                What Piercings do you love?
+              </h2>
+              <Typography.Text className="text-center text-base">
+                Pick as many as you&apos;d like.
+              </Typography.Text>
+            </div>
+
+            <div className="flex flex-col gap-4">
+              {Array.from(
+                {
+                  length: Math.ceil(expertisePiercingsServicesList.length / 10),
+                },
+                (_, i) => (
+                  <div
+                    key={i}
+                    className="flex justify-center items-center gap-4 flex-wrap"
+                  >
+                    {expertisePiercingsServicesList
+                      .slice(i * 10, i * 10 + 10)
+                      .map(style => (
+                        <button
+                          key={style}
+                          type="button"
+                          onClick={() => handleFavoritePiercingSelect(style)}
+                          className={`px-4 py-2 rounded-3xl border transition ${
+                            favoritePiercing.includes(style)
+                              ? 'border-primary text-blue-500 font-semibold bg-gray-400/30'
+                              : 'hover:border-primary'
+                          }`}
+                        >
+                          <span className="flex items-center gap-2">
+                            {favoritePiercing.includes(style) && (
+                              <FaCheck className="text-primary text-sm" />
+                            )}
+                            <span>{style}</span>
+                          </span>
+                        </button>
+                      ))}
+                  </div>
+                ),
+              )}
+            </div>
           </div>
 
           {/* Navigation buttons */}
           <Link href="/preferred-location">
             <button
-              disabled={!favoriteTattoos.length || !role}
+              disabled={
+                (!favoriteTattoos.length && !favoritePiercing.length) || !role
+              }
               type="button"
               className="w-full bg-primary text-white py-2 rounded-lg mt-5 mb-10 cursor-pointer"
             >
@@ -179,7 +274,7 @@ const Preferences = () => {
         {/* Steps */}
         <Steps
           current={current}
-          direction="horizontal"
+          orientation="horizontal"
           size="small"
           items={[
             { title: '', status: current >= 0 ? 'finish' : 'wait' },
@@ -274,7 +369,7 @@ const Preferences = () => {
         {/* Steps */}
         <Steps
           current={current}
-          direction="horizontal"
+          orientation="horizontal"
           size="small"
           items={[
             { title: '', status: current >= 0 ? 'finish' : 'wait' },
@@ -378,7 +473,7 @@ const Preferences = () => {
         {/* Steps */}
         <Steps
           current={current}
-          direction="horizontal"
+          orientation="horizontal"
           size="small"
           items={[
             { title: '', status: current >= 0 ? 'finish' : 'wait' },

@@ -74,7 +74,7 @@ const StayUpdated = () => {
     // for client
     if (savedRole === 'CLIENT') {
       const savedNotificationPreferences = localStorage.getItem(
-        'notificationPreferences'
+        'notificationPreferences',
       );
 
       if (savedNotificationPreferences) {
@@ -109,7 +109,7 @@ const StayUpdated = () => {
       }
 
       const expertise: string[] = JSON.parse(
-        localStorage.getItem('expertise') || '[]'
+        localStorage.getItem('expertise') || '[]',
       );
       if (!expertise) {
         toast.error('Please select all profile section!');
@@ -190,7 +190,7 @@ const StayUpdated = () => {
       }
 
       const servicesOffered: string[] = JSON.parse(
-        localStorage.getItem('servicesOffered') || '[]'
+        localStorage.getItem('servicesOffered') || '[]',
       );
       if (!servicesOffered) {
         toast.error('Please select all profile section!');
@@ -199,7 +199,7 @@ const StayUpdated = () => {
       }
 
       const operatingHours = JSON.parse(
-        localStorage.getItem('operatingHours') || '{}'
+        localStorage.getItem('operatingHours') || '{}',
       );
       if (!operatingHours) {
         toast.error('Please select all profile section!');
@@ -348,7 +348,7 @@ const StayUpdated = () => {
       if (registrationCertificateFile[0]?.originFileObj) {
         formData.append(
           'registrationCertificate',
-          registrationCertificateFile[0].originFileObj
+          registrationCertificateFile[0].originFileObj,
         );
       }
 
@@ -356,7 +356,7 @@ const StayUpdated = () => {
       if (taxIdOrEquivalentFile[0]?.originFileObj) {
         formData.append(
           'taxIdOrEquivalent',
-          taxIdOrEquivalentFile[0].originFileObj
+          taxIdOrEquivalentFile[0].originFileObj,
         );
       }
 
@@ -391,55 +391,100 @@ const StayUpdated = () => {
             {role === 'CLIENT'
               ? 'How would you like to stay updated?'
               : role === 'ARTIST'
-              ? 'Upload the files'
-              : role === 'BUSINESS'
-              ? 'Upload the files'
-              : ''}
+                ? 'Upload the files'
+                : role === 'BUSINESS'
+                  ? 'Upload the files'
+                  : ''}
           </h2>
           <Typography.Text className="text-center text-base text-gray-600">
             {role === 'CLIENT'
               ? 'Choose how we notify you about artists, guest spots, and bookings.'
               : role === 'ARTIST'
-              ? 'Select the related files to be verified quickly.'
-              : role === 'BUSINESS'
-              ? 'Select the related files to be verified quickly.'
-              : ''}
+                ? 'Select the related files to be verified quickly.'
+                : role === 'BUSINESS'
+                  ? 'Select the related files to be verified quickly.'
+                  : ''}
           </Typography.Text>
         </div>
 
         {role === 'CLIENT' ? (
           <div>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 items-center">
               {['app', 'email', 'sms'].map(type => (
-                <Checkbox
-                  key={type}
-                  checked={selectedType.includes(type)}
-                  onChange={() => handleTypeChange(type)}
-                >
-                  <label className="flex w-full cursor-pointer">
-                    <div className="border hover:border-primary rounded-lg p-6 md:w-96">
-                      <h1 className="text-xl font-bold">
-                        {type === 'app'
-                          ? 'In-App Notifications'
-                          : type === 'email'
+                <div key={type} className="w-full max-w-md">
+                  {(() => {
+                    const selected = selectedType.includes(type);
+                    const title =
+                      type === 'app'
+                        ? 'In-App Notifications'
+                        : type === 'email'
                           ? 'Email Alerts'
-                          : 'Text Messages'}
-                      </h1>
-                      <p>
-                        {type === 'app'
-                          ? 'Receive updates when browsing & in app.'
-                          : type === 'email'
-                          ? 'Get notifications sent to your email.'
-                          : 'Stay updated via SMS.'}
-                      </p>
-                    </div>
-                  </label>
-                </Checkbox>
+                          : 'Text Messages';
+                    const description =
+                      type === 'app'
+                        ? 'Receive updates when browsing & in app.'
+                        : type === 'email'
+                          ? 'Get notifications sent to your email'
+                          : 'Stay updated via SMS.';
+
+                    return (
+                      <div
+                        role="button"
+                        tabIndex={0}
+                        onClick={() => handleTypeChange(type)}
+                        onKeyDown={e => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            handleTypeChange(type);
+                          }
+                        }}
+                        className={`w-full rounded-2xl border px-5 py-4 cursor-pointer transition ${
+                          selected
+                            ? 'border-[#7b5859] bg-[#faf7f7]'
+                            : 'border-[#ece7e7] bg-white hover:border-[#d9cfcf]'
+                        }`}
+                      >
+                        <div className="flex items-start gap-4">
+                          <button
+                            type="button"
+                            onClick={e => {
+                              e.stopPropagation();
+                              handleTypeChange(type);
+                            }}
+                            className="mt-1 cursor-pointer"
+                            aria-label={`${selected ? 'Disable' : 'Enable'} ${title}`}
+                          >
+                            <span
+                              className={`relative inline-flex h-6 w-11 items-center rounded-full transition ${
+                                selected ? 'bg-[#7b5859]' : 'bg-[#e7e1e1]'
+                              }`}
+                            >
+                              <span
+                                className={`inline-block h-5 w-5 transform rounded-full bg-white transition ${
+                                  selected ? 'translate-x-5' : 'translate-x-1'
+                                }`}
+                              />
+                            </span>
+                          </button>
+
+                          <div className="flex-1">
+                            <div className="text-lg font-semibold text-[#1f2937]">
+                              {title}
+                            </div>
+                            <div className="mt-1 text-base text-[#374151]">
+                              {description}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </div>
               ))}
             </div>
 
             <Link href="/all-set">
-              <div className="w-full bg-primary text-lg font-medium text-white text-center py-3 rounded-xl mt-6 transition hover:bg-primary/90">
+              <div className="w-full max-w-md mx-auto bg-primary text-lg font-medium text-white text-center py-3 rounded-xl mt-6 transition hover:bg-primary/90">
                 Continue
               </div>
             </Link>
@@ -591,7 +636,7 @@ const StayUpdated = () => {
         <div className="mt-8">
           <Steps
             current={current}
-            direction="horizontal"
+            orientation="horizontal"
             size="small"
             items={[
               { title: '', status: 'finish' },
@@ -599,6 +644,7 @@ const StayUpdated = () => {
               { title: '', status: current >= 2 ? 'finish' : 'wait' },
               { title: '', status: current >= 3 ? 'finish' : 'wait' },
             ]}
+            style={{ width: '100%' }}
           />
         </div>
       </div>

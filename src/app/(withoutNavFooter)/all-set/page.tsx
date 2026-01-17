@@ -16,6 +16,7 @@ interface ProfileData {
   };
   radius: number;
   favoriteTattoos: string[];
+  favoritePiercing: string[];
   lookingFor: string[];
   notificationPreferences: string[];
 }
@@ -23,6 +24,7 @@ interface ProfileData {
 const AllSetPage = () => {
   const router = useRouter();
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -74,8 +76,13 @@ const AllSetPage = () => {
       }
       const favoriteTattoos: string[] = JSON.parse(savedFavoriteTattoos);
 
+      const savedFavoritePiercing = localStorage.getItem('favoritePiercing');
+      const favoritePiercing: string[] = savedFavoritePiercing
+        ? JSON.parse(savedFavoritePiercing)
+        : [];
+
       const savedNotificationPreferences = localStorage.getItem(
-        'notificationPreferences'
+        'notificationPreferences',
       );
       if (!savedNotificationPreferences) {
         toast.error('Please select all profile section!');
@@ -83,7 +90,7 @@ const AllSetPage = () => {
         return;
       }
       const notificationPreferences: string[] = JSON.parse(
-        savedNotificationPreferences
+        savedNotificationPreferences,
       );
 
       const artistProfileData: ProfileData = {
@@ -94,6 +101,7 @@ const AllSetPage = () => {
         },
         radius,
         favoriteTattoos,
+        favoritePiercing,
         lookingFor,
         notificationPreferences,
       };
@@ -103,6 +111,8 @@ const AllSetPage = () => {
   }, []);
 
   const handleAllSetCreateProfile = async () => {
+    if (isLoading) return;
+
     if (!profileData) {
       toast.error('Please select all profile section!');
       router.push('/user-type-selection');
@@ -113,6 +123,7 @@ const AllSetPage = () => {
     formData.append('data', JSON.stringify(profileData));
 
     try {
+      setIsLoading(true);
       const res = await createProfile(formData);
 
       if (res?.success) {
@@ -125,6 +136,8 @@ const AllSetPage = () => {
     } catch (err) {
       console.error(err);
       toast.error('Failed to create profile. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -158,9 +171,11 @@ const AllSetPage = () => {
 
             <div
               onClick={handleAllSetCreateProfile}
-              className="w-full bg-primary text-lg text-white text-center py-2 rounded-lg mt-5"
+              className={`w-full bg-primary text-lg text-white text-center py-2 rounded-lg mt-5 ${
+                isLoading ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'
+              }`}
             >
-              {/* {isLoading ? 'Loading...' : 'Continue'} */} Continue
+              {isLoading ? 'Loading...' : 'Continue'}
             </div>
           </Form>
         </div>
