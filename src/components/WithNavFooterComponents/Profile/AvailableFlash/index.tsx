@@ -4,14 +4,22 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 // import { ConfigProvider, Modal } from 'antd';
 // import BookingModalOne from '@/components/WithNavFooterComponents/BookingModals/BookingModalOne';
-import { IFolder } from '@/types';
+import { IArtist, IFolder } from '@/types';
 import { getCleanImageUrl } from '@/lib/getCleanImageUrl';
+import { useState } from 'react';
+import BookingRequestModal from '@/components/Shared/HomeComponent/AfterLogin/AfterLoginHeader/Artists/BookingRequestModal';
 
-const AvailableFlash = ({
+const AvailableImages = ({
   activeFolders = [],
+  artist,
 }: {
   activeFolders: IFolder[];
+  artist: IArtist | null;
 }) => {
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | undefined>(
+    undefined,
+  );
   // const [isModalOpen, setIsModalOpen] = useState(false);
   // const showModal = () => {
   //   setIsModalOpen(true);
@@ -27,10 +35,16 @@ const AvailableFlash = ({
 
   return (
     <div className="container mx-auto">
-      <div className="flex flex-col gap-10">
+      <div className="flex flex-col gap-20">
         {activeFolders?.map((folder, index) => (
           <div key={index}>
-            <h1 className="text-2xl font-bold">{folder.name}</h1>
+            <h1 className="text-2xl font-bold capitalize">
+              {String(folder.for).toLowerCase() === 'flash'
+                ? 'Available Flashes'
+                : String(folder.for).toLowerCase() === 'portfolio'
+                  ? 'Portfolio'
+                  : folder.for}
+            </h1>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {folder?.images?.map((image, index) => (
                 <div key={index} className="relative group overflow-hidden">
@@ -48,6 +62,21 @@ const AvailableFlash = ({
                       className="rounded-sm"
                     />
 
+                    {String(folder.for).toLowerCase() === 'flash' && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedImage(image);
+                            setIsBookingModalOpen(true);
+                          }}
+                          className="cursor-pointer bg-white text-black px-10 py-3 rounded-xl shadow-md"
+                        >
+                          Book Now
+                        </button>
+                      </div>
+                    )}
+
                     {/* <button
                       onClick={showModal}
                       className="cursor-pointer bg-white text-black px-4 py-2 rounded-xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-md scale-75 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-300 ease-in-out"
@@ -61,6 +90,16 @@ const AvailableFlash = ({
           </div>
         ))}
       </div>
+
+      <BookingRequestModal
+        open={isBookingModalOpen}
+        artist={artist}
+        initialSelectedImage={selectedImage}
+        onClose={() => {
+          setIsBookingModalOpen(false);
+          setSelectedImage(undefined);
+        }}
+      />
 
       {/* <ConfigProvider
         theme={{
@@ -87,4 +126,4 @@ const AvailableFlash = ({
   );
 };
 
-export default AvailableFlash;
+export default AvailableImages;

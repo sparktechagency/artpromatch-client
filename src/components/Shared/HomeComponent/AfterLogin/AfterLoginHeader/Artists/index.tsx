@@ -287,9 +287,11 @@ const Artists = ({
                     className="cursor-pointer"
                   >
                     <Carousel autoplay>
-                      {(artist?.flashImages?.length
-                        ? artist.flashImages
-                        : [undefined]
+                      {(artist?.portfolioImages?.length
+                        ? artist.portfolioImages
+                        : [
+                            'https://res.cloudinary.com/dweesppci/image/upload/v1768712213/1768712214413-KHALED-SIDDIQUE.png',
+                          ]
                       ).map((img, i) => (
                         <div key={`${artist._id}-flash-${i}`}>
                           <Image

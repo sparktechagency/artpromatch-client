@@ -76,17 +76,16 @@ const CheckoutForm = ({
   );
 };
 
-const defaultImg =
-  'https://res.cloudinary.com/dweesppci/image/upload/v1746204369/wtmpcphfvexcq2ubcss0.png';
-
 const BookingRequestModal = ({
   open,
   artist,
   onClose,
+  initialSelectedImage,
 }: {
   open: boolean;
   artist: IArtist | null;
   onClose: () => void;
+  initialSelectedImage?: string;
 }) => {
   const router = useRouter();
 
@@ -115,30 +114,39 @@ const BookingRequestModal = ({
   }, [artist]);
 
   const images = useMemo(() => {
-    const merged = [
-      ...(artist?.flashImages ?? []),
-      ...(artist?.portfolioImages ?? []),
-    ]
+    const merged = (
+      initialSelectedImage
+        ? [initialSelectedImage]
+        : artist?.flashImages && artist.flashImages.length > 0
+          ? artist.flashImages
+          : [
+              'https://res.cloudinary.com/dweesppci/image/upload/v1768712240/1768712240691-KHALED-SIDDIQUE.png',
+            ]
+    )
       .map(s => (typeof s === 'string' ? s.trim() : ''))
       .filter(Boolean);
 
     const unique = Array.from(new Set(merged));
 
-    return unique.length > 0 ? unique : [artist?.auth?.image || defaultImg];
-  }, [artist]);
+    return unique;
+  }, [artist, initialSelectedImage]);
 
   useEffect(() => {
     if (!open) return;
 
-    const first = images[0] || '';
-    setSelectedImage(first);
-    setSelectedImageIndex(0);
+    const preferred = initialSelectedImage
+      ? images.includes(initialSelectedImage)
+        ? initialSelectedImage
+        : images[0] || ''
+      : images[0] || '';
+    setSelectedImage(preferred);
+    setSelectedImageIndex(Math.max(0, images.indexOf(preferred)));
     setBookingType(availableBookingTypes[0] ?? null);
 
     setShowPaymentForm(false);
     setClientSecret('');
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  }, [open, initialSelectedImage]);
 
   useEffect(() => {
     if (!open) return;
@@ -178,6 +186,16 @@ const BookingRequestModal = ({
     setIsSubmitting(true);
 
     try {
+      if (
+        selectedImage ===
+          'https://res.cloudinary.com/dweesppci/image/upload/v1768712240/1768712240691-KHALED-SIDDIQUE.png' ||
+        selectedImage ===
+          'https://res.cloudinary.com/dweesppci/image/upload/v1768712213/1768712214413-KHALED-SIDDIQUE.png'
+      ) {
+        toast.warning('Please select an image!');
+        return;
+      }
+
       const payload = {
         artistId: artist._id,
         image: selectedImage,

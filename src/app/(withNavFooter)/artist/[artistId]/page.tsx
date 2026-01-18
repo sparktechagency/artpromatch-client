@@ -1,4 +1,4 @@
-import AvailableFlash from '@/components/WithNavFooterComponents/Profile/AvailableFlash';
+import AvailableImages from '@/components/WithNavFooterComponents/Profile/AvailableFlash';
 import ProfileSideBar from '@/components/WithNavFooterComponents/Profile/ProfileSidebar';
 import TattoArtistProfile from '@/components/WithNavFooterComponents/Profile/TattooArtistProfile';
 import { getArtistProfileByHisId } from '@/services/Service';
@@ -121,7 +121,10 @@ const ArtistProfilePage = async ({
           </div>
 
           <div className="pt-4 border-t">
-            <AvailableFlash activeFolders={artistData?.activeFolders ?? []}/>
+            <AvailableImages
+              activeFolders={artistData?.activeFolders ?? []}
+              artist={artistData ?? null}
+            />
           </div>
         </div>
       </div>

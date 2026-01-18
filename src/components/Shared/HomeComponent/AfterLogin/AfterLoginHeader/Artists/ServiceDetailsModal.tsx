@@ -22,8 +22,10 @@ const ServiceDetailsModal: React.FC<ServiceDetailsModalProps> = ({
 }) => {
   const images = useMemo(() => {
     const merged = [
-      ...(selectedArtist?.flashImages ?? []),
-      ...(selectedArtist?.portfolioImages ?? []),
+      ...(selectedArtist?.flashImages ?? [
+        'https://res.cloudinary.com/dweesppci/image/upload/v1768712240/1768712240691-KHALED-SIDDIQUE.png',
+      ]),
+      // ...(selectedArtist?.portfolioImages ?? []),
     ]
       .map(image => (typeof image === 'string' ? image.trim() : ''))
       .filter(Boolean);
