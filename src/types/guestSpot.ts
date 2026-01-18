@@ -1,4 +1,4 @@
-export interface GuestSpot {
+export interface  GuestSpot {
   _id: string;
 
   startDate: Date;
@@ -6,6 +6,10 @@ export interface GuestSpot {
 
   startTime?: string;
   endTime?: string;
+
+  stringLocation?: string;
+
+  offDays?: string[];
 
   location: {
     coordinates: [number, number];

@@ -9,6 +9,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { AiOutlineMessage } from 'react-icons/ai';
 import { trackArtistProfileView } from '@/services/ArtistProfileViews';
+import { CiHeart } from 'react-icons/ci';
+import { SlCalender } from 'react-icons/sl';
 
 type TattooArtistProfileProps = {
   name: string;
@@ -107,14 +109,14 @@ const TattoArtistProfile = ({
     isOnline === null
       ? 'Checking availability...'
       : isOnline
-      ? 'Available now'
-      : 'Currently offline';
+        ? 'Available now'
+        : 'Currently offline';
   const badgeColor =
     isOnline === null
       ? 'bg-gray-100 text-gray-600'
       : isOnline
-      ? 'bg-green-50 text-green-900'
-      : 'bg-zinc-50 text-zinc-400';
+        ? 'bg-green-50 text-green-900'
+        : 'bg-zinc-50 text-zinc-400';
   const dotColor = isOnline === true ? 'bg-green-600' : 'bg-zinc-400';
   return (
     <div>
@@ -151,24 +153,26 @@ const TattoArtistProfile = ({
             </div>
           </div>
           <div className="flex flex-col lg:flex-row justify-center items-center gap-2">
-            {/* <Link href="/favourites">
-              <button className="px-3 py-1 rounded-xl border">
+            <Link href="/favourites">
+              <button className="px-3 py-1 rounded-xl border border-gray-400/50">
                 <CiHeart className="h-4 w-4 " />
               </button>
-            </Link> */}
+            </Link>
             <Link
               href={`/message?receiverId=${artistAuthId}`}
-              className="px-3 py-1 rounded-xl border flex justify-center items-center gap-2"
+              className="px-3 py-1 rounded-xl border border-gray-400/50 flex justify-center items-center gap-2"
             >
               <AiOutlineMessage className="h-4 w-4 " />
               Message
             </Link>
-            {/* <Link href="/booking-availablity">
-              <button className="px-3 py-1 rounded-xl border flex justify-center items-center gap-2 bg-primary text-white">
-                <SlCalender className="h-4 w-4 " />
-                Book Now
+            <Link href="/booking-availablity">
+              <button className="px-3 py-1 rounded-xl border border-gray-400/50 bg-primary">
+                <span className="text-white flex justify-center items-center gap-2">
+                  <SlCalender className="h-4 w-4 " />
+                  Book Now
+                </span>
               </button>
-            </Link> */}
+            </Link>
           </div>
         </div>
       </div>
